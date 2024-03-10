@@ -61,10 +61,10 @@ function AddCustomer() {
             action=""
             className="grid grid-cols-10 grid-rows-12  min-h-[700px] p-6 "
           >
-            <div className="col-span-5  col-end-5 row-span-2   grid   ">
+            <div className="md:col-span-5  md:col-end-5 row-span-2   grid grid-cols-5 col-span-12 ">
               <label
                 htmlFor="name"
-                className="mt-2 text-start pr-4  cursor-pointer"
+                className="mt-2 text-start pr-4  cursor-pointer col-start-2 md:col-start-1 col-span-5 "
               >
                 Name <span className="text-red-400">*</span>
               </label>
@@ -77,12 +77,12 @@ function AddCustomer() {
                 type="text"
                 id="name"
                 name="name"
-                className="h-10 bg-gray-200  px-2 outline-none rounded-md"
+                className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5   px-2 outline-none rounded-md col-span-3 "
               />
             </div>
-            <div className="col-span-5  col-end-5 row-span-2 grid  ">
+            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12 ">
               <label
-                className="mt-2 text-start pr-4  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="mobile"
               >
                 Mobile
@@ -92,15 +92,15 @@ function AddCustomer() {
                   setFormData({ ...formData, mobile: e.target.value })
                 }
                 value={formData.mobile}
-                className="h-10  bg-gray-200  px-2 outline-none rounded-md"
+                className="h-10  bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="mobile"
                 id="mobile"
                 type="text"
               />
             </div>
-            <div className="col-span-5  col-end-5 row-span-2 grid  ">
+            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
               <label
-                className="mt-2 text-start pr-4  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="email"
               >
                 Email
@@ -110,15 +110,15 @@ function AddCustomer() {
                   setFormData({ ...formData, email: e.target.value })
                 }
                 value={formData.email}
-                className="h-10 bg-gray-200  px-2 outline-none rounded-md"
+                className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="mail"
                 id="email"
                 type="email"
               />
             </div>
-            <div className="col-span-5  col-end-5 row-span-2 grid  ">
+            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
               <label
-                className="mt-2 text-start pr-4  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="gst"
               >
                 GST Number
@@ -128,15 +128,15 @@ function AddCustomer() {
                   setFormData({ ...formData, gst: e.target.value })
                 }
                 value={formData.gst}
-                className="h-10 bg-gray-200  px-2 outline-none rounded-md "
+                className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md "
                 name="gst"
                 id="gst"
                 type="text"
               />
             </div>
-            <div className="col-span-5  col-end-5 row-span-2 grid  ">
+            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
               <label
-                className="mt-2 text-start pr-4  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="tax"
               >
                 TAX Number
@@ -146,16 +146,16 @@ function AddCustomer() {
                   setFormData({ ...formData, tax: e.target.value })
                 }
                 value={formData.tax}
-                className="h-10 bg-gray-200  px-2 outline-none rounded-md"
+                className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 id="tax"
                 name="tax"
                 type="text"
               />
             </div>
             {/* second column */}
-            <div className="col-span-5 col-start-7  col-end-12 row-span-2 grid   row-start-1">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-1">
               <label
-                className="mt-2 text-start pr-4  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="due"
               >
                 PreviousDue
@@ -165,15 +165,15 @@ function AddCustomer() {
                   setFormData({ ...formData, due: e.target.value })
                 }
                 value={formData.due}
-                className="h-10 bg-gray-200  px-2 outline-none rounded-md"
+                className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 type="text"
                 name="due"
                 id="due"
               />
             </div>
-            <div className="col-span-5 col-start-7  col-end-12 row-span-2 grid   row-start-3">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-3">
               <label
-                className="mt-2 text-start pr-4  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="state"
               >
                 State
@@ -183,15 +183,15 @@ function AddCustomer() {
                   setFormData({ ...formData, state: e.target.value })
                 }
                 value={formData.state}
-                className="h-10 bg-gray-200  px-2 outline-none rounded-md"
+                className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="state"
                 type="text"
                 id="state"
               />
             </div>
-            <div className="col-span-5 col-start-7  col-end-12 row-span-2 grid   row-start-5">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-5">
               <label
-                className="mt-2 text-start pr-4  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="city"
               >
                 City
@@ -201,15 +201,15 @@ function AddCustomer() {
                   setFormData({ ...formData, city: e.target.value })
                 }
                 value={formData.city}
-                className="h-10 bg-gray-200  px-2 outline-none rounded-md"
+                className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="city"
                 type="text"
                 id="city"
               />
             </div>
-            <div className="col-span-5 col-start-7  col-end-12 row-span-2 grid   row-start-7">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-7">
               <label
-                className="mt-2 text-start pr-4  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="pincode"
               >
                 Pincode
@@ -219,15 +219,15 @@ function AddCustomer() {
                   setFormData({ ...formData, pincode: e.target.value })
                 }
                 value={formData.pincode}
-                className="h-10 bg-gray-200  px-2 outline-none rounded-md"
+                className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="pincode"
                 type="text"
                 id="pincode"
               />
             </div>
-            <div className="col-span-5 col-start-7  col-end-12 row-span-2 grid   row-start-9">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-9">
               <label
-                className="mt-2 text-start pr-4  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="address"
               >
                 Address
@@ -237,21 +237,21 @@ function AddCustomer() {
                   setFormData({ ...formData, address: e.target.value })
                 }
                 value={formData.address}
-                className="h-20 resize-none bg-gray-200  px-2 outline-none rounded-md"
+                className="h-20 resize-none bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 id="address"
                 name="address"
               />
             </div>
             <input
               type="submit"
-              className="col-start-3 col-span-2 bg-green-400 font-bold text-white   cursor-pointer rounded-full row-start-12 cur"
+              className="mt-10 md:mt-0 col-start-3 col-span-2 bg-green-400 font-bold text-white   cursor-pointer rounded-full md:row-start-12 cur"
               value="OK"
             />
 
             <input
              onClick={handleReset}
              type="reset"
-              className="col-start-7 bg-red-400 col-span-2 rounded-full  font-bold text-white row-start-12 cursor-pointer"
+              className="mt-10  md:mt-0 col-start-7 bg-red-400 col-span-2 h-12 rounded-full  font-bold text-white md:row-start-12 cursor-pointer"
               value="Cancel"
             />
           </form>
