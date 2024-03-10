@@ -16,7 +16,7 @@ function SideBar() {
   const router = useRouter()
   const pathname = usePathname()
   return (
-    <div className='w-[280px] min-h-screen bg-[--primary] rounded-lg'>
+    <div className='w-[280px] md:block hidden min-h-screen bg-[--primary] rounded-lg'>
       <div className="flex flex-col gap-2 items-center px-2">
         <h1 className='w-full px-4 flex items-center gap-2 bg-white rounded-lg mt-2 '>
           <Image src={'/asserts/logo/logo.svg'} height={50} width={50} alt="Logo" />
