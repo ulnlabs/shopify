@@ -1,9 +1,6 @@
 import { FaDolly, FaHome } from 'react-icons/fa';
 import React from 'react'
 import { FaUsers } from 'react-icons/fa6'
-import type { MenuProps } from 'antd';
-export type MenuItem = Required<MenuProps>['items'][number];
-
 export type NavBarItem = {
     label: string;
     icon: JSX.Element;
