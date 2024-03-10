@@ -1,32 +1,17 @@
 'use client'
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, createElement, useEffect, useRef } from 'react'
 import { motion, useCycle } from 'framer-motion'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Button, ConfigProvider, Menu } from 'antd';
 import { navItems } from './Type'
 function SideBar() {
+  const router = useRouter()
   return (
-    <div className='w-[400px]'>
-      <ConfigProvider
-        theme={{
-          components: {
-            Menu:{
-              
-            }
-          }
-        }}
-      >
-        <Menu
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          mode="inline"
-          theme="light"
-          style={{ height: '100%' }}
-
-          items={navItems}
-        />
-      </ConfigProvider>
+    <div className='w-[250px] bg-[--primary]'>
+      <div className="w-full text-white">
+        close
+      </div>
+      
     </div>
   )
 }
