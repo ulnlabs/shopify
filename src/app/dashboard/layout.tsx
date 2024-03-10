@@ -20,6 +20,7 @@ export default function RootLayout({
   return (
       <div className="min-h-screen w-screen flex justify-between">
         <SideBar/>
+        {children}
       </div>
   );
 }
