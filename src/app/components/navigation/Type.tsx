@@ -3,7 +3,9 @@ import React from 'react'
 import { FaShop, FaShopify, FaUsers } from 'react-icons/fa6'
 import { AiOutlineShop } from 'react-icons/ai'
 import { IoReceiptOutline } from 'react-icons/io5';
-import { GiExpense } from 'react-icons/gi';
+import { GiExpense, GiNewspaper } from 'react-icons/gi';
+import { TiUser } from 'react-icons/ti';
+import { IoIosSettings } from 'react-icons/io';
 export type NavBarItem = {
     label: string;
     icon?: JSX.Element;
@@ -165,7 +167,7 @@ export const navItems: NavBarItem[] = [
         ]
     }, {
         label: 'reports',
-        icon: <FaHome />,
+        icon: <GiNewspaper />,
         key: "/reports",
         children: [
             {
@@ -219,7 +221,7 @@ export const navItems: NavBarItem[] = [
         ]
     }, {
         label: 'Users',
-        icon: <FaHome />,
+        icon: <TiUser />,
         key: "/users",
         children: [
             {
@@ -236,7 +238,7 @@ export const navItems: NavBarItem[] = [
         ]
     }, {
         label: 'Settings',
-        icon: <FaHome />,
+        icon: <IoIosSettings />,
         key: "/settings",
         children: [
             { label: 'Company Profile', key: "/dashboard/settings/company-profile" },
