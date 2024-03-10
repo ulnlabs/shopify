@@ -2,6 +2,8 @@ import { FaDolly, FaFileImport, FaHome, FaUserPlus } from 'react-icons/fa';
 import React from 'react'
 import { FaShop, FaShopify, FaUsers } from 'react-icons/fa6'
 import { AiOutlineShop } from 'react-icons/ai'
+import { IoReceiptOutline } from 'react-icons/io5';
+import { GiExpense } from 'react-icons/gi';
 export type NavBarItem = {
     label: string;
     icon?: JSX.Element;
@@ -103,7 +105,7 @@ export const navItems: NavBarItem[] = [
         ]
     }, {
         label: 'Items',
-        icon: <FaHome />,
+        icon: <IoReceiptOutline />,
         key: "/items",
         children: [
             {
@@ -141,7 +143,7 @@ export const navItems: NavBarItem[] = [
         ]
     }, {
         label: 'expenses',
-        icon: <FaHome />,
+        icon: <GiExpense />,
         key: "/expenses",
         children: [
             {
