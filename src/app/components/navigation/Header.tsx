@@ -48,7 +48,7 @@ function Header() {
         <AnimatePresence mode='wait'>
           {
             toggleprofile && (
-              <motion.div ref={profileCardRef} initial={profileVarient.closed} animate={profileVarient.open} exit={profileVarient.closed} className="absolute min-w-[200px] gap-4 px-2 py-2 border rounded-md flex justify-between items-center inset-y-full h-fit z-2  mt-[14px]">
+              <motion.div ref={profileCardRef} initial={profileVarient.closed} animate={profileVarient.open} exit={profileVarient.closed} className="absolute min-w-[200px] gap-4 px-2 py-2 border rounded-md flex justify-between items-center inset-y-full h-fit z-2  bg-white mt-[14px]">
                 <div className="h-4 w-4 absolute -top-2 right-2 rotate-45 border-t border-l rounded bg-white"></div>
                 <Image src={"/"} height={50} width={50} alt='' className='rounded-full border-2 border-[--primary]' />
                 <div className="flex flex-col items-end justify-center">
