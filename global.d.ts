@@ -10,3 +10,10 @@ type customerAdd={
     pincode:string,
     address:string
 }
+type contextData={
+    formData:customerAdd,
+    setFormData:Dispatch<SetStateAction<customerAdd>>
+}
+type children={
+    children:React.ReactNode
+}

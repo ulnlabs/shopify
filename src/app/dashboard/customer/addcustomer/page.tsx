@@ -3,7 +3,7 @@ import AddCustomer from '@/app/components/customer/AddCustomer'
 function page() {
     
   return (
-    <div>
+    <div className='w-full'>
 <AddCustomer/>
 
     </div>

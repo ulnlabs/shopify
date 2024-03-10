@@ -1,19 +1,11 @@
 "use client";
-import React, { FormEvent, useRef, useState } from "react";
-
+import React, { FormEvent, useContext } from "react";
+import { ContextData } from "../../../../contextapi";
 function AddCustomer() {
-  const [formData, setFormData] = useState<customerAdd>({
-    name: "",
-    mobile: "",
-    email: "",
-    gst: "",
-    tax: "",
-    due: "",
-    state: "",
-    city: "",
-    pincode: "",
-    address: "",
-  });
+  const {formData,setFormData}=useContext(ContextData)
+ console.log(formData);
+ 
+  
 
   const handleReset=():void => {
     setFormData({

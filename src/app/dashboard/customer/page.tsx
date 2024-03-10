@@ -1,5 +1,5 @@
 import React from 'react'
-import AddCustomer from '../components/customer/AddCustomer'
+import AddCustomer from '../../components/customer/AddCustomer'
 function page() {
     
   return (
