@@ -21,23 +21,23 @@ export const navItems: NavBarItem[] = [
         children: [
             {
                 label: "POS",
-                key: "/sales/pos",
+                key: "/dashboard/sales/pos",
             },
             {
                 label: "New Sale",
-                key: "/sales/new-sale",
+                key: "/dashboard/sales/new-sale",
             },
             {
                 label: "Sales List",
-                key: "/sales/list",
+                key: "/dashboard/sales/list",
             },
             {
                 label: "New Sales Return",
-                key: "/sales/new-return",
+                key: "/dashboard/sales/new-return",
             },
             {
                 label: "Sales Returns List",
-                key: "/sales/return-list",
+                key: "/dashboard/sales/return-list",
             },
 
 
@@ -50,15 +50,15 @@ export const navItems: NavBarItem[] = [
         children: [
             {
                 label: "New Customer",
-                key: "/customers/new",
+                key: "/dashboard/customers/new",
             },
             {
                 label: "Customers List",
-                key: "/customers/list",
+                key: "/dashboard/customers/list",
             },
             {
                 label: "Import Customers",
-                key: "/customers/import",
+                key: "/dashboard/customers/import",
             },
         ]
     }, {
@@ -68,19 +68,19 @@ export const navItems: NavBarItem[] = [
         children: [
             {
                 label: 'New Purchase',
-                key: "/purchases/new"
+                key: "/dashboard/purchases/new"
             },
             {
                 label: 'Purchases List',
-                key: "/purchases/list"
+                key: "/dashboard/purchases/list"
             },
             {
                 label: 'New Purchase Return',
-                key: "/purchases/return-new"
+                key: "/dashboard/purchases/return-new"
             },
             {
                 label: 'Purchase Returns List',
-                key: "/purchases/return-list"
+                key: "/dashboard/purchases/return-list"
             },
         ]
     }, {
@@ -90,15 +90,15 @@ export const navItems: NavBarItem[] = [
         children: [
             {
                 label: 'New Supplier',
-                key: "/suppliers/new"
+                key: "/dashboard/suppliers/new"
             },
             {
                 label: 'Suppliers List',
-                key: "/suppliers/list"
+                key: "/dashboard/suppliers/list"
             },
             {
                 label: ' Import Suppliers',
-                key: "/suppliers/import"
+                key: "/dashboard/suppliers/import"
             }
         ]
     }, {
@@ -108,35 +108,35 @@ export const navItems: NavBarItem[] = [
         children: [
             {
                 label: 'New Item',
-                key: "/items/new"
+                key: "/dashboard/items/new"
             },
             {
                 label: 'Items List',
-                key: "/items/list"
+                key: "/dashboard/items/list"
             },
             {
                 label: 'New Category',
-                key: "/items/new/category"
+                key: "/dashboard/items/new/category"
             },
             {
                 label: 'Categories List',
-                key: "/items/categories"
+                key: "/dashboard/items/categories"
             },
             {
                 label: 'New Brand',
-                key: "/items/new/brand"
+                key: "/dashboard/items/new/brand"
             },
             {
                 label: 'Brands List',
-                key: "/items/brands"
+                key: "/dashboard/items/brands"
             },
             {
                 label: 'Print Labels',
-                key: "/items/labels"
+                key: "/dashboard/items/labels"
             },
             {
                 label: 'Import Items',
-                key: "/items/import"
+                key: "/dashboard/items/import"
             }
         ]
     }, {
@@ -146,19 +146,19 @@ export const navItems: NavBarItem[] = [
         children: [
             {
                 label: 'New Expense',
-                key: "/expenses/new"
+                key: "/dashboard/expenses/new"
             },
             {
                 label: 'Expenses List',
-                key: "/expenses/list"
+                key: "/dashboard/expenses/list"
             },
             {
                 label: 'New Category',
-                key: "/expenses/new/category"
+                key: "/dashboard/expenses/new/category"
             },
             {
                 label: 'Categories List',
-                key: "/expenses/categories"
+                key: "/dashboard/expenses/categories"
             },
         ]
     }, {
@@ -168,51 +168,51 @@ export const navItems: NavBarItem[] = [
         children: [
             {
                 label: 'Profit & Loss Report',
-                key: "/reports/profit-loss"
+                key: "/dashboard/reports/profit-loss"
             },
             {
                 label: 'Purchase Report',
-                key: "/reports/purchase"
+                key: "/dashboard/reports/purchase"
             },
             {
                 label: 'Purchase Return Report',
-                key: "/reports/purchase-return"
+                key: "/dashboard/reports/purchase-return"
             },
             {
                 label: 'Purchase Payments Report',
-                key: "/reports/purchase-payments"
+                key: "/dashboard/reports/purchase-payments"
             },
             {
                 label: 'Item Sales Report',
-                key: "/reports/item-sales"
+                key: "/dashboard/reports/item-sales"
             },
             {
                 label: 'Item Purchase Report',
-                key: "/reports/item-purchase"
+                key: "/dashboard/reports/item-purchase"
             },
             {
                 label: 'Sales Report',
-                key: "/reports/sales"
+                key: "/dashboard/reports/sales"
             },
             {
                 label: 'Sales Return Report',
-                key: "/reports/sales-return"
+                key: "/dashboard/reports/sales-return"
             },
             {
                 label: 'Sales Payments Report',
-                key: "/reports/sales-payments"
+                key: "/dashboard/reports/sales-payments"
             },
             {
                 label: 'Stock Report',
-                key: "/reports/stock"
+                key: "/dashboard/reports/stock"
             },
             {
                 label: 'Expense Report',
-                key: "/reports/expense"
+                key: "/dashboard/reports/expense"
             },
             {
                 label: 'Expired Items Report',
-                key: "/reports/expired-items"
+                key: "/dashboard/reports/expired-items"
             },
         ]
     }, {
@@ -222,14 +222,14 @@ export const navItems: NavBarItem[] = [
         children: [
             {
                 label: 'New User',
-                key: "/users/new"
+                key: "/dashboard/users/new"
             },
             {
                 label: 'Users List',
-                key: "/users/list"
+                key: "/dashboard/users/list"
             }, {
                 label: 'role list',
-                key: "/users/roles"
+                key: "/dashboard/users/roles"
             }
         ]
     }, {
@@ -237,14 +237,14 @@ export const navItems: NavBarItem[] = [
         icon: <FaHome />,
         key: "/settings",
         children: [
-            { label: 'Company Profile', key: "/settings/company-profile" },
-            { label: 'Site Settings', key: "/settings/site-settings" },
-            { label: 'Tax List', key: "/settings/tax-list" },
-            { label: 'Units List', key: "/settings/units-list" },
-            { label: 'Payment Types List', key: "/settings/payment-types-list" },
-            { label: 'Currency List', key: "/settings/currency-list" },
-            { label: 'Change Password', key: "/settings/change-password" },
-            { label: 'Database Backup', key: "/settings/database-backup" },
+            { label: 'Company Profile', key: "/dashboard/settings/company-profile" },
+            { label: 'Site Settings', key: "/dashboard/settings/site-settings" },
+            { label: 'Tax List', key: "/dashboard/settings/tax-list" },
+            { label: 'Units List', key: "/dashboard/settings/units-list" },
+            { label: 'Payment Types List', key: "/dashboard/settings/payment-types-list" },
+            { label: 'Currency List', key: "/dashboard/settings/currency-list" },
+            { label: 'Change Password', key: "/dashboard/settings/change-password" },
+            { label: 'Database Backup', key: "/dashboard/settings/database-backup" },
         ]
     }
 ]
