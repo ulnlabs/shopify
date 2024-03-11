@@ -34,45 +34,47 @@ function SideBar() {
         <div className="md:hidden px-2 pt-4 w-full flex items-center justify-end">
           <AiOutlineClose onClick={() => setToggleNav(false)} className="text-white text-2xl" />
         </div>
-        <Accordion type="single" className='w-full flex flex-col gap-1 items-center py-2' collapsible>
-          {
-            navItems.map((item, index) => {
-              if (!item.children) {
+        <div className="w-full max-h-full overflow-scroll scrollbar-hide">
+          <Accordion type="single" className='w-full h-[90vh] flex flex-col gap-1 items-center py-2' collapsible>
+            {
+              navItems.map((item, index) => {
+                if (!item.children) {
+                  return (
+                    <Link key={index}
+                      className={cn('flex items-center w-full gap-2 text-white no-underline bg-white/[.2] py-2 hover:bg-white/[.3] rounded-lg px-2',
+                        item.key === pathname ? 'text-black bg-white hover:bg-white' : '')}
+                      href={item?.key ? item.key : ''}>{item.icon}{item.label}</Link>
+                  )
+                }
                 return (
-                  <Link key={index}
-                    className={cn('flex items-center w-full gap-2 text-white no-underline bg-white/[.2] py-2 hover:bg-white/[.3] rounded-lg px-2',
-                      item.key === pathname ? 'text-black bg-white hover:bg-white' : '')}
-                    href={item?.key ? item.key : ''}>{item.icon}{item.label}</Link>
-                )
-              }
-              return (
-                <AccordionItem key={index} className='border-none w-full' value={index.toString()}>
-                  <AccordionTrigger className={cn('text-white flex items-center justify-between w-full no-underline bg-white/[.2] py-2 hover:bg-white/[.3] rounded-lg px-2')}>
-                    <div className="flex items-center gap-2">
-                      <div className="">
-                        {item.icon}
+                  <AccordionItem key={index} className='border-none w-full' value={index.toString()}>
+                    <AccordionTrigger className={cn('text-white flex items-center justify-between w-full no-underline bg-white/[.2] py-2 hover:bg-white/[.3] rounded-lg px-2')}>
+                      <div className="flex items-center gap-2">
+                        <div className="">
+                          {item.icon}
+                        </div>
+                        {item.label}
                       </div>
-                      {item.label}
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className='py-0 px-0 pt-2'>
-                    <div className="flex flex-col gap-2 items-center px-2 py-2 bg-white/[.1] rounded-lg">
-                      {
-                        item.children?.map((child, index) => {
-                          return (
-                            <Link key={index} className={cn('px-2 py-2 w-full bg-white/[.2] rounded-md text-white hover:bg-white/[.3]', child.key === pathname ? 'text-gray-800 font-bold bg-white/[.8] hover:bg-white/[.8]' : '')} href={child?.key ? child.key : ''}>
-                              {child.label}
-                            </Link>
-                          )
-                        })
-                      }
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              )
-            })
-          }
-        </Accordion>
+                    </AccordionTrigger>
+                    <AccordionContent className='py-0 px-0 pt-2'>
+                      <div className="flex flex-col gap-2 items-center px-2 py-2 bg-white/[.1] rounded-lg">
+                        {
+                          item.children?.map((child, index) => {
+                            return (
+                              <Link key={index} className={cn('px-2 py-2 w-full bg-white/[.2] rounded-md text-white hover:bg-white/[.3]', child.key === pathname ? 'text-gray-800 font-bold bg-white/[.8] hover:bg-white/[.8]' : '')} href={child?.key ? child.key : ''}>
+                                {child.label}
+                              </Link>
+                            )
+                          })
+                        }
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                )
+              })
+            }
+          </Accordion>
+        </div>
       </div>
     </div>
   );
