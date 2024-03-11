@@ -2,6 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
+import { FaBars } from 'react-icons/fa6';
 
 
 const profileVarient = {
@@ -29,20 +30,22 @@ function Header() {
   const profileRef = useRef<HTMLDivElement>(null);
   const profileCardRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    try{
+    try {
       let handler = (e: any) => {
         if (!profileRef?.current?.contains(e.target) && !profileCardRef?.current?.contains(e.target)) {
           setToggleProfile(false)
         }
       }
       window.addEventListener('mousedown', handler)
-    }catch(err){
+    } catch (err) {
 
     }
   })
   return (
-    <div className='w-full bg-white h-[50px] flex items-center justify-between px-4'>
-      <div className=""></div>
+    <div className='w-full bg-white border-b flex items-center justify-between px-4 h-[60px]'>
+      <div className=" flex items-center justify-center">
+        <FaBars className='md:hidden flex'/>
+      </div>
       <div className="relative capitalize text-gray-800 font-semibold flex flex-col items-end h-fit">
         <h1 ref={profileRef} className='text-gray-800 cursor-pointer' onClick={() => setToggleProfile(!toggleprofile)}>{"Admin"}</h1>
         <AnimatePresence mode='wait'>

@@ -21,9 +21,11 @@ export default function RootLayout({
   return (
     <div className="min-h-screen max-w-screen flex justify-between">
       <SideBar />
-      <div className="w-full min-h-screen flex flex-col items-center">
+      <div className="w-full max-h-screen overflow-hidden">
         <Header />
-        {children}
+        <div className="w-full max-h-[calc(100vh_-_60px)] overflow-y-scroll flex flex-col items-center justify-start scrollbar-hide">
+          {children}
+        </div>
       </div>
     </div>
   );
