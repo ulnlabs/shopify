@@ -44,7 +44,7 @@ function Header() {
   return (
     <div className='w-full bg-white border-b flex items-center justify-between px-4 h-[60px]'>
       <div className=" flex items-center justify-center">
-        <FaBars className='md:hidden flex'/>
+        <FaBars className='md:hidden flex' />
       </div>
       <div className="relative capitalize text-gray-800 font-semibold flex flex-col items-end h-fit">
         <h1 ref={profileRef} className='text-gray-800 cursor-pointer' onClick={() => setToggleProfile(!toggleprofile)}>{"Admin"}</h1>
