@@ -1,10 +1,11 @@
 import NewSales from "../components/sales/NewSales";
-
 const page= () => {
  
 
   return (  
-  <NewSales />
+    <div className="w-screen ">
+    <NewSales />
+    </div>
   );
 };
 
