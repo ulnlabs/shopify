@@ -1,7 +1,8 @@
 'use client'
+import { UserContext } from '@/UserContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FaBars } from 'react-icons/fa6';
 
 
@@ -29,6 +30,7 @@ function Header() {
   const [toggleprofile, setToggleProfile] = useState<Boolean>(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const profileCardRef = useRef<HTMLDivElement>(null);
+  const { toggleNav, setToggleNav } = useContext(UserContext)
   useEffect(() => {
     try {
       let handler = (e: any) => {
@@ -44,7 +46,8 @@ function Header() {
   return (
     <div className='w-full bg-white border-b flex items-center justify-between px-4 h-[60px]'>
       <div className=" flex items-center justify-center">
-        <FaBars className='md:hidden flex' />
+        <FaBars onClick={() => setToggleNav(!toggleNav)} className='md:hidden flex' />
+        <div className="logo md:hidden flex items-center justify-center"></div>
       </div>
       <div className="relative capitalize text-gray-800 font-semibold flex flex-col items-end h-fit">
         <h1 ref={profileRef} className='text-gray-800 cursor-pointer' onClick={() => setToggleProfile(!toggleprofile)}>{"Admin"}</h1>

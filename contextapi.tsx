@@ -1,24 +1,23 @@
 "use client"
-import { createContext,useState} from "react";
+import { createContext, useState } from "react";
 //if some types are not seen here they are mentioned in the global.d.ts file
 
-export const ContextData=createContext<contextData >({
-    formData:{
-        name:"",
-        mobile:"",
-        email:"",
-        gst:"",
-        tax:"",
-        due:"",
-        state:"",
-        city:"",
-        pincode:"",
-        address:""
+export const ContextData = createContext<contextData>({
+    formData: {
+        name: "",
+        mobile: "",
+        email: "",
+        gst: "",
+        tax: "",
+        due: "",
+        state: "",
+        city: "",
+        pincode: "",
+        address: ""
     },
-    setFormData:()=>{}
+    setFormData: () => { }
 })
-
-const ContextContent=({children}:children)=>{
+const ContextContent = ({ children }: children) => {
     const [formData, setFormData] = useState<customerAdd>({
         name: "",
         mobile: "",
@@ -30,14 +29,13 @@ const ContextContent=({children}:children)=>{
         city: "",
         pincode: "",
         address: "",
-      });
-      
-return(
-    <>
-    <ContextData.Provider value={{formData,setFormData}}>
-        {children}
-    </ContextData.Provider>
-    </>
-)
+    });
+    return (
+        <>
+            <ContextData.Provider value={{ formData, setFormData }}>
+                {children}
+            </ContextData.Provider>
+        </>
+    )
 }
 export default ContextContent
