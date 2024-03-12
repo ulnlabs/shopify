@@ -12,6 +12,7 @@ import { Calendar as CalendarIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
+import { Input } from '@/components/ui/input'
 
 
 
@@ -27,7 +28,15 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command"
-import { Input } from '@/components/ui/input'
+
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
+
 const cutomerName = [
   {
     value: "Fire10",
@@ -43,7 +52,7 @@ const cutomerName = [
   },
 ]
 
-const status = [ 
+const status = [
   {
     value: "active",
     label: "Active",
@@ -83,9 +92,22 @@ const NewSales = () => {
     setData({ ...data, billStatus: label });
     setOpenStatus(!openStatus);
   }
+  const itemList = [
+    {
+      value: "active",
+      label: "Active",
+    },
+    {
+      value: "final",
+      label: "Final",
+    }
+  ]
+
+  const [itemOpen, setItemOpen] = useState<boolean>(false);
+  const [items, setItems] = useState<string>('');
   return (
     <div className='px-10  mt-10'>
-      <section className="grid grid-cols-6 gap-4">
+      <section className="grid grid-cols-6 gap-10">
         <div className=" col-start-1 relative col-span-3 ">
           <div className="flex shadow-md py-1 px-2 rounded-lg border items-center ">
             <IoMdContact className="mr-2 h-4 w-4 shrink-0  opacity-50" />
@@ -119,21 +141,21 @@ const NewSales = () => {
         <div className="col-start-4 col-end-7">
           <div className="flex shadow-md py-1 px-2 rounded-lg border items-center ">
             <AiOutlineCalendar className="mr-2 h-4 w-4 shrink-0  opacity-50" />
-            <Input placeholder='Select Customer' value={"" || billDate ? format(billDate, "PPP") : ''} readOnly onClick={() => {
+            <Input placeholder='Select Customer' value={billDate ? format(billDate, "PPP") : ''} readOnly onClick={() => {
               setDateOpen(!dateOpen)
             }} className="bg-primary-gray  cursor-pointer " />
           </div>
           {
-            
+
             dateOpen && (
               <div className="z-10 absolute mt-2 bg-white rounded-lg border shadow-md ">
-            <Calendar
-              mode="single"
-              selected={billDate}
-              onSelect={handleDateClick}
-              initialFocus
-            />
-            </div>
+                <Calendar
+                  mode="single"
+                  selected={billDate}
+                  onSelect={handleDateClick}
+                  initialFocus
+                />
+              </div>
             )
           }
         </div>
@@ -141,48 +163,57 @@ const NewSales = () => {
       <section className="mt-5 mb-16 relative shadow-md">
         <div className="flex items-center  border py-1 px-2 rounded-lg" >
           <IoMdContact className="mr-2 h-4 w-4 shrink-0  opacity-50" />
-          <Input placeholder="Status" 
-          value={"" || data.billStatus}
-          onClick={()=>{setOpenStatus(true)} }
-          className="bg-primary-gray cursor-pointer " readOnly />
+          <Input placeholder="Status"
+            value={"" || data.billStatus}
+            onClick={() => { setOpenStatus(true) }}
+            className="bg-primary-gray cursor-pointer " readOnly />
         </div>
         {
           openStatus && (
             <div className="z-10 absolute w-full mt-2 ">
-            <Command className="rounded-lg border shadow-md ">
-            <CommandList>
-              <CommandGroup>
-              {status.map((item) => (
-                        <CommandItem key={item.value}
+              <Command className="rounded-lg border shadow-md ">
+                <CommandList>
+                  <CommandGroup>
+                    {status.map((item) => (
+                      <CommandItem key={item.value}
                         className="cursor-pointer"
-                          onSelect={handleStatusClick}
-                        >
-                          {item.label}
-                        </CommandItem>
-                      ))}
-                 
-                
-              </CommandGroup>
-            </CommandList>
-          </Command>
-          </div>
+                        onSelect={handleStatusClick}
+                      >
+                        {item.label}
+                      </CommandItem>
+                    ))}
+
+
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </div>
           )
         }
-        
-      
-
-
       </section>
       <section className="mt-5 shadow-md">
         <div className="flex items-center border py-1 px-2 rounded-lg">
-
           <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
           <Input placeholder="Item Name / Barcode / Item Number" className="bg-primary-gray"
-
+            onClick={() => {
+              setItemOpen(true)
+            }}
           />
+
+
+        </div>
+        <div>
+          {itemOpen
+            && itemList.map((item: any) => (
+              item.value === "" ? true
+                : item.value.toLowerCase().trim().includes(item.value.toLowerCase().trim()))
+            )
+          }
 
         </div>
       </section>
+
+
     </div>
   )
 }
