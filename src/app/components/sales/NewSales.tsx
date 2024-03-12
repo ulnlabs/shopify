@@ -2,7 +2,7 @@
 import { BiCart } from "react-icons/bi";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { IoMdContact } from "react-icons/io";
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import { Check, ChevronsUpDown } from "lucide-react"
 
@@ -92,7 +92,7 @@ const NewSales = () => {
     setData({ ...data, billStatus: label });
     setOpenStatus(!openStatus);
   }
-  const customerData = [
+  const Items = [
     {
       name: 'Customer',
       value: 'Customer'
@@ -111,11 +111,24 @@ const NewSales = () => {
 
   const [itemOpen, setItemOpen] = useState<boolean>(false);
   const [items, setItems] = useState<string>('');
+  const [itemList, setItemList] = useState<any>([]);
+
+  const itemRef = useRef<null>(null);
+
+  useEffect(() => {
+    const handleClose = (e: any) => {
+      if (e.target != itemRef.current) {
+        setItemOpen(false);
+      }
+      window.addEventListener("click", handleClose)
+    }
+  }, []);
+
   return (
     <div className='px-10  mt-10'>
       <section className="grid grid-cols-6 gap-10">
         <div className=" col-start-1 relative col-span-3 ">
-          <div className="flex shadow-md py-1 px-2 rounded-lg border items-center ">
+          <div className="flex  py-1 px-2 rounded-lg border items-center ">
             <IoMdContact className="mr-2 h-4 w-4 shrink-0  opacity-50" />
             <Input placeholder='Select Customer' value={"" || data.customerName} readOnly onClick={() => {
               setCustomerOpen(!customerOpen)
@@ -125,7 +138,7 @@ const NewSales = () => {
           {
             customerOpen && (
               <div className="z-10 absolute w-full mt-2 ">
-                <Command className="rounded-lg border shadow-md">
+                <Command className="rounded-lg border ">
                   <CommandInput placeholder="Type a command or search..." />
                   <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
@@ -145,7 +158,7 @@ const NewSales = () => {
           }
         </div>
         <div className="col-start-4 col-end-7">
-          <div className="flex shadow-md py-1 px-2 rounded-lg border items-center ">
+          <div className="flex  py-1 px-2 rounded-lg border items-center ">
             <AiOutlineCalendar className="mr-2 h-4 w-4 shrink-0  opacity-50" />
             <Input placeholder='Select Customer' value={billDate ? format(billDate, "PPP") : ''} readOnly onClick={() => {
               setDateOpen(!dateOpen)
@@ -154,7 +167,7 @@ const NewSales = () => {
           {
 
             dateOpen && (
-              <div className="z-10 absolute mt-2 bg-white rounded-lg border shadow-md ">
+              <div className="z-10 absolute mt-2 bg-white rounded-lg border  ">
                 <Calendar
                   mode="single"
                   selected={billDate}
@@ -166,7 +179,7 @@ const NewSales = () => {
           }
         </div>
       </section>
-      <section className="mt-5 mb-16 relative shadow-md">
+      <section className="mt-5 mb-10 relative ">
         <div className="flex items-center  border py-1 px-2 rounded-lg" >
           <IoMdContact className="mr-2 h-4 w-4 shrink-0  opacity-50" />
           <Input placeholder="Status"
@@ -177,7 +190,7 @@ const NewSales = () => {
         {
           openStatus && (
             <div className="z-10 absolute w-full mt-2 ">
-              <Command className="rounded-lg border shadow-md ">
+              <Command className="rounded-lg border  ">
                 <CommandList>
                   <CommandGroup>
                     {status.map((item) => (
@@ -197,42 +210,69 @@ const NewSales = () => {
           )
         }
       </section>
-      <section className="mt-5 shadow-md">
+      <section className="mt-5">
         <div className="flex items-center border py-1 px-2 rounded-lg">
           <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
           <Input placeholder="Item Name / Barcode / Item Number" className="bg-primary-gray"
             onClick={() => {
-              setItemOpen(true)
+              setItemOpen(!itemOpen)
             }}
-            value={'' || items}
+            onChange={(e) => {
+              setItems(e.target.value)
+            }}
           />
-
-
         </div>
-        <div>
-            {
-              itemOpen &&   
-                customerData.filter((item, i) => {
-                  return item.value.toLowerCase().includes(items.toLowerCase())
-                }).map((item, index) => {
-                  return (
-                    <p key={index} onClick={() => {
-                      setItems(item.value.toLowerCase())
-                      setItemOpen(false)
+        
+
+
+          {
+            items && itemOpen &&
+            Items.filter((item, i) => {
+              return items === "" ? true : item.value.toLowerCase().includes(items.toLowerCase())
+            }).map((item, index) => {
+              return (
+                <div ref={itemRef} className="mt-2 border rounded-lg">
+                  <p key={index}
+                    className="px-3 py-1"
+                    onClick={() => {
+                      setItemList([...itemList, item.value])
                     }}>
-                      {item.name}
-                    </p> 
-                  )
-                })
-              }
-
-         
-        </div>
+                    {item.name}
+                  </p>
+                </div>
+              )
+            })
+          }
+          {Items.filter((item, i) => {
+            return items === "" ? true : item.value.toLowerCase().includes(items.toLowerCase())
+          }).length === 0 && (
+              <div className="mt-2 border rounded-lg">
+                <p className="px-3 py-1 text-center">
+                  Item Not Found
+                </p>
+              </div>
+            )}
+        
       </section>
+      <section>
+        <ul>
 
+          {
+            itemList.map((item: any) => (
+              <li key={item.name}>
+                {item.value}
+              </li>
+            ))
 
+          }
+
+        </ul>
+      </section>
     </div>
   )
 }
+
+
+
 
 export default NewSales
