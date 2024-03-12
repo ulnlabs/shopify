@@ -14,10 +14,6 @@ import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Input } from '@/components/ui/input'
 
-
-
-
-
 import {
   Command,
   CommandEmpty,
@@ -25,16 +21,18 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command"
 
 
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 
 const cutomerName = [
@@ -113,16 +111,8 @@ const NewSales = () => {
   const [items, setItems] = useState<string>('');
   const [itemList, setItemList] = useState<any>([]);
 
-  const itemRef = useRef<null>(null);
 
-  useEffect(() => {
-    const handleClose = (e: any) => {
-      if (e.target != itemRef.current) {
-        setItemOpen(false);
-      }
-      window.addEventListener("click", handleClose)
-    }
-  }, []);
+
 
   return (
     <div className='px-10  mt-10'>
@@ -184,7 +174,7 @@ const NewSales = () => {
           <IoMdContact className="mr-2 h-4 w-4 shrink-0  opacity-50" />
           <Input placeholder="Status"
             value={"" || data.billStatus}
-            onClick={() => { setOpenStatus(true) }}
+            onClick={() => { setOpenStatus(!openStatus) }}
             className="bg-primary-gray cursor-pointer " readOnly />
         </div>
         {
@@ -210,63 +200,160 @@ const NewSales = () => {
           )
         }
       </section>
-      <section className="mt-5">
+      <section className="mt-5 relative">
         <div className="flex items-center border py-1 px-2 rounded-lg">
           <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
           <Input placeholder="Item Name / Barcode / Item Number" className="bg-primary-gray"
             onClick={() => {
-              setItemOpen(!itemOpen)
+              setItemOpen(true);
             }}
             onChange={(e) => {
               setItems(e.target.value)
             }}
           />
         </div>
-        
-
-
-          {
-            items && itemOpen &&
-            Items.filter((item, i) => {
+        {
+          items && itemOpen &&
+          <div className="mt-2 z-10 border rounded-lg absolute w-full">
+            {
+              Items.filter((item, i) => {
+                return items === "" ? true : item.value.toLowerCase().includes(items.toLowerCase())
+              }).map((item, index) => {
+                return (
+                  <div className="">
+                    <p key={index}
+                      className="px-3 py-1"
+                      onClick={() => {
+                        setItemList([...itemList, item.value])
+                      }}>
+                      {item.name}
+                    </p>
+                  </div>
+                )
+              })
+            }
+            {Items.filter((item, i) => {
               return items === "" ? true : item.value.toLowerCase().includes(items.toLowerCase())
-            }).map((item, index) => {
-              return (
-                <div ref={itemRef} className="mt-2 border rounded-lg">
-                  <p key={index}
-                    className="px-3 py-1"
-                    onClick={() => {
-                      setItemList([...itemList, item.value])
-                    }}>
-                    {item.name}
+            }).length === 0 && (
+                <div className="">
+                  <p className="px-3 py-1 text-center">
+                    Item Not Found
                   </p>
                 </div>
-              )
-            })
-          }
-          {Items.filter((item, i) => {
-            return items === "" ? true : item.value.toLowerCase().includes(items.toLowerCase())
-          }).length === 0 && (
-              <div className="mt-2 border rounded-lg">
-                <p className="px-3 py-1 text-center">
-                  Item Not Found
-                </p>
-              </div>
-            )}
-        
+              )}
+
+          </div>
+        }
       </section>
-      <section>
-        <ul>
+      <section className="mt-5 grid-cols-7 grid grid-rows-4 grid-flow-col gap-4">
 
-          {
-            itemList.map((item: any) => (
-              <li key={item.name}>
-                {item.value}
-              </li>
-            ))
+        <div className="bg-primary-gray col-start-1 h-10 px-2 grid  lg:justify-start  place-items-center border rounded-lg col-span-4">
+          <span className="flex  gap-24 lg:gap-32 ">
+            <p>Quantity</p>
+            <p>0</p>
+          </span>
 
-          }
+        </div>
 
-        </ul>
+        <div className="grid  col-start-1 col-span-4 px-2  bg-primary-gray rounded-lg items-center grid-rows-subgrid gap-4 ">
+          <div>
+
+            <Input id="Charges" className="col-start-1 w-full px-2 h-8 col-span-2" placeholder="charges" />
+          </div>
+          <div className="col-end-4 col-span-2 ">
+            <Select>
+              <SelectTrigger className="h-8 w-full col-end-4  col-span-2">
+                <SelectValue placeholder="Select a fruit" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="apple">Apple</SelectItem>
+                  <SelectItem value="banana">Banana</SelectItem>
+                  <SelectItem value="blueberry">Blueberry</SelectItem>
+                  <SelectItem value="grapes">Grapes</SelectItem>
+                  <SelectItem value="pineapple">Pineapple</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="grid  col-start-1 col-span-4 px-2  bg-primary-gray rounded-lg items-center grid-rows-subgrid gap-4 ">
+          <div>
+
+            <Input id="Charges" className="col-start-1 w-full px-2 h-8 col-span-2" placeholder="charges" />
+          </div>
+          <div className="col-end-4 col-span-2 ">
+            <Select>
+              <SelectTrigger className="h-8 w-full col-end-4  col-span-2">
+                <SelectValue placeholder="Select a fruit" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="apple">Apple</SelectItem>
+                  <SelectItem value="banana">Banana</SelectItem>
+                  <SelectItem value="blueberry">Blueberry</SelectItem>
+                  <SelectItem value="grapes">Grapes</SelectItem>
+                  <SelectItem value="pineapple">Pineapple</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="grid  col-start-1 col-span-4 px-2  bg-primary-gray rounded-lg items-center grid-rows-subgrid gap-4 ">
+          <div>
+
+            <Input id="Charges" className="col-start-1 w-full px-2 h-8 col-span-2" placeholder="charges" />
+          </div>
+          <div className="col-end-4 col-span-2 ">
+            <Select>
+              <SelectTrigger className="h-8 w-full col-end-4  col-span-2">
+                <SelectValue placeholder="Select a fruit" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="apple">Apple</SelectItem>
+                  <SelectItem value="banana">Banana</SelectItem>
+                  <SelectItem value="blueberry">Blueberry</SelectItem>
+                  <SelectItem value="grapes">Grapes</SelectItem>
+                  <SelectItem value="pineapple">Pineapple</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="grid col-end-8 col-span-2 grid-rows-subgrid gap-4 row-span-4">
+        <div className="bg-primary-gray col-start-1 h-10 px-2 grid  lg:justify-start  place-items-center border rounded-lg col-span-4">
+          <span className="flex  gap-24 lg:gap-32 ">
+            <p>Quantity</p>
+            <p>0</p>
+          </span>
+
+        </div>
+        <div className="bg-primary-gray col-start-1 h-10 px-2 grid  lg:justify-start  place-items-center border rounded-lg col-span-4">
+          <span className="flex  gap-24 lg:gap-32 ">
+            <p>Quantity</p>
+            <p>0</p>
+          </span>
+
+        </div>
+        <div className="bg-primary-gray col-start-1 h-10 px-2 grid  lg:justify-start  place-items-center border rounded-lg col-span-4">
+          <span className="flex  gap-24 lg:gap-32 ">
+            <p>Quantity</p>
+            <p>0</p>
+          </span>
+
+        </div>
+        <div className="bg-primary-gray col-start-1 h-10 px-2 grid  lg:justify-start  place-items-center border rounded-lg col-span-4">
+          <span className="flex  gap-24 lg:gap-32 ">
+            <p>Quantity</p>
+            <p>0</p>
+          </span>
+
+        </div>
+        </div>
+
+
       </section>
     </div>
   )
