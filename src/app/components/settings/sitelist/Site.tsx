@@ -1,6 +1,6 @@
 "use client";
 import React, { FormEvent, useContext } from "react";
-import { ContextData } from "../../../../contextapi";
+import { ContextData } from "../../../../../contextapi";
 function AddCustomer() {
   const {formData,setFormData}=useContext(ContextData)
  console.log(formData);

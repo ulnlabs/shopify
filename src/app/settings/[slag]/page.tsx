@@ -1,9 +1,11 @@
 "use client"
 import React, { useState } from 'react'
-import Site from '@/app/components/settings/Site'
-import Sales from '@/app/components/settings/Sales'
-import Prefixes from '@/app/components/settings/Prefixes'
-function page() {
+import Site from '@/app/components/settings/sitelist/Site'
+import Sales from '@/app/components/settings/sitelist/Sales'
+import Prefixes from '@/app/components/settings/sitelist/Prefixes'
+import Unitlist from '@/app/components/settings/unitlist/Unitlist'
+
+function Sitesettings() {
     const[page,setpage]=useState("Site");
     const navigateoption=["Site","Sales","Prefixes"]
  var renderpage;
@@ -27,31 +29,29 @@ function page() {
                     <div className=" border w-[95%] bg-white   rounded-md">
                         <div className="">
                         <nav className=' flex  '>
-                           <ul  className=' flex text-sm gap-4 p-2 '>
+                           <ul  className=' flex  text-sm gap-4 p-2 '>
                             {navigateoption.map((item,index)=>(
                                 <li className='cursor-pointer' onClick={()=>setpage(item)} key={index}>{item}</li>
                             ))}
-                            
                            </ul>
                         </nav>
                         </div>
                         {renderpage}
-                      
-                       
-
-                       
                     </div>
-
                 </div>
-
-
-
             </div>
-
-
-
         </>
     )
+}
+
+
+
+function page() {
+  return (
+    <div>
+        <Unitlist />
+    </div>
+  )
 }
 
 export default page
