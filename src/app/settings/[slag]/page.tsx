@@ -1,56 +1,57 @@
 "use client"
 import React, { useState } from 'react'
-import Site from '@/app/components/settings/sitelist/Site'
-import Sales from '@/app/components/settings/sitelist/Sales'
-import Prefixes from '@/app/components/settings/sitelist/Prefixes'
-import Unitlist from '@/app/components/settings/unitlist/Unitlist'
+import Companyprofile from "@/app/components/settings/companyprofile/Companyprofile"
+import Sitesettings from "@/app/components/settings/sitelist/Sitesettings"
 
-function Sitesettings() {
-    const[page,setpage]=useState("Site");
-    const navigateoption=["Site","Sales","Prefixes"]
- var renderpage;
-    if(page=="Sales"){
-       renderpage=<Sales />
+function page({params}:any) {
+    const router=params.slag
+    
+    interface Details {
+        current_route: React.ReactNode;
+        header: React.ReactNode;
+        subheader: React.ReactNode;
     }
-    else if(page=="Prefixes"){
-        renderpage=<Prefixes/>
+    let detail:Details={
+        current_route: "",
+        header:"",
+        subheader:""
     }
-    else{
-        renderpage=<Site/>  
+
+    
+
+    switch(router){
+        case 'company':
+            detail.current_route=<Companyprofile />
+          detail.header="company profile"
+            detail.subheader="Add/Update Company Profile"
+            break;
+        case 'sitelist':
+            detail.current_route=<Sitesettings />
+            detail.header="Site settings"
+              detail.subheader="Add/update Site Settings"
+              break;
+
+
+        default:
+            detail.current_route= <div>Invalid Route</div>;
     }
-    return (
-        <>
-            <div className=" bg-[var(--settings)] h-screen ">
-                <div className=" p-4 w-full ">
-                    <h1 className='text-lg tracking-[.2rem] font-medium'>Site Settings <span className=' text-xs text-gray-500'>Add/update Site Settings</span></h1>
-                </div>
-                <div className=" flex justify-center ">
-
-                    <div className=" border w-[95%] bg-white   rounded-md">
-                        <div className="">
-                        <nav className=' flex  '>
-                           <ul  className=' flex  text-sm gap-4 p-2 '>
-                            {navigateoption.map((item,index)=>(
-                                <li className='cursor-pointer' onClick={()=>setpage(item)} key={index}>{item}</li>
-                            ))}
-                           </ul>
-                        </nav>
-                        </div>
-                        {renderpage}
-                    </div>
-                </div>
-            </div>
-        </>
-    )
-}
-
-
-
-function page() {
   return (
-    <div>
-        <Unitlist />
+    <>
+    <div className="h-screen w-full bg-[var(--settings)] ">
+        <div className="h-[50px] border">
+            
+        </div>
+        <div className="">
+            <h1 className='text-xl p-4 font-medium tracking-[.3em]'>{detail.header} <span className=' text-xs tracking-[.1em] text-gray-500'>  {detail.subheader}</span></h1>
+            
+        </div>
+
+    <div >
+        {detail.current_route}
     </div>
+    </div>
+    </>
+    
   )
 }
 
