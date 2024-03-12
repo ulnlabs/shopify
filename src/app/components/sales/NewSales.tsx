@@ -116,8 +116,8 @@ const NewSales = () => {
 
   return (
     <div className='px-10  mt-10'>
-      <section className="grid grid-cols-6 gap-10">
-        <div className=" col-start-1 relative col-span-3 ">
+      <section className="grid grid-cols-8 gap-10">
+        <div className=" col-start-1 relative col-span-4 ">
           <div className="flex  py-1 px-2 rounded-lg border items-center ">
             <IoMdContact className="mr-2 h-4 w-4 shrink-0  opacity-50" />
             <Input placeholder='Select Customer' value={"" || data.customerName} readOnly onClick={() => {
@@ -147,7 +147,7 @@ const NewSales = () => {
             )
           }
         </div>
-        <div className="col-start-4 col-end-7">
+        <div className="col-start-5 col-span-4">
           <div className="flex  py-1 px-2 rounded-lg border items-center ">
             <AiOutlineCalendar className="mr-2 h-4 w-4 shrink-0  opacity-50" />
             <Input placeholder='Select Customer' value={billDate ? format(billDate, "PPP") : ''} readOnly onClick={() => {
@@ -245,7 +245,7 @@ const NewSales = () => {
           </div>
         }
       </section>
-      <section className="mt-5 grid-cols-7 grid grid-rows-4 grid-flow-col gap-4">
+      <section className="mt-5 grid-cols- grid grid-rows-4 grid-flow-col gap-4">
 
         <div className="bg-primary-gray col-start-1 h-10 px-2 grid  lg:justify-start  place-items-center border rounded-lg col-span-4">
           <span className="flex  gap-24 lg:gap-32 ">
@@ -323,30 +323,30 @@ const NewSales = () => {
           </div>
         </div>
         <div className="grid col-end-8 col-span-2 grid-rows-subgrid gap-4 row-span-4">
-        <div className="bg-primary-gray col-start-1 h-10 px-2 grid  lg:justify-start  place-items-center border rounded-lg col-span-4">
-          <span className="flex  gap-24 lg:gap-32 ">
-            <p>Quantity</p>
+        <div className="bg-primary-gray col-start-1 h-auto px-2 grid justify-end px- items-center border rounded-lg col-span-4">
+          <span className="flex justify-evenly gap-24 lg:gap-32 ">
+            <p>Subtotal</p>
             <p>0</p>
           </span>
 
         </div>
-        <div className="bg-primary-gray col-start-1 h-10 px-2 grid  lg:justify-start  place-items-center border rounded-lg col-span-4">
+        <div className="bg-primary-gray col-start-1 h-auto px-2 grid justify-end px- items-center border rounded-lg col-span-4">
           <span className="flex  gap-24 lg:gap-32 ">
-            <p>Quantity</p>
+            <p>Other Charges</p>
             <p>0</p>
           </span>
 
         </div>
-        <div className="bg-primary-gray col-start-1 h-10 px-2 grid  lg:justify-start  place-items-center border rounded-lg col-span-4">
+        <div className="bg-primary-gray col-start-1 h-auto px-2 grid justify-end px- items-center border rounded-lg col-span-4">
           <span className="flex  gap-24 lg:gap-32 ">
-            <p>Quantity</p>
+            <p>Overall Discount</p>
             <p>0</p>
           </span>
 
         </div>
-        <div className="bg-primary-gray col-start-1 h-10 px-2 grid  lg:justify-start  place-items-center border rounded-lg col-span-4">
-          <span className="flex  gap-24 lg:gap-32 ">
-            <p>Quantity</p>
+        <div className="bg-primary-gray  h-auto  col-start-1 px-2 grid justify-end px- items-center border rounded-lg col-span-4">
+          <span className="flex gap-24 lg:gap-32 ">
+            <p>Grand Total</p>
             <p>0</p>
           </span>
 
