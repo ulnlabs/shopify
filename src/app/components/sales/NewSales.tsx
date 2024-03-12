@@ -92,14 +92,20 @@ const NewSales = () => {
     setData({ ...data, billStatus: label });
     setOpenStatus(!openStatus);
   }
-  const itemList = [
+  const customerData = [
     {
-      value: "active",
-      label: "Active",
+      name: 'Customer',
+      value: 'Customer'
     },
     {
-      value: "final",
-      label: "Final",
+      name: 'Customer 1',
+      value: 'Customer 1'
+    }, {
+      name: 'Customer 2',
+      value: 'Customer 2'
+    }, {
+      name: 'Customer 3',
+      value: 'Customer 3'
     }
   ]
 
@@ -198,18 +204,29 @@ const NewSales = () => {
             onClick={() => {
               setItemOpen(true)
             }}
+            value={'' || items}
           />
 
 
         </div>
         <div>
-          {itemOpen
-            && itemList.map((item: any) => (
-              item.value === "" ? true
-                : item.value.toLowerCase().trim().includes(item.value.toLowerCase().trim()))
-            )
-          }
+            {
+              itemOpen &&   
+                customerData.filter((item, i) => {
+                  return item.value.toLowerCase().includes(items.toLowerCase())
+                }).map((item, index) => {
+                  return (
+                    <p key={index} onClick={() => {
+                      setItems(item.value.toLowerCase())
+                      setItemOpen(false)
+                    }}>
+                      {item.name}
+                    </p> 
+                  )
+                })
+              }
 
+         
         </div>
       </section>
 
