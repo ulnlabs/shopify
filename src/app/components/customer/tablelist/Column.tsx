@@ -14,6 +14,11 @@ import {
 
 import { ColumnDef } from "@tanstack/react-table";
 
+function handleDelete(row:customerList):void{
+ 
+
+
+}
 export const columns: ColumnDef<customerList>[] = [
   {
     id: "select",
@@ -102,7 +107,7 @@ export const columns: ColumnDef<customerList>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Delete Customer</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>{handleDelete(row.original)}}>Delete Customer</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => console.log("jking")}>
               Update customer
