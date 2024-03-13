@@ -28,7 +28,7 @@ export const Selector = ({ data, changeState, currentstate, commonTitle }: Selec
         <Popover open={opener} onOpenChange={setOpener}>
             <PopoverTrigger className='border rounded-lg w-full flex items-center justify-between p-2 py-2'><p>{currentstate ? currentstate : commonTitle}</p>{opener ? <AiFillCaretUp /> : <AiFillCaretDown />}</PopoverTrigger>
             <PopoverContent className='w-full px-4'>
-                <Command>
+                <Command className="min-w-full">
                     <CommandInput placeholder="Type a command or search..." />
                     <CommandList>
                         <CommandEmpty>No results found.</CommandEmpty>
