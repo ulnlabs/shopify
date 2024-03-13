@@ -43,250 +43,76 @@ function Companyprofile() {
 
   return (
     <>
-      
-      <main className=" flex items-center flex-col justify-center">
-        <section className="  mt-3 w-[95%] bg-white  ">
-          <form
-            onSubmit={handleSubmit}
-            action=""
-            className="grid grid-cols-10 grid-rows-14  gap-2 min-h-[700px] p-[15px]  "
-          >
-            <div className="md:col-span-5  md:col-end-5 row-span-2   grid grid-cols-10 col-span-10 ">
-              <label
-                htmlFor="companyname"
-                className="mt-2  pr-4  cursor-pointer col-start-2 md:col-start-1 col-span-7 "
-              >
-                CompanyName <span className="text-red-400">*</span>
-              </label>
-              <input
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                value={formData.name}
-                required
-                type="text"
-                id="companynameme"
-                name="companyname"
-                className="h-10 bg-gray-200 col-start-2  md:col-start-1   px-2 outline-none rounded-md md:col-end-12 col-end-10"
-              />
-            </div>
-            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-10 col-span-10 ">
-              <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-end-12  md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="mobile"
-              >
-                Mobile <span className="text-red-400">*</span>
-              </label>
-              <input
-                onChange={(e) =>
-                  setFormData({ ...formData, mobile: e.target.value })
-                }
-                value={formData.mobile}
-                className="h-10  bg-gray-200 col-start-2 md:col-start-1 md:col-end-12 col-end-10 px-2 outline-none rounded-md"
-                name="mobile"
-                id="mobile"
-                type="text"
-              />
-            </div>
-            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-10 col-span-10   ">
-              <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="email"
-              >
-                Email <span className="text-red-400">*</span>
-              </label>
-              <input
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                value={formData.email}
-                               className="h-10 bg-gray-200 col-start-2  md:col-start-1    px-2 outline-none rounded-md md:col-end-12 col-end-10"
+      <div className="">
+      <form action="" className=' lg:col-span-4  grid md:grid-rows-6  md:grid-flow-col grid-col-12 grid-row-12 gap-4 md:gap-9 p-10'>
+        <div className=" grid gap-3">
+          <label htmlFor=""  className='mr-2'>
+            Site Name <span className=' text-red-600'> *</span>
+          </label>
+          <input type="text" className=' border rounded-md h-8' />
 
-                name="mail"
-                id="email"
-                type="email"
-              />
-            </div>
-            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-10 col-span-10   ">
-              <label
-                className="mt-2 text-start pr-4 md:col-end-12 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="gst"
-              >
-                GST Number <span className="text-red-400">*</span>
-              </label>
-              <input
-                onChange={(e) =>
-                  setFormData({ ...formData, gst: e.target.value })
-                }
-                value={formData.gst}
-                className="h-10 bg-gray-200 col-start-2 md:col-start-1  md:col-end-12 col-end-10 px-2 outline-none rounded-md "
-                name="gst"
-                id="gst"
-                type="text"
-              />
-            </div>
-            <div className="md:col-span-5   md:col-end-5 row-span-2 grid grid-cols-10 col-span-10   ">
-              <label
-                className="mt-2 text-start md:col-end-12 pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="gst"
-              >
-                VAT Number <span className="text-red-400">*</span>
-              </label>
-              <input
-                onChange={(e) =>
-                  setFormData({ ...formData, gst: e.target.value })
-                }
-                value={formData.gst}
-                className="h-10 bg-gray-200  col-start-2 md:col-start-1  md:col-end-12 col-end-10 px-2 outline-none rounded-md "
-                name="gst"
-                id="gst"
-                type="text"
-              />
-            </div>
-            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-10 col-span-10   ">
-              <label
-                className="mt-3 text-start md:col-end-12 pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="gst"
-              >
-                PAN Number <span className="text-red-400">*</span>
-              </label>
-              <input
-                onChange={(e) =>
-                  setFormData({ ...formData, gst: e.target.value })
-                }
-                value={formData.gst}
-                className="h-10 bg-gray-200 md:-mt-6 col-start-2 md:col-start-1 md:col-end-12 col-end-10 px-2 outline-none rounded-md "
-                name="gst"
-                id="gst"
-                type="text"
-              />
-            </div>
-           
-            
-            {/* second column */}
-            <div className="md:col-span-5 md:col-start-7  md:col-end-14 row-span-2 grid grid-cols-10 col-span-10    md:row-start-1">
-              <label
-                className="mt-2 text-start pr-4 md:col-end-12 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="bank_deatils"
-              >
-               Bank Details  <span className="text-red-400">*</span>
-              </label>
-              <input
-                onChange={(e) =>
-                  setFormData({ ...formData, due: e.target.value })
-                }
-                value={formData.due}
-                               className="h-10 bg-gray-200 col-start-2  md:col-start-1  px-2 outline-none rounded-md md:col-end-11  col-end-10"
+        </div>
+        <div className=" grid gap-3">
+          <label htmlFor="" className='mr-2 '>
+            Time Zone <span className=' text-red-600'> *</span>
+          </label>
+          <input type="text" className=' border rounded-md h-8' />
 
-                type="text"
-                name="bank_deatils"
-                id="bank_deatils"
-              />
-            </div>
-            
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-10 col-span-10    md:row-start-3">
-              <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="state"
-              >
-                Country  <span className="text-red-400">*</span>
-              </label>
-              <select name="country" id="country"   className="h-10 bg-gray-200 col-start-2  md:col-start-1    px-2 outline-none rounded-md md:col-end-11  col-end-10"
->
-                {countries.map((country,index) =>(
-                    <option key={index} value={country}>{country}</option>
-                ))}
-               
-              </select>
-            </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-10 col-span-10    md:row-start-5">
-              <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="city"
-              >
-                City <span className="text-red-400">*</span>
-              </label>
-              <input
-                onChange={(e) =>
-                  setFormData({ ...formData, city: e.target.value })
-                }
-                value={formData.city}
-                               className="h-10 bg-gray-200 col-start-2  md:col-start-1    px-2 outline-none rounded-md md:col-end-11  col-end-10"
+        </div>
+        <div className="grid gap-3">
+          <label htmlFor="">
+            Date Format <span className=' text-red-600'> *</span>
+          </label>
+          <input type="text" className=' border rounded-md h-8' />
 
-                name="city"
-                type="text"
-                id="city"
-              />
-            </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-10 col-span-10    md:row-start-7">
-              <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="pincode"
-              >
-                Postal Code <span className="text-red-400">*</span>
-              </label>
-              <input
-                onChange={(e) =>
-                  setFormData({ ...formData, pincode: e.target.value })
-                }
-                value={formData.pincode}
-                               className="h-10 bg-gray-200 col-start-2  md:col-start-1    px-2 outline-none rounded-md md:col-end-11  col-end-10"
+        </div>
+        <div className=" grid gap-3">
+          <label htmlFor="">
+           Time Format <span className=' text-red-600'> *</span>
+          </label>
+          <input type="text" className=' border rounded-md h-8' />
 
-                name="pincode"
-                type="text"
-                id="pincode"
-              />
-            </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-10 col-span-10    md:row-start-9">
-              <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="state"
-              >
-                Country  <span className="text-red-400">*</span>
-              </label>
-              <select name="country" id="country"   className="h-10 bg-gray-200 col-start-2  md:col-start-1    px-2 outline-none rounded-md md:col-end-11  col-end-10"
->
-                {countries.map((country,index) =>(
-                    <option key={index} value={country}>{country}</option>
-                ))}
-               
-              </select>
-            </div>
-      
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-10 col-span-10    md:row-start-11">
-              <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="address"
-              >
-                Address <span className="text-red-400">*</span>
-              </label>
-              <textarea
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
-                value={formData.address}
-                className="h-20 resize-none bg-gray-200 col-start-2 md:col-start-1 md:col-end-11  col-end-10  px-2 outline-none rounded-md"
-                id="address"
-                name="address"
-              />
-            </div>
-            <div className="md:col-span-5 md:col-start-7   md:col-end-12 row-span-2 grid grid-cols-10 col-span-10    md:row-start-13">
-              <label
-                className="mt-2 text-start md:col-end-12 pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="logo"
-              >
-                Company Logo 
-              </label>
-              <div  className="h-[110px] resize-none border col-start-2 md:col-start-1 col-end-8  px-2 outline-none rounded-md"></div>
-              
-            </div>
-            
+        </div>
+        <div className="grid gap-3 grid-cols-12">
+          <label htmlFor="" className="md:col-span-6 md:col-end-7">
+           Rounded Amount
+          </label>
+          <input type="checkbox"  className="md:col-span-4  h-8 " />
+        </div>
+        <div className="grid gap-3 grid-cols-12">
+          <label htmlFor="" className="md:col-span-6 md:col-end-7 ">
+           Disable Tax
+          </label>
+          <input type="checkbox"  className="md:col-span-4  h-8 " />
+        </div>
+        <div className="grid gap-3">
+          <label htmlFor="">
+          Currency <span className=' text-red-600'> *</span>
+          </label>
+          <select className="border h-8 rounded-md">
+            {countries.map((country,index)=>(
+              <option key={index} value={country}>{country}</option>
+            ))}
+          </select>
 
-          </form>
+        </div>
+        <div className="grid gap-3">
+          <label htmlFor="">
+            Language <span className=' text-red-600'> *</span>
+          </label>
+          <input type="text" className=' border rounded-md h-8' />
 
-        </section>
-         
-      </main>
+        </div>
+        <div className="grid gap-3 grid-cols-12">
+          <label htmlFor="" className="md:col-span-4 md:col-end-5">
+            Site Logo
+          </label>
+          <input type="file"  className="md:col-span-8 md:col-end-13" />
+        </div>
+       
+       
+      </form>
+    </div>
     </>
   );
 }
