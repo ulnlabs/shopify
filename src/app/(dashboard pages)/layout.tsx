@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import SideBar from "../components/navigation/SideBar";
 import Header from "../components/navigation/Header";
+import { UserProvider } from "@/UserContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,12 +20,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <UserProvider>
+    
     <div className="min-h-screen max-w-screen flex justify-between">
       <SideBar />
-      <div className="w-full min-h-screen flex flex-col items-center">
+      <div className="w-full max-h-screen overflow-hidden">
         <Header />
-        {children}
+        <div className="w-full max-h-[calc(100vh_-_60px)] overflow-y-scroll flex flex-col items-center justify-start scrollbar-hide">
+          {children}
+        </div>
       </div>
     </div>
+  </UserProvider>    
   );
 }

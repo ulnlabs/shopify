@@ -1,8 +1,10 @@
+import DashboardHeader from '@/app/components/dashboard/DashboardHeader'
 import React from 'react'
 
 function page() {
   return (
     <div className='w-full flex flex-col items-center py-6 px-6 gap-4'>
+      <DashboardHeader title='Dashboard' subtitle='Business analatics'/>
       <div className="flex justify-evenly w-full gap-6 flex-wrap">
         <SaleAmount title="today Sale Amount" amount={2000} />
         <SaleAmount title="today Sale Amount" amount={20} />
