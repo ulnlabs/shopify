@@ -68,7 +68,9 @@ function page() {
   }, [categories])
   return (
     <div className='w-full min-h-screen px-4 py-2'>
-      <DashboardHeader title='Sales Invoice' breadcrumb={[{ title: "new-sales", path: '/sales/new-sales' }, { title: 'pos', path: '/sales/pos' }]} />
+      <div className="py-2">
+        <DashboardHeader title='Sales Invoice' breadcrumb={[{ title: "new-sales", path: '/sales/new-sales' }, { title: 'pos', path: '/sales/pos' }]} />
+      </div>
       <div className="grid grid-cols-2">
         <div className="h-fit">
           <div className="flex justify-evenly items-center gap-2 py-4">
