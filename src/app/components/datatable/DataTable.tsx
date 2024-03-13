@@ -18,10 +18,7 @@ import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuCheckboxItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -68,12 +65,10 @@ export function DataTable<TData, TValue>({
       rowSelection,
     },
   });
-
+/* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
   return (
     <>
-      <header className="w-[100%] h-[50px]  text-xl font-semibold text-gray-400 flex px-10 rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px]  items-center  ">
-        Customers List
-      </header>
+      
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."
@@ -186,3 +181,4 @@ export function DataTable<TData, TValue>({
     </>
   );
 }
+/* at all you have your own data table to use your data table call this component like this on your code exam : page.tsx    <DataTable columns={c_columns} data={customerData} /> the c_colums is your column replace it with your and data also  for reference how i share my data see dashboard/customers/list/page.tsx ,i hope u got it  */

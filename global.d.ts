@@ -29,4 +29,8 @@ type customerList = {
     email: string
 
 }
+type columnHeader_dataTable={
+    accessorKey: string,
+    header: string,
+}
 
