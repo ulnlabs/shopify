@@ -1,3 +1,11 @@
 {
-  "extends": "next/core-web-vitals"
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    // Add any custom rule overrides or disables here
+    "@typescript-eslint/no-explicit-any": "off"
+  }
 }

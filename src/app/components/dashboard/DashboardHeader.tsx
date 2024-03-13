@@ -26,12 +26,12 @@ function DashboardHeader({ title, subtitle, breadcrumb }: breadcrumbdata) {
     return (
         <div className='w-full h-[20px] px-2 flex justify-between items-center'>
             <div className="flex items-center gap-2">
-                <h1 className='text-lg font-semibold'>{title}</h1>
+                <h1 className='md:text-lg text-md font-semibold'>{title}</h1>
                 <p className='text-[10px] font-light'>{subtitle ? subtitle : ""}</p>
             </div>
             <div className="">
                 <Breadcrumb>
-                    <BreadcrumbList className='flex items-center justify-center'>
+                    <BreadcrumbList className='md:flex hidden items-center justify-center'>
                         {
                             breadcrumb?.map((item: any, i) => {
                                 return (
