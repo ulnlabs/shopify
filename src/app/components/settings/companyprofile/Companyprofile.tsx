@@ -72,7 +72,7 @@ function Companyprofile() {
             </div>
             <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-10 col-span-10 ">
               <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 md:col-end-12  md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="mobile"
               >
                 Mobile <span className="text-red-400">*</span>
@@ -109,7 +109,7 @@ function Companyprofile() {
             </div>
             <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-10 col-span-10   ">
               <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
+                className="mt-2 text-start pr-4 md:col-end-12 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="gst"
               >
                 GST Number <span className="text-red-400">*</span>
@@ -127,7 +127,7 @@ function Companyprofile() {
             </div>
             <div className="md:col-span-5   md:col-end-5 row-span-2 grid grid-cols-10 col-span-10   ">
               <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
+                className="mt-2 text-start md:col-end-12 pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="gst"
               >
                 VAT Number <span className="text-red-400">*</span>
@@ -137,7 +137,7 @@ function Companyprofile() {
                   setFormData({ ...formData, gst: e.target.value })
                 }
                 value={formData.gst}
-                className="h-10 bg-gray-200 col-start-2 md:col-start-1  md:col-end-12 col-end-10 px-2 outline-none rounded-md "
+                className="h-10 bg-gray-200  col-start-2 md:col-start-1  md:col-end-12 col-end-10 px-2 outline-none rounded-md "
                 name="gst"
                 id="gst"
                 type="text"
@@ -145,7 +145,7 @@ function Companyprofile() {
             </div>
             <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-10 col-span-10   ">
               <label
-                className="mt-3 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
+                className="mt-3 text-start md:col-end-12 pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="gst"
               >
                 PAN Number <span className="text-red-400">*</span>
@@ -166,7 +166,7 @@ function Companyprofile() {
             {/* second column */}
             <div className="md:col-span-5 md:col-start-7  md:col-end-14 row-span-2 grid grid-cols-10 col-span-10    md:row-start-1">
               <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
+                className="mt-2 text-start pr-4 md:col-end-12 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="bank_deatils"
               >
                Bank Details  <span className="text-red-400">*</span>
@@ -272,7 +272,7 @@ function Companyprofile() {
             </div>
             <div className="md:col-span-5 md:col-start-7   md:col-end-12 row-span-2 grid grid-cols-10 col-span-10    md:row-start-13">
               <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
+                className="mt-2 text-start md:col-end-12 pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="logo"
               >
                 Company Logo 
