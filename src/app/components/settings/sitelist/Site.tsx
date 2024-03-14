@@ -43,76 +43,79 @@ function Companyprofile() {
 
   return (
     <>
-      <div className="">
-      <form action="" className=' lg:col-span-4  grid md:grid-rows-6  md:grid-flow-col grid-col-12 grid-row-12 gap-4 md:gap-9 p-10'>
-        <div className=" grid gap-3">
-          <label htmlFor=""  className='mr-2'>
-            Site Name <span className=' text-red-600'> *</span>
+    <div className="">
+    <form action="" className='  flex flex-col lg:  lg:grid lg:grid-cols-2 gap-y-3  p-5'>
+      <div className=" md:grid md:grid-cols-12 grid   p-2 md:text-end  md:gap-x-5  ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+   Site Name <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+
+      </div>
+      <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+       Time Zone  <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+
+      </div>
+      <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+      Date Format  <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+
+      </div>
+      <div className=" md:grid md:grid-cols-12  grid   p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+     Time Format  <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+
+      </div>
+      <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+      Currency  <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+
+      </div>
+      <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
+          <label htmlFor=""  className=' md:col-span-5 col-span-1 basis-3/4 sm:text-stat md:text-end mr-[15%] '>
+          Enable Round Off
           </label>
-          <input type="text" className=' border rounded-md h-8' />
+          <input type="checkbox" className='   cursor-pointer md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
 
         </div>
-        <div className=" grid gap-3">
-          <label htmlFor="" className='mr-2 '>
-            Time Zone <span className=' text-red-600'> *</span>
+        <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
+          <label htmlFor=""  className=' md:col-span-5 col-span-1 basis-3/4 sm:text-stat md:text-end mr-[15%] '>
+          Disable Tax
           </label>
-          <input type="text" className=' border rounded-md h-8' />
+          <input type="checkbox" className='   cursor-pointer md:col-span-1  basis-1/4  h-[2.0rem] w-[4.5rem] ' />
 
         </div>
-        <div className="grid gap-3">
-          <label htmlFor="">
-            Date Format <span className=' text-red-600'> *</span>
-          </label>
-          <input type="text" className=' border rounded-md h-8' />
+      <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+        Language <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
-        </div>
-        <div className=" grid gap-3">
-          <label htmlFor="">
-           Time Format <span className=' text-red-600'> *</span>
-          </label>
-          <input type="text" className=' border rounded-md h-8' />
+      </div>
+      <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+     Site logo <span className=' text-red-600'> *</span>
+        </label>
+        <input type="file" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
-        </div>
-        <div className="grid gap-3 grid-cols-12">
-          <label htmlFor="" className="md:col-span-6 md:col-end-7">
-           Rounded Amount
-          </label>
-          <input type="checkbox"  className="md:col-span-4  h-8 " />
-        </div>
-        <div className="grid gap-3 grid-cols-12">
-          <label htmlFor="" className="md:col-span-6 md:col-end-7 ">
-           Disable Tax
-          </label>
-          <input type="checkbox"  className="md:col-span-4  h-8 " />
-        </div>
-        <div className="grid gap-3">
-          <label htmlFor="">
-          Currency <span className=' text-red-600'> *</span>
-          </label>
-          <select className="border h-8 rounded-md">
-            {countries.map((country,index)=>(
-              <option key={index} value={country}>{country}</option>
-            ))}
-          </select>
-
-        </div>
-        <div className="grid gap-3">
-          <label htmlFor="">
-            Language <span className=' text-red-600'> *</span>
-          </label>
-          <input type="text" className=' border rounded-md h-8' />
-
-        </div>
-        <div className="grid gap-3 grid-cols-12">
-          <label htmlFor="" className="md:col-span-4 md:col-end-5">
-            Site Logo
-          </label>
-          <input type="file"  className="md:col-span-8 md:col-end-13" />
-        </div>
-       
-       
-      </form>
-    </div>
+      </div>
+      <div className="md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5">
+        <div className="md:col-span-5 col-span-12 "></div>
+        <div className=" border rounded-md h-[100px] col-span-4  "></div>
+      </div>
+      
+    </form>
+  </div>
+ 
     </>
   );
 }
