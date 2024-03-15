@@ -29,7 +29,67 @@ const uploadData=():void=>{
         setCsvData(res.data);
       },
     });
+   
   };
+  const dataValue = [
+    {
+      id : 1,
+      coloum : "Customer Name",
+      value : "Required"
+    },
+    {
+      id : 2,
+      coloum : "Mobile",
+      value : "Required"
+    },
+    {
+      id : 3,
+      coloum : "Email",
+      value : "Required"
+    },
+    {
+      id : 4,
+      coloum : "GST Number",
+      value : "Required"
+    },
+    {
+      id : 5,
+      coloum : "TAX Number",
+      value : "Required"
+    },
+    {
+      id : 6,
+      coloum : "State Name",
+      value : "Optional"
+    },
+    {
+      id : 7,
+      coloum : "City",
+      value : "Optional"
+    },
+    {
+      id : 8,
+      coloum : "Pincode",
+      value : "Required"
+    },
+    {
+      id : 9,
+      coloum : "Address",
+      value : "Optional"
+    },
+    {
+      id : 10,
+      coloum : "Balance",
+      value : "Required"
+    }
+  ]
+ const value= dataValue.map((item,index) => (
+    <tr>
+      <td key = "index">{item.id}</td>
+      <td key = "index">{item.coloum}</td>
+      <td key = "index">{item.value}</td>
+    </tr>
+  ))
   return (<>
     <div className="grid grid-flow-col grid-cols-6 mt-5 ">
       <section className="col-span-3 flex items-center mx-6 px-2 col-start-1 border-2 rounded-md border-gray-300">
@@ -62,10 +122,19 @@ const uploadData=():void=>{
 </section>
     </div >
 
-      <div className="container my-4 h-[300px] border border-black flex justify-center flex-col ">
-            <p>Name :</p>
-            <p>Customer name :</p>
-            <p>email :</p>
+      <div className="">
+        <table>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Coloum Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {value}
+          </tbody>
+        </table>
       </div>
 
 
