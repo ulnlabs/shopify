@@ -44,7 +44,7 @@ function Companyprofile() {
   return (
     <>
     <div className="">
-    <form action="" className='  flex flex-col lg:  lg:grid lg:grid-cols-2 gap-y-3  p-5'>
+    <form action="" className='  flex flex-col   lg:grid lg:grid-cols-2 gap-y-3  p-5'>
       <div className=" md:grid md:grid-cols-12 grid   p-2 md:text-end  md:gap-x-5  ">
         <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
    Site Name <span className=' text-red-600'> *</span>
@@ -81,17 +81,17 @@ function Companyprofile() {
 
       </div>
       <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
-          <label htmlFor=""  className=' md:col-span-5 col-span-1 basis-3/4 sm:text-stat md:text-end mr-[15%] '>
+          <label htmlFor=""  className=' md:col-span-5 col-span-1 basis-1/4 sm:text-stat md:text-end lg:mr-[10%] '>
           Enable Round Off
           </label>
-          <input type="checkbox" className='   cursor-pointer md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
+          <input type="checkbox" className=' cursor-pointer lg:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
 
         </div>
         <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
-          <label htmlFor=""  className=' md:col-span-5 col-span-1 basis-3/4 sm:text-stat md:text-end mr-[15%] '>
+          <label htmlFor=""  className=' md:col-span-5 col-span-1 basis-1/4 sm:text-stat md:text-end lg:mr-[10%] '>
           Disable Tax
           </label>
-          <input type="checkbox" className='   cursor-pointer md:col-span-1  basis-1/4  h-[2.0rem] w-[4.5rem] ' />
+          <input type="checkbox" className=' cursor-pointer lg:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
 
         </div>
       <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">

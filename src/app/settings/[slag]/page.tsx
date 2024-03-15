@@ -35,7 +35,7 @@ function page({params}:any) {
     }
   return (
     <>
-    <div className="h-screen w-full bg-[var(--settings)] ">
+    <div className="h-screen w-full  ">
        
         <div className="">
             <h1 className='text-xl p-4 font-medium tracking-[.3em]'>{detail.header} <span className=' text-xs tracking-[.1em] text-gray-500'>  {detail.subheader}</span></h1>
