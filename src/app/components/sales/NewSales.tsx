@@ -35,8 +35,8 @@ import {
 } from "@/components/ui/select"
 import { Selector } from "../Custom-shadcn-components/Selector";
 
-
-
+import { i_columns } from "../datatable/itemColumn";
+import { DataTable } from "../datatable/DataTable";
 
 const cutomerName = [
   {
@@ -69,6 +69,19 @@ interface FormState {
   billStatus: string,
   billDate: any,
 }
+
+const sample = [
+  {
+
+    name:"Deepath",
+    quantity:2,
+    price:2000,
+    discount:10,
+    tax:1,
+    subtotal:10,
+  }
+  ]
+  
 
 const NewSales = () => {
   const [data, setData] = useState<FormState>({
@@ -449,7 +462,10 @@ const NewSales = () => {
           </textarea>
         </div>
       </section>
-    
+     <section>
+          <DataTable  columns={i_columns} data={sample} />
+
+     </section>
 
     </div>
     
