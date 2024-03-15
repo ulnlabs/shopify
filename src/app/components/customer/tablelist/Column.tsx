@@ -1,7 +1,7 @@
 "use client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-
+import axios from "axios"
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import {
   DropdownMenu,
@@ -14,7 +14,9 @@ import {
 
 import { ColumnDef } from "@tanstack/react-table";
 
-function handleDelete(row:customerList):void{
+async function handleDelete(row:customerList):Promise<void> {
+ const response=await axios.get("/api/customer")
+ console.log(response);
  
 
 
