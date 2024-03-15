@@ -39,9 +39,9 @@ interface DataTableProps<TData, TValue> {
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export function DataTable<TData, TValue>({
+export default function DataTable<TData, TValue>({
   columns,
-  data,
+  data
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -73,7 +73,7 @@ export function DataTable<TData, TValue>({
         <Input
           placeholder="Filter emails..."
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
+          onChange={(event) => 
             table.getColumn("email")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"

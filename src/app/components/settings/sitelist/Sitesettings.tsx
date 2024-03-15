@@ -1,7 +1,7 @@
 import Site from '@/app/components/settings/sitelist/Site'
 import Sales from '@/app/components/settings/sitelist/Sales'
 import Prefixes from '@/app/components/settings/sitelist/Prefixes'
-import Unitlist from '@/app/components/settings/unitlist/Unitlist'
+import Unitlist from '@/app/components/settings/currencylist/Currencylist'
 import { useState } from 'react'
 function Sitesettings() {
     const [page, setpage] = useState("Site");

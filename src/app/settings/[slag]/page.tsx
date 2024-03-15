@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import Companyprofile from "@/app/components/settings/companyprofile/Companyprofile"
 import Sitesettings from "@/app/components/settings/sitelist/Sitesettings"
+import Currencylist from "@/app/components/settings/currencylist/Currencylist"
 
 function page({params}:any) {
     const router=params.slag
@@ -28,6 +29,11 @@ function page({params}:any) {
             detail.header="Site settings"
               detail.subheader="Add/update Site Settings"
               break;
+        case 'currencylist':
+          detail.current_route=<Currencylist />
+          detail.header="Currency List"
+          detail.subheader="Add/update Currency List"
+          break;
 
 
         default:
@@ -39,7 +45,6 @@ function page({params}:any) {
        
         <div className="">
             <h1 className='text-xl p-4 font-medium tracking-[.3em]'>{detail.header} <span className=' text-xs tracking-[.1em] text-gray-500'>  {detail.subheader}</span></h1>
-            
         </div>
 
     <div >

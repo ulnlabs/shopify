@@ -1,6 +1,6 @@
 "use client";
-import { DataTable } from "@/app/components/datatable/DataTable";
 import { useEffect, useState } from "react";
+import DataTable from "@/app/components/datatable/DataTable";
 import { c_columns } from "@/app/components/datatable/Column";
 
 export default function DemoPage() {
