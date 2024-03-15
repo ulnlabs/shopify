@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { FaTrashAlt } from 'react-icons/fa'
+import { FaPlusCircle, FaTrashAlt } from 'react-icons/fa'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineBarcode, AiOutlineMinus, AiOutlinePlus, AiOutlineUser, AiOutlineUserAdd } from 'react-icons/ai'
@@ -30,6 +30,7 @@ const customerData = [
   }
 ]
 const cols: string[] = ['Item name', 'Quantity', 'Price', 'Discount', 'Tax', 'Sub Total ', 'remove']
+const product: string[] = ['Item name', 'Price']
 const data: any[] = [
   {
     itemname: 'iphone',
@@ -67,7 +68,9 @@ function page() {
   }, [categories])
   return (
     <div className='w-full min-h-screen px-4 py-2'>
-      <DashboardHeader title='Sales Invoice' breadcrumb={[{ title: "new-sales", path: '/sales/new-sales' }, { title: 'pos', path: '/sales/pos' }]} />
+      <div className="py-2">
+        <DashboardHeader title='Sales Invoice' breadcrumb={[{ title: "new-sales", path: '/sales/new-sales' }, { title: 'pos', path: '/sales/pos' }]} />
+      </div>
       <div className="grid grid-cols-2">
         <div className="h-fit">
           <div className="flex justify-evenly items-center gap-2 py-4">
@@ -141,7 +144,7 @@ function page() {
                     }
                   </TableRow>
                 </TableHeader>
-                <TableBody className='overflow-y-scroll scrollbar-hide'>
+                <TableBody className='overflow-y-scroll scrollbar-hide '>
                   {
                     data.map((data, index) => {
                       return (
@@ -195,8 +198,37 @@ function page() {
             </div>
           </div>
           <div className="flex items-center justify-center border rounded-lg w-full py-1 mt-4 px-2 gap-2">
-            <AiOutlineBarcode/>
+            <AiOutlineBarcode />
             <input type="text" placeholder='item name' className='w-full rounded bg-gray-100 px-2 py-1' />
+          </div>
+          <div className="bg-gray-100 rounded-lg w-full border mt-2">
+            <Table>
+              <TableHeader>
+                <TableRow className='bg-white'>
+                  {
+                    product.map((item, index) => {
+                      return (
+                        <TableHead className='' key={index}>{item}</TableHead>
+                      )
+                    })
+                  }
+                  <TableHead className='text-center'>product</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className='overflow-y-scroll scrollbar-hide'>
+                {
+                  data.map((data, index) => {
+                    return (
+                      <TableRow key={index} className='h-fit'>
+                        <TableCell>{data.itemname}</TableCell>
+                        <TableCell>₹{data.price}</TableCell>
+                        <TableCell><button className='flex w-full items-center text-green-600 justify-center'><FaPlusCircle /></button></TableCell>
+                      </TableRow>
+                    )
+                  })
+                }
+              </TableBody>
+            </Table>
           </div>
         </div>
       </div>
