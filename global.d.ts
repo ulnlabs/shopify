@@ -29,4 +29,13 @@ type customerList = {
     email: string
 
 }
-
+type columnHeader_dataTable={
+    accessorKey: string,
+    header: string,
+}
+type tableVeiw={
+    column:boolean,
+    filter:boolean,
+    rows:boolean,
+    paginator:boolean,
+}
