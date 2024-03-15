@@ -121,7 +121,7 @@ const NewSales = () => {
 
 
         <div className="grid grid-cols-12 gap-5 md:gap-10">
-          <div className="  relative  col-start-1 md:col-span-6 col-span-full">
+          <div className="  relative  col-start-1 md:col-span-6 col-span-full">              //coustomer
             <div className="flex  py-1 px-2 rounded-lg border items-center ">
               <IoMdContact className="mr-2 h-4 w-4 shrink-0  opacity-50" />
               <Input placeholder='Select Customer' value={"" || data.customerName} readOnly onClick={() => {
@@ -151,7 +151,7 @@ const NewSales = () => {
               )
             }
           </div>
-          <div className="md:col-start-7 md:col-span-6 col-span-full">
+          <div className="md:col-start-7 md:col-span-6 col-span-full">                   //Date
             <div className="flex  py-1 px-2 rounded-lg border items-center ">
               <AiOutlineCalendar className="mr-2 h-4 w-4 shrink-0  opacity-50" />
               <Input placeholder='Select Customer' value={billDate ? format(billDate, "PPP") : ''} readOnly onClick={() => {
@@ -174,7 +174,7 @@ const NewSales = () => {
           </div>
         </div>
 
-        <div className="mt-5 mb-10 col-span-full relative ">
+        <div className="mt-5 mb-10 col-span-full relative ">                //status
 
           <div className="flex items-center  border py-1 px-2 rounded-lg" >
             <IoMdContact className="mr-2 h-4 w-4 shrink-0  opacity-50" />
@@ -254,7 +254,11 @@ const NewSales = () => {
         </div>
 
       </section>
+          <section>
 
+         <section>
+          
+         </section>
       <div className="grid grid-cols-12 grid-rows-4 mt-16 grid-flow-col gap-4">
         <div className="col-start-1 items-center grid col-span-full md:col-span-6 h-10 rounded-lg bg-primary-gray">
           <div className="grid md:grid-cols-4 gap-20 px-5  ">
@@ -399,8 +403,13 @@ const NewSales = () => {
           </div>
         </div>
       </div>
+      </section>
+      <section>
+        <div>
+          
+        </div>
+      </section>
 
-            
 
     </div>
   )
