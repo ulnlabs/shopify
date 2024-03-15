@@ -36,6 +36,8 @@ import {
 import { Selector } from "../Custom-shadcn-components/Selector";
 
 
+import Table from "./tables"
+
 const cutomerName = [
   {
     value: "Fire10",
@@ -254,6 +256,11 @@ const NewSales = () => {
         </div>
 
       </section>
+      <section>
+
+          
+
+      </section>
 
       <div className="grid grid-cols-12 grid-rows-4 mt-16 grid-flow-col gap-4">
         <div className="col-start-1 items-center grid col-span-full md:col-span-6 h-auto rounded-lg bg-primary-gray">
@@ -374,28 +381,28 @@ const NewSales = () => {
 
 
         <div className="md:col-end-13 md:mt-0 mt-10 h-auto md:col-span-4 rounded-lg col-span-full grid items-center bg-primary-gray">
-          <div className="grid  grid-cols-4 lg:grid-cols-3 py-2 justify-start gap-4 lg:gap-20 px-5 ">
+          <div className="grid  grid-cols-4 lg:grid-cols-3 py-2 justify-start gap-4  px-5 ">
             <p className="col-start-1 col-end-3">Subtotal</p>
-            <p className="col-end-4 col-start-3  md:pr-2 ">100000000</p>
+            <p className="col-span-2 col-start-3 md-pr-2  ">100000000</p>
           </div>
 
         </div>
         <div className="md:col-end-13 md:col-span-4 py-2 h-auto rounded-lg col-span-full grid items-center bg-primary-gray">
-          <div className="grid grid-cols-4 h-auto justify-end gap-4  px-5  ">
+          <div className="grid grid-cols-4 h-auto lg:grid-cols-3 justify-start gap-4  px-5  ">
             <p className="col-start-1  col-end-3">Other Charges</p>
-            <p className="col-span-2 w-auto col-start-3 ">100000</p>
+            <p className="col-span-2 col-start-3 md-pr-2 ">100000</p>
           </div>
         </div>
         <div className="md:col-end-13 md:col-span-4 h-auto rounded-lg col-span-full grid items-center bg-primary-gray">
-          <div className="grid grid-cols-4 justify-end py-2 gap-4 px-5  ">
+          <div className="grid grid-cols-4 justify-start lg:grid-cols-3 py-2 gap-4 px-5  ">
             <p className="col-start-1 col-end-3">Overall Discount</p>
             <p className="col-span-2 col-start-3 md-pr-2">100000</p>
           </div>
         </div>
         <div className="md:col-end-13 md:col-span-4 rounded-lg h-auto col-span-full grid items-center bg-primary-gray">
-          <div className="grid grid-cols-4 justify-end py-2 gap-4 px-5  ">
+          <div className="grid grid-cols-4 justify-start lg:grid-cols-3 py-2 gap-4 px-5  ">
             <p className="col-start-1 col-end-3">Grand Total</p>
-            <p className="col-span-2 col-start-3 ">100000</p>
+            <p className="col-span-2 col-start-3 md-pr-2 ">100000</p>
           </div>
         </div>
       </div>
@@ -446,8 +453,11 @@ const NewSales = () => {
           </textarea>
         </div>
       </section>
+    
+          <Table />
 
     </div>
+    
   )
 }
 
