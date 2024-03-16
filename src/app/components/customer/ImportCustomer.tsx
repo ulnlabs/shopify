@@ -87,7 +87,7 @@ function ImportCustomer() {
     <tr className="border-b hover:bg-slate-100">
       <td key="index" className="p-2">{item.id}</td>
       <td key="index" className="p-2">{item.coloum}</td>
-      <td key="index" className={`p-2 ${item.value=="Required"? "border":null}`}><span>{item.value}</span></td>
+      <td key="index" className="p-2">{item.value}</td>
     </tr>
   ))
   return (<>
