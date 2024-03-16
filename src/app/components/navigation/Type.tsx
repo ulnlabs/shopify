@@ -243,12 +243,10 @@ export const navItems: NavBarItem[] = [
         children: [
             { label: 'Company Profile', key: "/settings/company" },
             { label: 'Site Settings', key: "/settings/sitelist" },
-            { label: 'Tax List', key: "/settings/taxlists" },
-            { label: 'Units List', key: "/settings/units-list" },
-            { label: 'Payment Types List', key: "/settings/payment-types-list" },
-            { label: 'Currency List', key: "/settings/currencylist" },
+            { label: 'Tax List', key: "/settings/taxlist" },
+            { label: 'Units List', key: "/settings/unitlist" },
+            { label: 'Payment Types List', key: "/settings/payment-type" },
             { label: 'Change Password', key: "/settings/change-password" },
-            { label: 'Database Backup', key: "/settings/database-backup" },
         ]
     }
 ]

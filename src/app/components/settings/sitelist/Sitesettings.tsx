@@ -1,7 +1,7 @@
 import Site from '@/app/components/settings/sitelist/Site'
 import Sales from '@/app/components/settings/sitelist/Sales'
 import Prefixes from '@/app/components/settings/sitelist/Prefixes'
-import Unitlist from '@/app/components/settings/currencylist/Currencylist'
+import Unitlist from '@/app/components/settings/currencylist/Taxlist'
 import { useState } from 'react'
 function Sitesettings() {
     const [page, setpage] = useState("Site");
@@ -19,7 +19,7 @@ function Sitesettings() {
     }
     return (
         <>
-            <div className=" bg-[var(--settings)] h-screen ">
+            <div className="  h-screen ">
 
                 <div className=" flex justify-center flex-col items-center ">
 

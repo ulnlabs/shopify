@@ -24,9 +24,13 @@ import { useState } from "react";
 function handleDelete(row: customerList): void {}
 
 
-const Currency_Name: columnHeader_dataTable = {
-  accessorKey: "currencyname",
-  header: "Currency Name",
+const Tax_percentage: columnHeader_dataTable = {
+  accessorKey: "taxpercentage",
+  header: "Tax(%)",
+};
+const Tax_name: columnHeader_dataTable = {
+  accessorKey: "taxname",
+  header: "Tax Name",
 };
 
 const C_SELECT = {
@@ -60,8 +64,6 @@ const status={
       else{
         status="Inactive";
       }
-     
-    
       return(
         <button className={`  ${active?"bg-green-500 p-2 rounded-md text-white":"bg-red-500 p-2 rounded-md text-white"}`} onClick={()=>Deactive(!active)} >
          {status}
@@ -116,8 +118,8 @@ const C_ACTION = {
 };
 export const c_columns: ColumnDef<any>[] = [
   C_SELECT,
-  Currency_Name,
+  Tax_name,
+  Tax_percentage,
   status,
- 
   C_ACTION,
 ];

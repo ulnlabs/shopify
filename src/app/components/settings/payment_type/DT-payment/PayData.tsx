@@ -35,10 +35,6 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-
 export default function DataTable<TData, TValue>({
   columns,
   data
@@ -65,16 +61,15 @@ export default function DataTable<TData, TValue>({
       rowSelection,
     },
   });
-/* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
   return (
     <>
       
       <div className="flex items-center p-4">
         <Input
-          placeholder="Filter Currency ...."
-          value={(table.getColumn("currencyname")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter Payment ...."
+          value={(table.getColumn("payment_type")?.getFilterValue() as string) ?? ""}
           onChange={(event) => 
-            table.getColumn("currencyname")?.setFilterValue(event.target.value)
+            table.getColumn("payment_type")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -181,4 +176,3 @@ export default function DataTable<TData, TValue>({
     </>
   );
 }
-/* at all you have your own data table to use your data table call this component like this on your code exam : page.tsx    <DataTable columns={c_columns} data={customerData} /> the c_colums is your column replace it with your and data also  for reference how i share my data see dashboard/customers/list/page.tsx ,i hope u got it  */

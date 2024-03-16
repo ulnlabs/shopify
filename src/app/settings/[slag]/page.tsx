@@ -2,10 +2,14 @@
 import React, { useState } from 'react'
 import Companyprofile from "@/app/components/settings/companyprofile/Companyprofile"
 import Sitesettings from "@/app/components/settings/sitelist/Sitesettings"
-import Currencylist from "@/app/components/settings/currencylist/Currencylist"
+import Taxlist from "@/app/components/settings/currencylist/Taxlist"
+import Unitlist from '@/app/components/settings/unitlist/Unitlist'
+import Payment from "@/app/components/settings/payment_type/Payment"
+import Changepassword from '@/app/components/settings/Passwordchange/Changepassword'
 
 function page({params}:any) {
     const router=params.slag
+    console.log(router);
     
     interface Details {
         current_route: React.ReactNode;
@@ -24,18 +28,38 @@ function page({params}:any) {
           detail.header="company profile"
             detail.subheader="Add/Update Company Profile"
             break;
+
         case 'sitelist':
             detail.current_route=<Sitesettings />
             detail.header="Site settings"
               detail.subheader="Add/update Site Settings"
               break;
-        case 'currencylist':
-          detail.current_route=<Currencylist />
-          detail.header="Currency List"
-          detail.subheader="Add/update Currency List"
+
+        case 'taxlist':
+          detail.current_route=<Taxlist />
+          detail.header="Tax List"
+          detail.subheader="Add/update Tax List"
           break;
 
+       case 'unitlist':
+          detail.current_route=<Unitlist />
+          detail.header="Unit List"
+          detail.subheader="Add/update Unit List"
+          break;
 
+       case 'payment-type':
+          detail.current_route=<Payment/>
+          detail.header="Payment List"
+          detail.subheader="Add/View Payment List"
+          break;
+          case 'change-password':
+            detail.current_route=<Changepassword/>
+            detail.header="Change Password"
+            detail.subheader="Reset Password"
+            break;
+  
+    
+          
         default:
             detail.current_route= <div>Invalid Route</div>;
     }
