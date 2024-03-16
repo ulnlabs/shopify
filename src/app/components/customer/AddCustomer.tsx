@@ -3,7 +3,6 @@ import React, { FormEvent, useContext } from "react";
 import { ContextData } from "../../../../contextapi";
 function AddCustomer() {
   const {formData,setFormData}=useContext(ContextData)
- console.log(formData);
  
   
 
@@ -25,7 +24,7 @@ function AddCustomer() {
   }
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    console.log(formData);
+console.log(formData);
 
     setFormData({
       name: "",
@@ -39,7 +38,6 @@ function AddCustomer() {
       pincode: "",
       address: "",
     });
-    console.log("jkinging");
   };
   return (
     <>
