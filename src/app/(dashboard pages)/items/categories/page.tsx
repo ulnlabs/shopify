@@ -8,31 +8,11 @@ function page() {
   const exampleData: InventoryItem[] = [
     {
       select: false,
-      itemCode: 'ABC',
-      itemName: 'Example Item',
-      brand: 'XYZ Brand',
       category: 'Electronic Devices',
-      unit: 'Piece',
-      stockQty: 100,
-      minQty: 50,
-      purchaseprice: 120,
-      finalsalesprice: 200,
-      tax: 15,
-      status: 'In Stock',
-    },
-    {
-      select: false,
-      itemCode: 'ABgtC',
-      itemName: 'Example Itejyygm',
-      brand: 'XYZ Bra;lknd',
-      category: 'Electron.kn.ic Devices',
-      unit: 'Piece',
-      stockQty: 800,
-      minQty: 90,
-      purchaseprice: 100,
-      finalsalesprice: 900,
-      tax: 35,
-      status: 'In Stock',
+      categoryName:'mobiles',
+      code:'CO094',
+      description:'MOBILE',
+      status:'Active'
     },
     // Add more sample data here
   ];
