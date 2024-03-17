@@ -1,5 +1,5 @@
 "use client"
-import NewSales from "@/app/components/sales/addnew";
+import NewSales from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
 import { useState } from "react";
 

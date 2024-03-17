@@ -1,14 +1,11 @@
 "use client"
 import { BiCart } from "react-icons/bi";
 import { AiOutlineCalendar } from "react-icons/ai";
-import { IoMdContact } from "react-icons/io";
-import React, { useState, useEffect, useRef } from 'react'
-
-
+import React, { useState, useEffect } from 'react'
 import { format } from "date-fns"
 import { Calendar } from "@/components/ui/calendar"
 import { Input } from '@/components/ui/input'
-
+import { IoMdContact } from "react-icons/io";
 import {
   Command,
   CommandEmpty,
@@ -24,7 +21,7 @@ import {
 import { sales_Column } from "../datatable/salesColumn";
 import { DataTable } from "../datatable/DataTable";
 
-import { pur_Column } from "../datatable/purColumn"; 
+import { pur_Column } from "../datatable/purColumn";
 
 
 import Selections from "./selections";
@@ -44,29 +41,6 @@ const cutomerName = [
     label: "Dhilip",
   },
 ]
-
-
-interface FormState {
-  customerName: string,
-  billDate: Date,
-  billStatus: string,
-  billQuantity: number,
-  billCharges: any,
-  billTaxType: string,
-  billDiscount: any,
-  billDiscountType: string,
-  billNote: string,
-  billSubtotal: number,
-  billOtherCharge: number,
-  billOverallDis: number
-  billTotal: number,
-  billPaymentType: string,
-  billAmount: any,
-  billPayNote: string,
-
-
-}
-
 const sample = [
   {
 
@@ -78,9 +52,7 @@ const sample = [
     subtotal: 10,
   }
 ]
-
-
-const NewSales = ({data,setData,placeholder,isSales}:any) => {
+const NewSales = ({ data, setData, placeholder, isSales }: any) => {
 
 
 
@@ -182,7 +154,6 @@ const NewSales = ({data,setData,placeholder,isSales}:any) => {
               }} className="  cursor-pointer " />
             </div>
             {
-
               dateOpen && (
                 <div className="z-10 absolute mt-2 bg-white rounded-lg border  ">
                   <Calendar
@@ -246,7 +217,11 @@ const NewSales = ({data,setData,placeholder,isSales}:any) => {
         </div>
       </section>
       <section>
-        <DataTable columns= { isSales ? sales_Column : pur_Column} data={sample} />
+        <DataTable
+          columns={isSales ? sales_Column : pur_Column}
+          rows={true}
+          paginater={true}
+          data={sample} />
       </section>
       <div className="grid grid-cols-12 grid-rows-4 grid-flow-col gap-4">
         <div className="col-start-1 items-center grid col-span-full md:col-span-6 h-auto rounded-lg bg-primary-gray">
@@ -313,8 +288,14 @@ const NewSales = ({data,setData,placeholder,isSales}:any) => {
           </div>
         </div>
       </div>
-      <section>
-        <DataTable columns={sales_Column} data={sample} />
+      <section className="pt-5">
+        <h2 className="text-green-500">Previous Payment Information :</h2>
+        <DataTable
+          columns={sales_Column}
+          data={sample}
+          rows={true}
+          paginater={true}
+        />
       </section>
       <section className="grid grid-cols-12 md:gap-10 gap-5">
         <div className="mt-5 col-start-1 col-span-6 relative ">
@@ -336,7 +317,7 @@ const NewSales = ({data,setData,placeholder,isSales}:any) => {
 
         </div>
       </section >
-     
+
     </div>
 
   )

@@ -129,11 +129,8 @@ export const c_columns: ColumnDef<any>[] = [
   C_ID,
   C_NAME,
   C_MOBILE,
-
   C_Email,
-
   C_PAID,
-
   C_SALESDUE,
   C_RETURNDUE,
   C_STATUS,

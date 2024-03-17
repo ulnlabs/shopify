@@ -9,7 +9,7 @@ import {
     CommandGroup,
     CommandItem,
     CommandList,
-  } from "@/components/ui/command"
+} from "@/components/ui/command"
 
 
 
@@ -58,21 +58,23 @@ const Selections = ({ cValue, setCValue, placeholder, inputData, icon, payment }
                     <div className={`z-10 absolute w-full ${!icon ? "px-2" : "py-1"} ${payment ? "py-1" : ""} `}>
                         <Command className="rounded-lg border bg-white py-1  ">
                             <CommandList>
-                             <CommandGroup>                               {inputData.map((item, index) => (
-                                    <CommandItem key={index}
-                                        className="cursor-pointer px-2 py-1  rounded-md"
-                                        onSelect={() => { handleStatusClick(item) }}
-                                    >
-                                        {item}
-                                    </CommandItem>
-                                ))}
-                                </CommandGroup> 
- 
+                                <CommandGroup>
+                                    {inputData.map((item, index) => (
+                                        <CommandItem key={index}
+                                            className="cursor-pointer px-2 py-1  rounded-md"
+                                            onSelect={() => { handleStatusClick(item) }}
+                                        >
+                                            {item}
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+
                             </CommandList>
                         </Command>
                     </div>
                 )
-            }    </div>
+            }
+        </div>
     )
 }
 
