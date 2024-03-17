@@ -28,8 +28,8 @@ export const navItems: NavBarItem[] = [
                 key: "/sales/pos",
             },
             {
-                label: "New Sale",
-                key: "/sales/new-sale",
+                label: "New Sales",
+                key: "/sales/new-sales",
             },
             {
                 label: "Sales List",
