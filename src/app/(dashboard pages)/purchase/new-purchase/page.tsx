@@ -27,7 +27,7 @@ interface FormState {
 const page = () => {
 
 
-  const [salesData, setSalesData] = useState<FormState>({
+  const [purchaseData, setPurchaseData] = useState<FormState>({
     customerName: "",
     billDate: new Date,
     billStatus: "",
@@ -47,15 +47,15 @@ const page = () => {
   })
 
   const handleClick = () =>{
-    console.log(salesData);  
+    console.log(purchaseData);  
   }
 
 
   return (
     <div className="w-full ">
-      <h1 className="px-10 pt-5 ">New Sales</h1>
+      <h1 className="px-10 pt-5 ">New Purchase</h1>
 
-      <NewSales data={salesData} setData={setSalesData} placeholder="Select Customer" isSales={true} />
+      <NewSales data={purchaseData} setData={setPurchaseData} placeholder="Select Supplier" isSales={false} />
       <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
         <Link href={"../../dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>

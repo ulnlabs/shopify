@@ -21,8 +21,12 @@ import {
 
 
 
-import { i_columns } from "../datatable/itemColumn";
+import { sales_Column } from "../datatable/salesColumn";
 import { DataTable } from "../datatable/DataTable";
+
+import { pur_Column } from "../datatable/purColumn"; 
+
+
 import Selections from "./selections";
 import Link from "next/link";
 
@@ -68,7 +72,7 @@ const sample = [
 
     name: "Deepath",
     quantity: 2,
-    price: 2000,
+    price: 200000000,
     discount: 10,
     tax: 1,
     subtotal: 10,
@@ -76,7 +80,7 @@ const sample = [
 ]
 
 
-const NewSales = ({data,setData,placeholder}:any) => {
+const NewSales = ({data,setData,placeholder,isSales}:any) => {
 
 
 
@@ -242,7 +246,7 @@ const NewSales = ({data,setData,placeholder}:any) => {
         </div>
       </section>
       <section>
-        <DataTable columns={i_columns} data={sample} />
+        <DataTable columns= { isSales ? sales_Column : pur_Column} data={sample} />
       </section>
       <div className="grid grid-cols-12 grid-rows-4 grid-flow-col gap-4">
         <div className="col-start-1 items-center grid col-span-full md:col-span-6 h-auto rounded-lg bg-primary-gray">
@@ -310,7 +314,7 @@ const NewSales = ({data,setData,placeholder}:any) => {
         </div>
       </div>
       <section>
-        <DataTable columns={i_columns} data={sample} />
+        <DataTable columns={sales_Column} data={sample} />
       </section>
       <section className="grid grid-cols-12 md:gap-10 gap-5">
         <div className="mt-5 col-start-1 col-span-6 relative ">

@@ -1,26 +1,4 @@
-"use client";
 import { MdOutlineDelete } from "react-icons/md"; 
-//for hint how do make your custom columns see line 137 or below to comment
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-
-
-} from "@/components/ui/dropdown-menu";
-
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
 
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -62,7 +40,7 @@ const i_REMOVE = {
 };
 
 
-export const i_columns: ColumnDef<any> []=  [
+export const sales_Column: ColumnDef<any> []=  [
 
 
     i_NAME,
