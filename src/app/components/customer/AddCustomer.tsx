@@ -2,12 +2,10 @@
 import React, { FormEvent, useContext } from "react";
 import { ContextData } from "../../../../contextapi";
 function AddCustomer() {
-  const {formData,setFormData}=useContext(ContextData)
- 
-  
+  const { customerData, setCustomerData } = useContext(ContextData);
 
-  const handleReset=():void => {
-    setFormData({
+  const handleReset = (): void => {
+    setCustomerData({
       name: "",
       mobile: "",
       email: "",
@@ -19,14 +17,11 @@ function AddCustomer() {
       pincode: "",
       address: "",
     });
-
-
-  }
+  };
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-console.log(formData);
 
-    setFormData({
+    setCustomerData({
       name: "",
       mobile: "",
       email: "",
@@ -60,9 +55,9 @@ console.log(formData);
               </label>
               <input
                 onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
+                  setCustomerData({ ...customerData, name: e.target.value })
                 }
-                value={formData.name}
+                value={customerData.name}
                 required
                 type="text"
                 id="name"
@@ -79,9 +74,9 @@ console.log(formData);
               </label>
               <input
                 onChange={(e) =>
-                  setFormData({ ...formData, mobile: e.target.value })
+                  setCustomerData({ ...customerData, mobile: e.target.value })
                 }
-                value={formData.mobile}
+                value={customerData.mobile}
                 className="h-10  bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="mobile"
                 id="mobile"
@@ -97,9 +92,9 @@ console.log(formData);
               </label>
               <input
                 onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
+                  setCustomerData({ ...customerData, email: e.target.value })
                 }
-                value={formData.email}
+                value={customerData.email}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="mail"
                 id="email"
@@ -115,9 +110,9 @@ console.log(formData);
               </label>
               <input
                 onChange={(e) =>
-                  setFormData({ ...formData, gst: e.target.value })
+                  setCustomerData({ ...customerData, gst: e.target.value })
                 }
-                value={formData.gst}
+                value={customerData.gst}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md "
                 name="gst"
                 id="gst"
@@ -133,9 +128,9 @@ console.log(formData);
               </label>
               <input
                 onChange={(e) =>
-                  setFormData({ ...formData, tax: e.target.value })
+                  setCustomerData({ ...customerData, tax: e.target.value })
                 }
-                value={formData.tax}
+                value={customerData.tax}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 id="tax"
                 name="tax"
@@ -152,9 +147,9 @@ console.log(formData);
               </label>
               <input
                 onChange={(e) =>
-                  setFormData({ ...formData, due: e.target.value })
+                  setCustomerData({ ...customerData, due: e.target.value })
                 }
-                value={formData.due}
+                value={customerData.due}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 type="text"
                 name="due"
@@ -170,9 +165,9 @@ console.log(formData);
               </label>
               <input
                 onChange={(e) =>
-                  setFormData({ ...formData, state: e.target.value })
+                  setCustomerData({ ...customerData, state: e.target.value })
                 }
-                value={formData.state}
+                value={customerData.state}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="state"
                 type="text"
@@ -188,9 +183,9 @@ console.log(formData);
               </label>
               <input
                 onChange={(e) =>
-                  setFormData({ ...formData, city: e.target.value })
+                  setCustomerData({ ...customerData, city: e.target.value })
                 }
-                value={formData.city}
+                value={customerData.city}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="city"
                 type="text"
@@ -206,9 +201,9 @@ console.log(formData);
               </label>
               <input
                 onChange={(e) =>
-                  setFormData({ ...formData, pincode: e.target.value })
+                  setCustomerData({ ...customerData, pincode: e.target.value })
                 }
-                value={formData.pincode}
+                value={customerData.pincode}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="pincode"
                 type="text"
@@ -224,9 +219,9 @@ console.log(formData);
               </label>
               <textarea
                 onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
+                  setCustomerData({ ...customerData, address: e.target.value })
                 }
-                value={formData.address}
+                value={customerData.address}
                 className="h-20 resize-none bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 id="address"
                 name="address"
@@ -234,14 +229,14 @@ console.log(formData);
             </div>
             <input
               type="submit"
-              className="mt-10 md:mt-0 col-start-3 col-span-2 bg-green-400 font-bold text-white   cursor-pointer rounded-full md:row-start-12 cur"
+              className="mt-10 md:mt-0 min-w-[100px] col-start-3 col-span-2 bg-green-400 font-bold text-white   cursor-pointer rounded-full md:row-start-12 cur"
               value="OK"
             />
 
             <input
-             onClick={handleReset}
-             type="reset"
-              className="mt-10  md:mt-0 col-start-7 bg-red-400 col-span-2 h-12 rounded-full  font-bold text-white md:row-start-12 cursor-pointer"
+              onClick={handleReset}
+              type="reset"
+              className="mt-10  md:mt-0 col-start-7 min-w-[100px] bg-red-400 col-span-2 h-12 rounded-full  font-bold text-white md:row-start-12 cursor-pointer"
               value="Cancel"
             />
           </form>
