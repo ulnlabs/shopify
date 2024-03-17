@@ -2,15 +2,13 @@
 import React, { useState } from 'react'
 import Companyprofile from "@/app/components/settings/companyprofile/Companyprofile"
 import Sitesettings from "@/app/components/settings/sitelist/Sitesettings"
-import Taxlist from "@/app/components/settings/currencylist/Taxlist"
+import Taxlist from "@/app/components/settings/taxlist/Taxlist"
 import Unitlist from '@/app/components/settings/unitlist/Unitlist'
 import Payment from "@/app/components/settings/payment_type/Payment"
 import Changepassword from '@/app/components/settings/Passwordchange/Changepassword'
 
-function page({params}:any) {
+function page({params}:{params:{slag:string}}) {
     const router=params.slag
-    console.log(router);
-    
     interface Details {
         current_route: React.ReactNode;
         header: React.ReactNode;
@@ -49,8 +47,8 @@ function page({params}:any) {
 
        case 'payment-type':
           detail.current_route=<Payment/>
-          detail.header="Payment List"
-          detail.subheader="Add/View Payment List"
+          detail.header="Payment Type List"
+          detail.subheader="Add/View Payment Type List"
           break;
           case 'change-password':
             detail.current_route=<Changepassword/>

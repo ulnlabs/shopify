@@ -1,8 +1,8 @@
 "use client"
 import React from 'react'
 import { useState } from 'react';
-import DataTable from "@/app/components/settings/currencylist/DT_Tax/Taxdata"
-import { c_columns } from "@/app/components/settings/currencylist/DT_Tax/T-column";
+import DataTable from "@/app/components/settings/taxlist/DT_Tax/Taxdata"
+import { c_columns } from "@/app/components/settings/taxlist/DT_Tax/T-column";
 
 
   // Function to delete a currency from the list

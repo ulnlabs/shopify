@@ -64,14 +64,14 @@ export default function DataTable<TData, TValue>({
   return (
     <>
       
-      <div className="flex items-center p-4">
+      <div className="flex items-center p-4 ">
         <Input
           placeholder="Filter Payment ...."
           value={(table.getColumn("payment_type")?.getFilterValue() as string) ?? ""}
           onChange={(event) => 
             table.getColumn("payment_type")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="w-[70%]"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

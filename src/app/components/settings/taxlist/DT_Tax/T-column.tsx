@@ -20,7 +20,6 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 
-/* //delete the data or update here you have to use your custom function import it from your area */
 function handleDelete(row: customerList): void {}
 
 

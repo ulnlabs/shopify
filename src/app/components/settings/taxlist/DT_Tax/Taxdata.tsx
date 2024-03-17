@@ -76,7 +76,7 @@ export default function DataTable<TData, TValue>({
           onChange={(event) => 
             table.getColumn("taxname")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="w-[70%]"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
