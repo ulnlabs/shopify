@@ -1,4 +1,4 @@
-import React, { useState, SetStateAction, Dispatch } from 'react'
+import React, { useState, SetStateAction, Dispatch, useRef,useEffect } from 'react'
 
 import {
     Command,
@@ -27,8 +27,19 @@ const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlacehold
         setValue(label);
         setIsOpen(false);
     }
+
+    const selRef=useRef<any>()
+    useEffect(()=>{
+        const handleClose = (e:any) =>{
+            if (!selRef.current?.contains(e.target)){
+                setIsOpen(false)
+            }
+        }
+        document.addEventListener('click',handleClose)
+    },[])
+
     return (
-        <div>
+        <div ref={selRef} className='relative'>
             
             <div className="  py-1 rounded-lg">
                 <div className={`  px-2 py-1  border rounded-md cursor-pointer `} onClick={() => { setIsOpen(!isOpen) }} >

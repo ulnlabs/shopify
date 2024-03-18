@@ -2,39 +2,55 @@
 import { Calendar } from '@/components/ui/calendar'
 import { format } from "date-fns"
 import { Input } from '@/components/ui/input'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineCalendar } from 'react-icons/ai'
+import { useReactTable } from '@tanstack/react-table'
 
 interface dateType {
     date: Date,
 }
 
-const CalenSelect = ({ date, setDate }: any) => {
+const CalenSelect = ({ date, setDate }: dateType | any) => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
     const handleDateClick = (label: any): void => {
-        console.log(label);
+        setDate(label);
+        setIsOpen(false);
 
     }
 
+    const calRef=useRef<any>(null)
+    useEffect(()=>{
+        const handleClose = (e:any) =>{
+            if (!calRef.current?.contains(e.target)){
+                setIsOpen(false)
+            }
+        }
+        document.addEventListener('click',handleClose)
+    },[])
+
+
+    const today = new Date;
     return (
-        <div>
+        <div className='relative' ref={calRef}>
 
             <div className="flex  py-1 text-w bg-primary-gray px-2 rounded-lg border items-center cursor-pointer "
                 onClick={() => { setIsOpen(!isOpen) }}>
                 <AiOutlineCalendar className="mr-2  h-4 w-4 shrink-0  opacity-50" />
-                <Input placeholder='Select Customer' value={date ? format(date, "PPP") : ''} readOnly onClick={() => {
+                <Input placeholder='Select Customer' value={date ? format(date, "dd-MM-yyyy") : ''} readOnly onClick={() => {
                     setIsOpen(!isOpen)
                 }} className="  cursor-pointer " />
             </div>
             {
                 isOpen && (
-                    <div className="z-10 absolute mt-2 bg-white rounded-lg border  ">
+                    <div className="z-10 absolute  bg-white rounded-lg border  ">
                         <Calendar
                             mode="single"
+                            toDate={today}
+                            fixedWeeks                           
                             selected={date}
-                            onSelect={setDate}
+                            onSelect={handleDateClick}
                             initialFocus
                         />
                     </div>
@@ -43,5 +59,6 @@ const CalenSelect = ({ date, setDate }: any) => {
         </div>
     )
 }
+
 
 export default CalenSelect

@@ -33,7 +33,7 @@ export const navItems: NavBarItem[] = [
             },
             {
                 label: "Sales List",
-                key: "/sales/list",
+                key: "/sales/sales-list",
             },
             {
                 label: "New Sales Return",
@@ -72,15 +72,15 @@ export const navItems: NavBarItem[] = [
         children: [
             {
                 label: 'New Purchase',
-                key: "/purchases/new"
+                key: "/purchases/new-purchase"
             },
             {
                 label: 'Purchases List',
-                key: "/purchases/list"
+                key: "/purchases/purchase-list"
             },
             {
                 label: 'New Purchase Return',
-                key: "/purchases/return-new"
+                key: "/purchases/new-return"
             },
             {
                 label: 'Purchase Returns List',

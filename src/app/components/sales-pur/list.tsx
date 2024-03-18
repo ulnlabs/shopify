@@ -13,20 +13,15 @@ import { Calendar } from "@/components/ui/calendar";
 
 
 
+interface propType {
+    Customer:string[],
+    page:string,
+}
 
 
 
-const Customer = [
-    "Deepath",
-    "Hari",
-    "Deepath",
-    "Deepath",
-    "Deepath",
-]
 
-const List = () => {
-
-    const [dateOpen, setDateOpen] = useState<boolean>(false)
+const List = ({Customer,page}:propType) => {
     const [customerName, setCustomerName] = useState<string>("");
     const [user, setUser] = useState<string>("");
     const [from, setFrom] = useState<Date | undefined>(new Date);
@@ -86,7 +81,7 @@ const List = () => {
 
 
             </section>
-            <section>
+            <section className="mb-96 ">
 
                 <div className="grid grid-cols-12 my-8" >
                     <span className="md:col-end-13 flex  col-end-13 col-span-5 md:col-span-3 mb-5 px-2 text-center border  rounded-sm py-1 ">
@@ -94,7 +89,7 @@ const List = () => {
                         <Link href={"new-sales"}
                             className="bg-primary-gray px-2 py-1 w-full rounded-md"
                         >
-                            + New Sales
+                            + New {page}
                         </Link>
                     </span>
                     <div className="md:col-span-5 col-span-full col-start-1">

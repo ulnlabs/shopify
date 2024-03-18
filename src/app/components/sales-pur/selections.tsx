@@ -1,5 +1,5 @@
 import { MdArrowDropDown } from "react-icons/md";
-import React, { useState, SetStateAction, Dispatch } from 'react'
+import React, { useState, SetStateAction, Dispatch, useRef, useEffect } from 'react'
 
 import { IoMdContact } from 'react-icons/io'
 import { Input } from '@/components/ui/input'
@@ -27,7 +27,16 @@ const Selections = ({ cValue, setCValue, placeholder, inputData, icon, payment }
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
+    const selectRef = useRef<null | any>(null)
 
+    useEffect(()=>{
+        const handleClose = (e:any) =>{
+            if(!selectRef.current?.contains(e.target)){
+                setIsOpen(false)
+            }
+        }
+        document.addEventListener('click',handleClose)
+    })
 
     const handleStatusClick = (label: string): void => {
         setCValue(label);
@@ -36,7 +45,7 @@ const Selections = ({ cValue, setCValue, placeholder, inputData, icon, payment }
 
 
     return (
-        <div>
+        <div ref={selectRef}>
             <div className="bg-primary-gray py-1 rounded-lg px-2">
 
                 <div className={` flex items-center ${icon ? "bg-primary-gray" : "bg-white"}  border rounded-md cursor-pointer `} onClick={() => { setIsOpen(!isOpen) }} >

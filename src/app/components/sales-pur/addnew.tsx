@@ -1,7 +1,7 @@
 "use client"
 import { BiCart } from "react-icons/bi";
 import { AiOutlineCalendar } from "react-icons/ai";
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { format } from "date-fns"
 import { Calendar } from "@/components/ui/calendar"
 import { Input } from '@/components/ui/input'
@@ -54,14 +54,32 @@ const sample = [
 ]
 const NewSales = ({ data, setData, placeholder, isSales }: any) => {
 
+  const cusRef = useRef<null | any>(null);
+  const dateRef = useRef<null | any>(null);
+  const itemRef = useRef<null | any>(null);
+  useEffect(() => {
+    const handleClose = (e: any) => {
+      if (!cusRef.current?.contains(e.target)) {
+        setCustomerOpen(false);
+      }
+      if (!dateRef.current?.contains(e.target)) {
+        setDateOpen(false);
+      }
+      if(!itemRef.current?.contains(e.target)) {
+        setItemOpen(false);
+      }
+    }
+    document.addEventListener('click', handleClose)
+  }, [])
 
-
-  const { billDate } = data;
   const [customerOpen, setCustomerOpen] = useState<boolean>(false)
   const handleCustomerClick = (label: string): void => {
     setData({ ...data, customerName: label });
     setCustomerOpen(false);
   }
+
+
+  const { billDate } = data;
   const [dateOpen, setDateOpen] = useState<boolean>(false);
   const handleDateClick = (label: any) => {
     setData({ ...data, billDate: new Date(label) });
@@ -109,11 +127,15 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
   useEffect(() => {
     setData({ ...data, billPaymentType: payType });
   }, [payType]);
+
+
+
+
   return (
     <div className='px-10 mt-10 mb-10'>
       <section>
         <div className="grid grid-cols-12 gap-5 md:gap-10">
-          <div className="  relative  col-start-1 md:col-span-6 col-span-full">
+          <div ref={cusRef} className="  relative  col-start-1 md:col-span-6 col-span-full">
             <div className="flex bg-primary-gray  py-1 px-2 rounded-lg border items-center ">
               <IoMdContact className="mr-2 h-4 w-4 shrink-0  opacity-50" />
               <Input placeholder={placeholder} value={"" || data.customerName} readOnly onClick={() => {
@@ -145,7 +167,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
               )
             }
           </div>
-          <div className="md:col-start-7 md:col-span-6 col-span-full">
+          <div ref={dateRef} className="md:col-start-7 md:col-span-6 col-span-full">
             <div className="flex  py-1 text-w bg-primary-gray px-2 rounded-lg border items-center cursor-pointer "
               onClick={() => { setDateOpen(!dateOpen) }}>
               <AiOutlineCalendar className="mr-2  h-4 w-4 shrink-0  opacity-50" />
@@ -170,10 +192,10 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
         <div className="mt-5 mb-10 col-span-full relative ">                {/* status */}
           <Selections inputData={["Active", "Final"]} cValue={statusValue} placeholder="Status" setCValue={setStatusValue} icon={true} />
         </div>
-        <div className="mt-5 relative">
+        <div ref={itemRef} className="mt-5 relative">
           <div className="flex items-center border py-1  bg-primary-gray px-2 rounded-lg">
             <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
-            <Input placeholder="Item Name / Barcode / Item Number" className=""
+            <Input placeholder="Item Name / Barcode / Item Number" value={items}
               onClick={() => {
                 setItemOpen(true);
               }}
@@ -192,9 +214,11 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
                   return (
                     <div className="">
                       <p key={index}
-                        className="px-3 py-1"
+                        className="px-3 py-1 cursor-pointer"
                         onClick={() => {
-                          setItemList([...itemList, item.value])
+                          setItemList([...itemList, item.value]);
+                          setItems("")
+                          setItemOpen(false);
                         }}>
                         {item.name}
                       </p>
@@ -211,7 +235,6 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
                     </p>
                   </div>
                 )}
-
             </div>
           }
         </div>
