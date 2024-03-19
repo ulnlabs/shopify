@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server"
-
+import { connectMongoDB } from "../../../../mongo";
+import customerDB from "@/modals/customer";
 export async function GET():Promise<NextResponse<customerList[]>>{
 
   console.log("api/customer");
+  try {
+  await  connectMongoDB()
+ await customerDB.create({file_name:"jking"})
+  
+  } catch (error) {
+    
+  }
   
 const data:customerList[]=[
     {
