@@ -11,6 +11,7 @@ import {
   getFilteredRowModel,
   SortingState,
   useReactTable,
+
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -85,14 +86,20 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4">
         {veiw.filter && (
           <Input
-            placeholder="Filter emails..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
+            placeholder="Search..."
+            
+            
+            onChange={(event) => {
+              
+              table.setGlobalFilter(event.target.value)
+              console.log(table.getColumn("mobile"))
+            }
+              
             }
             className="max-w-sm"
           />
         )}
+        
         {veiw.column && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -110,7 +117,7 @@ export function DataTable<TData, TValue>({
                       key={column.id}
                       className="capitalize"
                       checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
+                      onCheckedChange={(value:any) =>
                         column.toggleVisibility(!!value)
                       }
                     >
