@@ -23,7 +23,7 @@ function page() {
       select: false,
       itemCode: "ABgtC",
       itemName: "Example Itejyygm",
-      brand: "XYZ Bra;lknd",
+      brand: "XYZ Bralknd",
       category: "Electron.kn.ic Devices",
       unit: "Piece",
       stockQty: 800,
@@ -39,7 +39,7 @@ function page() {
     <div className="w-full px-2 py-4">
       <DashboardHeader title="Items List" />
       <div className="py-4 px-2">
-        <DataTable columns={COLUMNS_DATA} data={exampleData} />
+        <DataTable columns={COLUMNS_DATA} data={exampleData} filter paginater/>
       </div>
     </div>
   );
