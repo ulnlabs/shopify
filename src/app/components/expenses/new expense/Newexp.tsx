@@ -2,6 +2,8 @@
 import React, { FormEvent, useContext, useState } from "react";
 import DashboardHeader from "../../dashboard/DashboardHeader";
 import path from "path";
+import { Search } from "lucide-react";
+import SearchSelect from "../../sales-pur/search";
 function Newexp() {
 const [expensesData,setExpenses] = useState<any>({})
   const handleReset = (): void => {
@@ -41,7 +43,7 @@ const [expensesData,setExpenses] = useState<any>({})
                 htmlFor="name"
                 className="mt-2 text-start pr-4  cursor-pointer col-start-2 md:col-start-1 col-span-5 "
               >
-                Name <span className="text-red-400">*</span>
+                Date<span className="text-red-400">*</span>
               </label>
               <input
                 onChange={(e) =>
@@ -49,7 +51,7 @@ const [expensesData,setExpenses] = useState<any>({})
                 }
                 value={expensesData.name}
                 required
-                type="text"
+                type="date"
                 id="date"
                 name="date"
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5   px-2 outline-none rounded-md col-span-3 "
@@ -60,18 +62,11 @@ const [expensesData,setExpenses] = useState<any>({})
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="category"
               >
-                Category
+                Category<span className="text-red-400">*</span>
               </label>
-              <input
-                onChange={(e) =>
-                  setExpenses({ ...expensesData, mobile: e.target.value })
-                }
-                value={expensesData.mobile}
-                className="h-10  bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
-                name="category"
-                id="category"
-                type="text"
-              />
+              <div className="col-start-2 md:col-start-1 md:col-span-5  col-span-3">
+              <SearchSelect className="border-none bg-gray-200" value={expensesData} setValue={setExpenses} inputData={["category","fuel"]} placeholder="Select" searchPlaceholder="Search category" />
+              </div>
             </div>
             <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
               <label
@@ -115,7 +110,7 @@ const [expensesData,setExpenses] = useState<any>({})
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="refno"
               >
-                Reference No
+                Reference No<span className="text-red-400">*</span>
               </label>
               <input
                 onChange={(e) =>
