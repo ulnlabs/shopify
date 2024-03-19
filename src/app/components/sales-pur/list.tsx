@@ -71,7 +71,7 @@ const List = ({ Customer, page,isSales,path }: propType) => {
                
                    
 
-           
+           <SearchSelect  />
 
 
             </section>
