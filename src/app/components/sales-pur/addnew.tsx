@@ -161,7 +161,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
               <AiOutlineCalendar className="mr-2  h-4 w-4 shrink-0  opacity-50" />
               <Input placeholder='Select Customer' value={billDate ? format(billDate, "PPP") : ''} readOnly onClick={() => {
                 
-              }} className="  cursor-pointer " />
+              }} className="  cursor-default " />
             </div>
           </div>
         </div>
@@ -267,25 +267,25 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
         </div>
         <div className="md:col-end-13  h-auto md:col-span-4 rounded-lg col-span-full grid items-center bg-primary-gray">
           <div className="grid whitespace-nowrap text-ellipsis overflow-clip grid-cols-4 lg:grid-cols-3 py-2 justify-start gap-4  px-5 ">
-            <p className="col-start-1 col-end-3">Subtotal</p>
+            <p className="col-start-1 md:text-end col-end-3">Subtotal</p>
             <p className="col-span-2 col-start-3 md-pr-2 "> $ {data.billSubtotal} </p>
           </div>
         </div>
         <div className="md:col-end-13 md:col-span-4 py-2 h-auto rounded-lg col-span-full grid items-center bg-primary-gray">
           <div className="grid grid-cols-4 h-auto lg:grid-cols-3 justify-start gap-4  px-5  ">
-            <p className="col-start-1 text-end  col-end-3">Other Charges</p>
+            <p className="col-start-1 md:text-end  col-end-3">Other Charges</p>
             <p className="col-span-2 col-start-3 md-pr-2 "> ${data.billOtherCharge} </p>
           </div>
         </div>
         <div className="md:col-end-13 md:col-span-4 h-auto rounded-lg col-span-full grid items-center bg-primary-gray">
           <div className="grid grid-cols-4 justify-start lg:grid-cols-3 py-2 gap-4 px-5  ">
-            <p className="col-start-1 text-end  col-end-3">Overall Discount</p>
+            <p className="col-start-1 md:text-end  col-end-3">Overall Discount</p>
             <p className="col-span-2 col-start-3 md-pr-2">${data.billOverallDis} </p>
           </div>
         </div>
         <div className="md:col-end-13 md:col-span-4 rounded-lg h-auto col-span-full grid items-center bg-primary-gray">
           <div className="grid grid-cols-4 justify-start lg:grid-cols-3 py-2 gap-4 px-5  ">
-            <p className="col-start-1 text-end  col-end-3">Grand Total</p>
+            <p className="col-start-1 md:text-end  col-end-3">Grand Total</p>
             <p className="col-span-2 col-start-3 md-pr-2 ">${data.billTotal} </p>
           </div>
         </div>
