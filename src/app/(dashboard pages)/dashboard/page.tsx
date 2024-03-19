@@ -1,8 +1,10 @@
+import DashboardHeader from '@/app/components/dashboard/DashboardHeader'
 import React from 'react'
 
 function page() {
   return (
     <div className='w-full flex flex-col items-center py-6 px-6 gap-4'>
+      <DashboardHeader title='Dashboard' subtitle='Business analatics'/>
       <div className="flex justify-evenly w-full gap-6 flex-wrap">
         <SaleAmount title="today Sale Amount" amount={2000} />
         <SaleAmount title="today Sale Amount" amount={20} />
@@ -22,7 +24,7 @@ export default page
 
 const SaleAmount = ({ title, amount }: { title: String, amount: number }) => {
   return (
-    <div className="sm:w-[400px] w-full p-2 shadow shadow-gray-200 rounded-[20px] shadow-[inset_0px_0px_4px_1px] flex items-center justify-between">
+    <div className="sm:w-[400px] w-full p-2  shadow-gray-200 rounded-[20px] shadow-[inset_0px_0px_4px_1px] flex items-center justify-between">
       <div className="min-w-[100px] min-h-[100px] border rounded-[20px] font-bold flex items-center justify-center text-4xl text-[--primary]">
         {
           amount >= 1000 ? amount / 1000 + "k" : (amount >= 100 && amount < 1000) ? amount / 100 + "h" : "₹" + amount
