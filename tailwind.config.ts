@@ -28,7 +28,12 @@ const config = {
           gray:"#e6e6e6",
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          gray:"#E6E6E6",
+          save:"#E22222",
+          close:"#353535",
         },
+
+
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",

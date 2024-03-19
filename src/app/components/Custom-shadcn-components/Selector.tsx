@@ -16,13 +16,13 @@ import {
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 
 export type SelectorProps = {
-    currentstate: string;
+    currentstate?: string;
     data: string[];
-    commonTitle: string;
-    changeState: Dispatch<SetStateAction<string>>
+    commonTitle?: string;
+    changeState: Dispatch<SetStateAction<string> > 
 }
 
-export const Selector = ({ data, changeState, currentstate, commonTitle }: SelectorProps) => {
+export const Selector = ({ data, changeState, currentstate, commonTitle }: SelectorProps,className:string) => {
     const [opener, setOpener] = useState<boolean>(false);
     return (
         <Popover open={opener} onOpenChange={setOpener}>
