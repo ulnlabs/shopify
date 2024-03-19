@@ -1,7 +1,8 @@
 "use client"
 import NewSales from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { postData } from "@/app/utils/api";
 
 interface FormState {
   customerName: string,
@@ -27,6 +28,9 @@ interface FormState {
 const page = () => {
 
 
+  
+
+
   const [salesData, setSalesData] = useState<FormState>({
     customerName: "",
     billDate: new Date,
@@ -46,8 +50,21 @@ const page = () => {
     billPayNote: "",
   })
 
-  const handleClick = () =>{
-    console.log(salesData);  
+  const handleClick = async () =>{
+    try{
+
+      const response = await postData<FormState>("/api/sales",salesData );
+      console.log('response : ',response);
+
+      
+    } catch (e) {
+      console.error("error ",e);
+      
+    }
+
+
+    
+     
   }
 
 

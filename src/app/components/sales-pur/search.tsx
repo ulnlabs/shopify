@@ -44,7 +44,7 @@ const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlacehold
             <div className="  py-1 rounded-lg">
                 <div className={`  px-2 py-1  border-none rounded-md cursor-pointer `} onClick={() => { setIsOpen(!isOpen) }} >
                     <div className='flex items-center rounded-md bg-primary-gray'>
-                        <Input placeholder={placeholder}
+                        <Input placeholder={placeholder || "Search..."}
                             value={"" || value}
                             className={`border-none bg-primary-gray cursor-pointer ${className}`}
                             readOnly />

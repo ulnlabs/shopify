@@ -137,7 +137,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
               customerOpen && (
                 <div className="z-10 absolute w-full mt-2 ">
                   <Command className="rounded-lg border ">
-                    <CommandInput placeholder="Type a command or search..." />
+                    <CommandInput autoFocus placeholder="Type a command or search..." />
                     <CommandList>
                       <CommandEmpty>No results found.</CommandEmpty>
                       <CommandGroup>
