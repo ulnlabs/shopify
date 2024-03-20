@@ -1,19 +1,12 @@
 "use client"
-import { BsPersonAdd } from "react-icons/bs"; 
+import { BsPersonAdd } from "react-icons/bs";
 import { BiCart } from "react-icons/bi";
 import { AiOutlineCalendar } from "react-icons/ai";
 import React, { useState, useEffect, useRef } from 'react'
 import { format } from "date-fns"
 import { Input } from '@/components/ui/input'
 import { IoMdContact } from "react-icons/io";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
+
 
 
 
@@ -27,20 +20,7 @@ import { pur_Column } from "../datatable/purColumn";
 import Selections from "./selections";
 import Link from "next/link";
 
-const cutomerName = [
-  {
-    value: "Fire10",
-    label: "Fire10",
-  },
-  {
-    value: "deepath",
-    label: "Deepath",
-  },
-  {
-    value: "999",
-    label: "Dhilip",
-  },
-]
+
 const sample = [
   {
 
@@ -52,7 +32,7 @@ const sample = [
     subtotal: 10,
   }
 ]
-const NewSales = ({ data, setData, placeholder, isSales }: any) => {
+const NewSales = ({ data, setData, placeholder, isSales, customerData, items, setItems, Items }: any) => {
 
   const cusRef = useRef<null | any>(null);
   const dateRef = useRef<null | any>(null);
@@ -62,7 +42,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
       if (!cusRef.current?.contains(e.target)) {
         setCustomerOpen(false);
       }
-      if(!itemRef.current?.contains(e.target)) {
+      if (!itemRef.current?.contains(e.target)) {
         setItemOpen(false);
       }
     }
@@ -70,30 +50,12 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
   }, [])
 
   const [customerOpen, setCustomerOpen] = useState<boolean>(false)
-  const handleCustomerClick = (label: string): void => {
-    setData({ ...data, customerName: label });
-    setCustomerOpen(false);
-  }
+
   const { billDate } = data;
-  const Items = [
-    {
-      name: 'Customer',
-      value: 'Customer'
-    },
-    {
-      name: 'Customer 1',
-      value: 'Customer 1'
-    }, {
-      name: 'Customer 2',
-      value: 'Customer 2'
-    }, {
-      name: 'Customer 3',
-      value: 'Customer 3'
-    }
-  ]
+
 
   const [itemOpen, setItemOpen] = useState<boolean>(false);
-  const [items, setItems] = useState<string>('');
+
   const [itemList, setItemList] = useState<any>([]);
   const [statusValue, setStatusValue] = useState("")
 
@@ -127,50 +89,66 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
           <div ref={cusRef} className="  relative  col-start-1 md:col-span-6 col-span-full">
             <div className="flex bg-primary-gray  py-1 px-2 rounded-lg border items-center ">
               <IoMdContact className="mr-2 h-4 w-4 shrink-0  opacity-50" />
-              <Input placeholder={placeholder} value={"" || data.customerName} readOnly onClick={() => {
-                setCustomerOpen(!customerOpen)
-              }} className=" cursor-pointer  " />
-              <Link href={""}>
-                <BsPersonAdd className="ml-2 h-4 w-4 shrink-0  opacity-50" />
+              <Input placeholder={placeholder} value={"" || data.customerName}
+                onClick={() => {
+                  setCustomerOpen(true);
+                }}
+                onChange={(e) => {
+                  setData({ ...data, customerName: e.target.value });
+                }}
+              />
+
+              <Link href={"/customers/new"}>
+                <BsPersonAdd className="ml-2 h-4 w-4 shrink-0  opacity-100" />
               </Link>
             </div>
             {
-              customerOpen && (
-                <div className="z-10 absolute w-full mt-2 ">
-                  <Command className="rounded-lg border ">
-                    <CommandInput placeholder="Type a command or search..." />
-                    <CommandList>
-                      <CommandEmpty>No results found.</CommandEmpty>
-                      <CommandGroup>
-                        {cutomerName.map((item) => (
-                          <CommandItem key={item.value}
-                            onSelect={handleCustomerClick}
-                          >
-                            {item.label} <p className="hidden">{item.value}</p>
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
+              customerOpen && data.customerName && (
+                <div className="mt-2 z-10 border rounded-lg bg-white absolute w-full">
+                  {
+                    customerData.map((item: any, index: any) => {
+                      return (
+                        <div className="">
+                          <p key={index}
+                            className="px-3 py-1 cursor-pointer"
+                            onClick={() => {
+                              setData({ ...data, customerName: item.value });
+                              setCustomerOpen(false);
+                            }}>
+                            {item.label}
+                          </p>
+                        </div>
+                      )
+                    })
+                  }
+                  {customerData.filter((item: any) => {
+                    return data.customerName === "" ? true : item.value.toLowerCase().includes(data.customerName.toLowerCase())
+                  }).length === 0 && (
+                      <div className="">
+                        <p className="px-3 py-1 text-center">
+                          Item Not Found
+                        </p>
+                      </div>
+                    )}
                 </div>
               )
             }
           </div>
           <div ref={dateRef} className="md:col-start-7 md:col-span-6 col-span-full">
             <div className="flex  py-1 text-w bg-primary-gray px-2 rounded-lg border items-center cursor-pointer "
-             >
+            >
               <AiOutlineCalendar className="mr-2  h-4 w-4 shrink-0  opacity-50" />
               <Input placeholder='Select Customer' value={billDate ? format(billDate, "PPP") : ''} readOnly onClick={() => {
-                
+
               }} className="  cursor-default " />
             </div>
           </div>
         </div>
         {
-          !isSales && 
-        <div className="mt-5 mb-10 col-span-full relative ">
-          <Selections inputData={["Active", "Final"]} cValue={statusValue} placeholder="Status" setCValue={setStatusValue} icon={true} />
-        </div>
+          !isSales &&
+          <div className="mt-5 mb-10 col-span-full relative ">
+            <Selections inputData={["Active", "Final"]} cValue={statusValue} placeholder="Status" setCValue={setStatusValue} icon={true} />
+          </div>
         }
         <div ref={itemRef} className="mt-5 relative">
           <div className="flex items-center border py-1 bg-primary-gray px-2 rounded-lg">
@@ -188,9 +166,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
             items && itemOpen &&
             <div className="mt-2 z-10 border rounded-lg bg-white absolute w-full">
               {
-                Items.filter((item, i) => {
-                  return items === "" ? true : item.value.toLowerCase().includes(items.toLowerCase())
-                }).map((item, index) => {
+                Items.map((item: any, index: any) => {
                   return (
                     <div className="">
                       <p key={index}
@@ -206,7 +182,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
                   )
                 })
               }
-              {Items.filter((item, i) => {
+              {Items.filter((item: any) => {
                 return items === "" ? true : item.value.toLowerCase().includes(items.toLowerCase())
               }).length === 0 && (
                   <div className="">
@@ -233,7 +209,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
             <p className="col-span-2 col-start-3 ">$ {data.billQuantity} </p>
           </div>
         </div>
-        <div className="grid items-center grid-cols-subgrid h-auto grid-rows-subgrid gap-2 col-start-1 px-1 bg-primary-gray col-span-12 md:col-span-6 rounded-lg row-span-1">
+        <div className="grid items-center grid-cols-subgrid h-auto grid-rows-subgrid gap-2 col-start-1 px-1 bg-primary-gray col-span-12 md:col-span-6 rounded-lg ">
           <div className="col-start-1 pl-2 col-end-7 py-2 md:col-end-4">
             <input id="Charges"
               className=" w-full rounded-md border px-2 h-10 outline-none"
@@ -245,7 +221,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
             <Selections inputData={["GST 5%", "VAT 5%"]} cValue={taxType} placeholder="Type" setCValue={setTaxType} icon={false} />
           </div>
         </div>
-        <div className="grid  items-center grid-cols-subgrid grid-rows-subgrid gap-2 col-start-1 px-1 bg-primary-gray col-span-12 md:col-span-6 rounded-lg row-span-1">
+        <div className="grid  items-center grid-cols-subgrid grid-rows-subgrid gap-2 col-start-1 px-1 bg-primary-gray col-span-12 md:col-span-6 rounded-lg ">
           <div className="col-start-1 pl-2 col-end-7 md:col-end-4">
             <input id="Charges"
               onChange={(e) => { setData({ ...data, billDiscount: e.target.value }) }}
@@ -256,7 +232,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
             <Selections inputData={["Per %", "Fixed"]} cValue={disType} placeholder="Type" setCValue={setDisType} icon={false} />
           </div>
         </div>
-        <div className="grid items-center  grid-rows-subgrid gap-2 col-start-1 px-2 bg-primary-gray col-span-12 md:col-span-6 rounded-lg row-span-1">
+        <div className="grid items-center  grid-rows-subgrid gap-2 col-start-1 px-2 bg-primary-gray col-span-12 md:col-span-6 rounded-lg ">
           <div className="py-2">
             <textarea
               id="Charges"
@@ -311,15 +287,9 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
             onChange={(e) => { setData({ ...data, billAmount: e.target.value }) }}
           />
         </div>
-        <div className="col-span-full py-2 px-2 rounded-lg bg-primary-gray">
-          <textarea
-            placeholder="Note"
-            className="h-auto px-1 w-full resize-none rounded-md outline-none"
-            onChange={(e) => { setData({ ...data, billNote: e.target.value }) }}
-          />
 
-        </div>
       </section >
+
 
     </div>
 
