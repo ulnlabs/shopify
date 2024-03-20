@@ -235,7 +235,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
         <div className="grid items-center grid-cols-subgrid h-auto grid-rows-subgrid gap-2 col-start-1 px-1 bg-primary-gray col-span-12 md:col-span-6 rounded-lg row-span-1">
           <div className="col-start-1 pl-2 col-end-7 py-2 md:col-end-4">
             <input id="Charges"
-              className=" w-full rounded-md px-2 h-10 outline-none"
+              className=" w-full rounded-md border px-2 h-10 outline-none"
               type="number"
               onChange={(e) => { setData({ ...data, billCharges: e.target.value }) }}
               placeholder="Other Charges" />
@@ -248,7 +248,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
           <div className="col-start-1 pl-2 col-end-7 md:col-end-4">
             <input id="Charges"
               onChange={(e) => { setData({ ...data, billDiscount: e.target.value }) }}
-              className=" w-full rounded-md px-2 h-10 outline-none"
+              className=" w-full border rounded-md px-2 h-10 outline-none"
               placeholder="Overall Discount" />
           </div>
           <div className="md:col-start-4 col-start-7 col-end-13 relative md:col-end-7  bg-primary-gray">
