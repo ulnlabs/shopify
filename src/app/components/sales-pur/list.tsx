@@ -66,18 +66,10 @@ const List = ({ Customer, page,isSales,path }: propType) => {
                         </Link>
                     </div>
                 </div>
-               
-                   
-
-           <SearchSelect  />
-
-
             </section>
             <section className=" ">
-
                 <div className="grid grid-cols-12 my-8" >
                     <span className="md:col-end-13 flex  col-end-13 col-span-5 md:col-span-3 mb-5 px-2 text-center border  rounded-sm py-1 ">
-
                         <Link href={path}
                             className="bg-primary-gray px-2 py-1 w-full rounded-md"
                         >
@@ -93,18 +85,15 @@ const List = ({ Customer, page,isSales,path }: propType) => {
                         <CalenSelect date={end} setDate={setEnd} />
                     </span>
                 </div>
-
             </section>
             <section>
                 {  isSales ?
-
                 <DataTable
                     columns={s_LIST_Column}
                     data={sample}
                     rows={true}
                     paginater={true}
                     filter={true}
-                     
                 /> : 
                 <DataTable
                 columns={p_LIST_Column}
@@ -114,8 +103,6 @@ const List = ({ Customer, page,isSales,path }: propType) => {
                 filter={true}
             />
                 }
-
-               
             </section>
         </div>
     )
