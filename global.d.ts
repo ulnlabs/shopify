@@ -33,4 +33,19 @@ type columnHeader_dataTable={
     accessorKey: string,
     header: string,
 }
+type tableVeiw={
+    column:boolean,
+    filter:boolean,
+    rows:boolean,
+    paginator:boolean,
+}
+type customerFileFormat={
+    id:number,
+    coloum:string,
+    value:string
+}
+type supplierColumn={
+    accessorKey: string,
+    header: string,
 
+}

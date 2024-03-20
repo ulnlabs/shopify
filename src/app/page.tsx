@@ -1,26 +1,55 @@
 'use client'
+import { signIn} from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-
 export default function Home() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState({
+    email: '',
+    password: ''
+  })
+  const router = useRouter()
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const logger = await signIn('credentials', {
+      email: user.email,
+      password: user.password,
+      redirect: false
+    })
+    if (logger?.ok) {
+      router.push("/dashboard")
+      return
+    }
+    setError("Invalid email or password. Please try again.");
+  }
   return (
     <>
+      {error && (
+        <div className="fixed bg-opacity-75 top-0 flex items-center justify-center py-4 w-full">
+          <div className="bg-white border-l-4 border-r-4 border-purple-400 text-gray-600 px-4 py-3 rounded-lg shadow-lg" role="alert">
+            <strong className="font-bold">Error! </strong>
+            <span className="block sm:inline">{error}</span>
+          </div>
+        </div>
+      )}
       <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <Image className="mx-auto h-[100px] w-auto" src={'/asserts/logo/logo.svg'} height={100} width={100} alt="Logo"/>
+            <Image className="mx-auto h-[100px] w-auto" src={'/asserts/logo/logo.svg'} height={100} width={100} alt="Logo" />
             <h2 className="mt-6 text-center text-3xl font-extrabold text-purple-600 tracking-tight sm:text-4xl">
               Sign in to your Shopify account
             </h2>
           </div>
-          <form className="mt-8 space-y-6" action="#" method="POST">
+          <form onSubmit={handleSignIn} className="mt-8 space-y-6" action="#" method="POST">
             <input type="hidden" name="remember" value="true" />
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
                 <label htmlFor="email-address" className="sr-only">Email address</label>
                 <input
+                  onChange={(e) => setUser({ ...user, email: e.target.value })}
                   id="email-address"
                   name="email"
                   type="email"
@@ -34,6 +63,7 @@ export default function Home() {
                 <label htmlFor="password" className="sr-only">Password</label>
                 <div className="relative">
                   <input
+                    onChange={(e) => setUser({ ...user, password: e.target.value })}
                     id="password"
                     name="password"
                     type={showPassword ? "text" : "password"}
