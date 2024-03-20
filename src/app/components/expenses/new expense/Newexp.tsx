@@ -1,8 +1,6 @@
 "use client";
 import React, { FormEvent, useContext, useState } from "react";
 import DashboardHeader from "../../dashboard/DashboardHeader";
-import path from "path";
-import { Search } from "lucide-react";
 import SearchSelect from "../../sales-pur/search";
 function Newexp() {
 const [expensesData,setExpenses] = useState<any>({})

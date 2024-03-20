@@ -6,10 +6,18 @@ import { Checkbox } from '@/components/ui/checkbox'
 
 function Explist() {
   return (
-    <DataTable columns={expColumn} data={[{
-      date: "",
-
-    }]} filter={true} paginater={true} column={true} rows={true} />
+    <>
+     <div className="">
+          <DataTable
+            columns={expColumn}
+            data={[]}
+            column={true}
+            filter={true}
+            rows={true}
+            paginater={true}
+          />
+        </div>
+    </>
   )
 }
 const EXP_SELECT = {
@@ -20,7 +28,7 @@ const EXP_SELECT = {
         table.getIsAllPageRowsSelected() ||
         (table.getIsSomePageRowsSelected() && "indeterminate")
       }
-      onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      onCheckedChange={(value:any) => table.toggleAllPageRowsSelected(!!value)}
       aria-label="Select all"
     />
   ),

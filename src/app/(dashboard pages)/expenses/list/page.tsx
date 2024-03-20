@@ -3,9 +3,10 @@ import Explist from '@/app/components/expenses/expense list/Explist'
 
 function page() {
   return (
-    <div>
-      <Explist />
-    </div>
+    <>
+    <Explist />
+    </>
+  
   )
 }
 

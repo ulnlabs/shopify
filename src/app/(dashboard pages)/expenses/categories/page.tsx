@@ -3,7 +3,7 @@ import List from '@/app/components/expenses/categories/List'
 
 function page() {
   return (
-    <div>
+    <div className='h-full w-full'>
       <List />
     </div>
   )
