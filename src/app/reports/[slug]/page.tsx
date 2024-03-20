@@ -3,7 +3,10 @@ import Proandloss from '@/app/components/reports/profit and loss report/Proandlo
 import Purchasereprot from '@/app/components/reports/purchasereport/Purchasereprot';
 import ReturnPurchase from '@/app/components/reports/Purchasereturn/ReturnPurchase';
 import PaymentReport from '@/app/components/reports/purchasepayment/PaymentReport';
-import SalesReport from "@/app/components/reports/itemSalesReport/SalesReport"
+import ItemSalesReport from "@/app/components/reports/itemSalesReport/ItemSalesReport"
+import ItemReport from "@/app/components/reports/itemreport/ItemReport"
+import SalesReport from "@/app/components/reports/salesreport/SalesReport"
+import SalesReturnReport from "@/app/components/reports/salesreturnreport/SalesReturnReport"
 
 function page({params}:{params:{slug:string}}) {
     const route=params.slug
@@ -35,9 +38,25 @@ function page({params}:{params:{slug:string}}) {
             report.header="Purchase Payment Report"
             break;
         case "item-sales":
+            report.current_route=<ItemSalesReport />
+            report.header="Sales Report"
+            break;
+        case "item-purchase":
+            report.current_route=<ItemReport />
+            report.header="Item Purchase Report"
+            break;
+        case "sales":
             report.current_route=<SalesReport />
             report.header="Sales Report"
             break;
+        case "sales-return":
+            report.current_route=<SalesReturnReport />
+            report.header="Sales Return Report"
+            break;
+        
+        
+            
+       
     }
     
   return (
