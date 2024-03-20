@@ -66,8 +66,8 @@ const [expensesData,setExpenses] = useState<any>({})
               >
                 Category<span className="text-red-400">*</span>
               </label>
-              <div className="col-start-2  md:col-start-1 md:col-span-5  col-span-3">
-              <SearchSelect className="bg-gray-200" value={expensesData} setValue={setExpenses} inputData={["category","fuel"]} placeholder="Select" searchPlaceholder="Search category" />
+              <div className="col-start-2  md:col-s{ttart-1 md:col-span-5  col-span-3">
+              <SearchSelect isExpense className="bg-gray-200 h-8 " upClassName="bg-gray-200 " value={expensesData} setValue={setExpenses} inputData={["category","fuel"]} placeholder="Select" searchPlaceholder="Search category" />
               </div>
             </div>
             <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">

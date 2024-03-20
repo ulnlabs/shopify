@@ -3,7 +3,7 @@ import Category from '@/app/components/expenses/new category/Category'
 
 function page() {
   return (
-    <div>
+    <div className='w-full h-full'>
       <Category />
     </div>
   )
