@@ -30,9 +30,11 @@ const [expensesData,setExpenses] = useState<any>({})
   };
   return (
     <>
+    <div className="mt-8 ml-4">
       <DashboardHeader title="Expenses" subtitle="Add/Update Expense" breadcrumb={[{title:"dashboard",path:"/dashboard"},{title:"Expenses",path:""}]}/>
-      <main>
-        <section className=" min-h-[500px]  mt-10 w-[90%] ml-[5%] rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] ">
+    </div>
+      <main className="flex">
+        <section className=" min-h-[500px]  mt-28 w-[90%] ml-[5%] rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px]">
           <form
             onSubmit={handleSubmit}
             action=""
@@ -40,7 +42,7 @@ const [expensesData,setExpenses] = useState<any>({})
           >
             <div className="md:col-span-5  md:col-end-5 row-span-2   grid grid-cols-5 col-span-12 ">
               <label
-                htmlFor="name"
+                htmlFor="date"
                 className="mt-2 text-start pr-4  cursor-pointer col-start-2 md:col-start-1 col-span-5 "
               >
                 Date<span className="text-red-400">*</span>
@@ -64,8 +66,8 @@ const [expensesData,setExpenses] = useState<any>({})
               >
                 Category<span className="text-red-400">*</span>
               </label>
-              <div className="col-start-2 md:col-start-1 md:col-span-5  col-span-3">
-              <SearchSelect className="border-none bg-gray-200" value={expensesData} setValue={setExpenses} inputData={["category","fuel"]} placeholder="Select" searchPlaceholder="Search category" />
+              <div className="col-start-2  md:col-start-1 md:col-span-5  col-span-3">
+              <SearchSelect className="bg-gray-200" value={expensesData} setValue={setExpenses} inputData={["category","fuel"]} placeholder="Select" searchPlaceholder="Search category" />
               </div>
             </div>
             <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">

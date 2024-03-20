@@ -3,7 +3,6 @@ import { BiCart } from "react-icons/bi";
 import { AiOutlineCalendar } from "react-icons/ai";
 import React, { useState, useEffect, useRef } from 'react'
 import { format } from "date-fns"
-import { Calendar } from "@/components/ui/calendar"
 import { Input } from '@/components/ui/input'
 import { IoMdContact } from "react-icons/io";
 import {
@@ -62,9 +61,6 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
       if (!cusRef.current?.contains(e.target)) {
         setCustomerOpen(false);
       }
-      if (!dateRef.current?.contains(e.target)) {
-        setDateOpen(false);
-      }
       if(!itemRef.current?.contains(e.target)) {
         setItemOpen(false);
       }
@@ -77,15 +73,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
     setData({ ...data, customerName: label });
     setCustomerOpen(false);
   }
-
-
   const { billDate } = data;
-  const [dateOpen, setDateOpen] = useState<boolean>(false);
-  const handleDateClick = (label: any) => {
-    setData({ ...data, billDate: new Date(label) });
-    setDateOpen(false)
-  }
-
   const Items = [
     {
       name: 'Customer',
@@ -132,7 +120,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
 
 
   return (
-    <div className='px-10 mt-10 mb-10'>
+    <div className='mx-10 mt-10 mb-10'>
       <section>
         <div className="grid grid-cols-12 gap-5 md:gap-10">
           <div ref={cusRef} className="  relative  col-start-1 md:col-span-6 col-span-full">
@@ -169,31 +157,22 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
           </div>
           <div ref={dateRef} className="md:col-start-7 md:col-span-6 col-span-full">
             <div className="flex  py-1 text-w bg-primary-gray px-2 rounded-lg border items-center cursor-pointer "
-              onClick={() => { setDateOpen(!dateOpen) }}>
+             >
               <AiOutlineCalendar className="mr-2  h-4 w-4 shrink-0  opacity-50" />
               <Input placeholder='Select Customer' value={billDate ? format(billDate, "PPP") : ''} readOnly onClick={() => {
-                setDateOpen(!dateOpen)
-              }} className="  cursor-pointer " />
+                
+              }} className="  cursor-default " />
             </div>
-            {
-              dateOpen && (
-                <div className="z-10 absolute mt-2 bg-white rounded-lg border  ">
-                  <Calendar
-                    mode="single"
-                    selected={billDate}
-                    onSelect={handleDateClick}
-                    initialFocus
-                  />
-                </div>
-              )
-            }
           </div>
         </div>
-        <div className="mt-5 mb-10 col-span-full relative ">                {/* status */}
+        {
+          !isSales && 
+        <div className="mt-5 mb-10 col-span-full relative ">
           <Selections inputData={["Active", "Final"]} cValue={statusValue} placeholder="Status" setCValue={setStatusValue} icon={true} />
         </div>
+        }
         <div ref={itemRef} className="mt-5 relative">
-          <div className="flex items-center border py-1  bg-primary-gray px-2 rounded-lg">
+          <div className="flex items-center border py-1 bg-primary-gray px-2 rounded-lg">
             <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
             <Input placeholder="Item Name / Barcode / Item Number" value={items}
               onClick={() => {
@@ -256,7 +235,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
         <div className="grid items-center grid-cols-subgrid h-auto grid-rows-subgrid gap-2 col-start-1 px-1 bg-primary-gray col-span-12 md:col-span-6 rounded-lg row-span-1">
           <div className="col-start-1 pl-2 col-end-7 py-2 md:col-end-4">
             <input id="Charges"
-              className=" w-full rounded-md px-2 h-8"
+              className=" w-full rounded-md px-2 h-10 outline-none"
               type="number"
               onChange={(e) => { setData({ ...data, billCharges: e.target.value }) }}
               placeholder="Other Charges" />
@@ -269,7 +248,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
           <div className="col-start-1 pl-2 col-end-7 md:col-end-4">
             <input id="Charges"
               onChange={(e) => { setData({ ...data, billDiscount: e.target.value }) }}
-              className=" w-full rounded-md px-2 h-8"
+              className=" w-full rounded-md px-2 h-10 outline-none"
               placeholder="Overall Discount" />
           </div>
           <div className="md:col-start-4 col-start-7 col-end-13 relative md:col-end-7  bg-primary-gray">
@@ -280,33 +259,33 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
           <div className="py-2">
             <textarea
               id="Charges"
-              className=" w-full rounded-md px-2 h-auto resize-none"
+              className=" w-full rounded-md px-2 h-auto resize-none outline-none"
               placeholder="Note"
               onChange={(e) => { setData({ ...data, billNote: e.target.value }) }}
             />
           </div>
         </div>
         <div className="md:col-end-13  h-auto md:col-span-4 rounded-lg col-span-full grid items-center bg-primary-gray">
-          <div className="grid  grid-cols-4 lg:grid-cols-3 py-2 justify-start gap-4  px-5 ">
-            <p className="col-start-1 col-end-3">Subtotal</p>
+          <div className="grid whitespace-nowrap text-ellipsis overflow-clip grid-cols-4 lg:grid-cols-3 py-2 justify-start gap-4  px-5 ">
+            <p className="col-start-1 md:text-end col-end-3">Subtotal</p>
             <p className="col-span-2 col-start-3 md-pr-2 "> $ {data.billSubtotal} </p>
           </div>
         </div>
         <div className="md:col-end-13 md:col-span-4 py-2 h-auto rounded-lg col-span-full grid items-center bg-primary-gray">
           <div className="grid grid-cols-4 h-auto lg:grid-cols-3 justify-start gap-4  px-5  ">
-            <p className="col-start-1 text-end  col-end-3">Other Charges</p>
+            <p className="col-start-1 md:text-end  col-end-3">Other Charges</p>
             <p className="col-span-2 col-start-3 md-pr-2 "> ${data.billOtherCharge} </p>
           </div>
         </div>
         <div className="md:col-end-13 md:col-span-4 h-auto rounded-lg col-span-full grid items-center bg-primary-gray">
           <div className="grid grid-cols-4 justify-start lg:grid-cols-3 py-2 gap-4 px-5  ">
-            <p className="col-start-1 text-end  col-end-3">Overall Discount</p>
+            <p className="col-start-1 md:text-end  col-end-3">Overall Discount</p>
             <p className="col-span-2 col-start-3 md-pr-2">${data.billOverallDis} </p>
           </div>
         </div>
         <div className="md:col-end-13 md:col-span-4 rounded-lg h-auto col-span-full grid items-center bg-primary-gray">
           <div className="grid grid-cols-4 justify-start lg:grid-cols-3 py-2 gap-4 px-5  ">
-            <p className="col-start-1 text-end  col-end-3">Grand Total</p>
+            <p className="col-start-1 md:text-end  col-end-3">Grand Total</p>
             <p className="col-span-2 col-start-3 md-pr-2 ">${data.billTotal} </p>
           </div>
         </div>

@@ -11,6 +11,7 @@ import {
   getFilteredRowModel,
   SortingState,
   useReactTable,
+
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -45,15 +46,11 @@ interface DataTableProps<TData, TValue> {
 
 export default function DataTable<TData, TValue>({
   columns,
-<<<<<<< HEAD
   data,
   column,
   filter,
   rows,
   paginater,
-=======
-  data
->>>>>>> 4ca93cefe9b417800bf3a7479159b414b9f03836
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -87,46 +84,6 @@ export default function DataTable<TData, TValue>({
   return (
     <>
       <div className="flex items-center py-4">
-<<<<<<< HEAD
-        {veiw.filter && (
-          <Input
-            placeholder="Filter emails..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-        )}
-        {veiw.column && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-=======
         <Input
           placeholder="Filter emails..."
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
@@ -161,7 +118,6 @@ export default function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
->>>>>>> 4ca93cefe9b417800bf3a7479159b414b9f03836
       </div>
 
       <div className="rounded-md border">

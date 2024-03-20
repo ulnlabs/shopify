@@ -19,8 +19,6 @@ interface searchType {
     inputData: string[],
     searchPlaceholder?: string,
     className?:string,
-
-
 }
 
 const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlaceholder,className }: searchType) => {
@@ -44,11 +42,11 @@ const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlacehold
         <div ref={selRef} className='relative'>
             
             <div className="  py-1 rounded-lg">
-                <div className={`  px-2 py-1  border-none rounded-md ${className} cursor-pointer `} onClick={() => { setIsOpen(!isOpen) }} >
+                <div className={`  px-2 py-1  border-none rounded-md cursor-pointer `} onClick={() => { setIsOpen(!isOpen) }} >
                     <div className='flex items-center rounded-md bg-primary-gray'>
                         <Input placeholder={placeholder}
                             value={"" || value}
-                            className="border bg-primary-gray cursor-pointer"
+                            className={`border-none bg-primary-gray cursor-pointer ${className}`}
                             readOnly />
                         <MdArrowDropDown className="mr-2 h-6 w-6 ml-2 shrink-0 opacity-50" />
                     </div>

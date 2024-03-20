@@ -12,7 +12,7 @@ const page = () => {
   return (
     <div className='w-full px-10'>
         <h1>Purchase List</h1>
-        <List Customer={Customer} page='Purchase' />
+        <List path='new-purchase' Customer={Customer} page='Purchase' />
     </div>
   )
 }

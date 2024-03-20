@@ -23,7 +23,7 @@ interface selectionProp {
 
 }
 
-const Selections = ({ cValue, setCValue, placeholder, inputData, icon, payment }: selectionProp, className: string) => {
+const Selections = ({ cValue, setCValue, placeholder, inputData, icon, payment }: selectionProp) => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -48,13 +48,13 @@ const Selections = ({ cValue, setCValue, placeholder, inputData, icon, payment }
         <div ref={selectRef}>
             <div className="bg-primary-gray py-1 rounded-lg px-2">
 
-                <div className={` flex items-center ${icon ? "bg-primary-gray" : "bg-white"}  border rounded-md cursor-pointer `} onClick={() => { setIsOpen(!isOpen) }} >
+                <div className={` flex items-center ${icon ? "bg-primary-gray" : "bg-white border"}   rounded-md cursor-pointer `} onClick={() => { setIsOpen(!isOpen) }} >
                     {icon &&
                         <IoMdContact className="mr-2 h-4 w-4 shrink-0 opacity-50" />
                     }
                     <Input placeholder={placeholder}
                         value={"" || cValue}
-                        className="border-none cursor-pointer"
+                        className={`${icon ? "border" : " border-none"} cursor-pointer`}
                         readOnly />
                     {!icon &&
                         <MdArrowDropDown className="mr-2 h-6 w-6 ml-2 shrink-0 opacity-50" />

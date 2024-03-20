@@ -12,7 +12,7 @@ const page = () => {
   return (
     <div className='w-full px-10'> 
         <h1>Sales Return List</h1>
-        <List Customer={Customer} page="Sales" />
+        <List Customer={Customer} path='/new-return' page="Sales Return" isSales />
     </div>
   )
 }
