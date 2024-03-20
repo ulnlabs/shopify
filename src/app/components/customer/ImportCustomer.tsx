@@ -31,8 +31,8 @@ const uploadData=():void=>{
     });
   };
   return (<>
-    <div className="grid grid-flow-col grid-cols-6 mt-5 ">
-      <section className="col-span-3 flex items-center mx-6 px-2 col-start-1 border-2 rounded-md border-gray-300">
+    <div className="flex justify-between w-full flex-wrap items-center h-36 ">
+      <section className=" flex items-center mx-6 px-2 col-start-1 border-2 rounded-lg w-[200px] border-gray-300 h-12">
 <span className=""><span className="font-semibold text-gray-600">FilName:</span>{fileName}</span>
 
       </section>
@@ -45,7 +45,7 @@ const uploadData=():void=>{
           className="hidden"
           ref={fileRef}
         />
-        <label htmlFor="csvFile" className= "active:scale-95 hover:bg-gray-100 grid grid-flow-col grid-cols-4  h-12  w-[200px] border-gray-300 gap-x-2 border-2 rounded-xl cursor-pointer">
+        <label htmlFor="csvFile" className= "active:scale-95 hover:bg-gray-100 grid grid-flow-col  grid-cols-4  h-12  w-[200px] border-gray-300 mx-6 px-2 border-2 rounded-xl cursor-pointer ">
           <span className="col-span-1 flex justify-center  col-start-1  items-center">
             <BsFiletypeCsv  className="text-blue-600 text-2xl"/>
 
@@ -55,10 +55,10 @@ const uploadData=():void=>{
       </form>
     </div>
     <div className=" w-full  ">
-<section className=" grid grid-cols-12 grid-rows-4  ">
+<section className=" flex justify-around lg:justify-center lg:gap-x-52  ">
 
-<button className="col-span-2 p-2 active:scale-95 border bg-green-300 row-start-2 col-start-2 rounded-full hover:bg-green-400" onClick={uploadData}>Import</button>
-<button className="col-span-2 p-2 active:scale-95 border bg-red-300 row-start-2 col-start-5 rounded-full hover:bg-red-400" onClick={clearFile}>Cancel</button>
+<button className=" p-2 active:scale-95 border bg-green-300 row-start-2 md:w-[140px] col-start-2 rounded-md hover:bg-green-400" onClick={uploadData}>Import</button>
+<button className="col-span-2 p-2 active:scale-95 border bg-red-300 md:w-[140px] row-start-2 col-start-5 rounded-md hover:bg-red-400" onClick={clearFile}>Cancel</button>
 </section>
     </div >
 
