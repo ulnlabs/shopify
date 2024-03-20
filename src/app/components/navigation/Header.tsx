@@ -1,6 +1,7 @@
 'use client'
 import { UserContext } from '@/UserContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FaBars } from 'react-icons/fa6';
@@ -27,6 +28,9 @@ const profileVarient = {
 
 
 function Header() {
+  const {data:session} = useSession()
+  console.log(session);
+  
   const [toggleprofile, setToggleProfile] = useState<Boolean>(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const profileCardRef = useRef<HTMLDivElement>(null);
@@ -58,9 +62,9 @@ function Header() {
                 <div className="h-4 w-4 absolute -top-2 right-2 rotate-45 border-t border-l rounded bg-white"></div>
                 <Image src={"/"} height={50} width={50} alt='' className='rounded-full border-2 border-[--primary]' />
                 <div className="flex flex-col items-end justify-center">
-                  <h1 className='w-fit text-gray-800'>{"Gowdaman P"}</h1>
-                  <p className='text-[12px] font-light text-gray-800'>{"Admin"}</p>
-                  <button className='border border-[--primary] rounded p-1 mt-1 text-sm text-[--primary] hover:text-white hover:bg-[--primary] transition-all duration-500 ease-In-Out'>SignOut</button>
+                  <h1 className='w-fit text-gray-800'>{session?.user?.name}</h1>
+                  <p className='text-[12px] font-light text-gray-800'>{}</p>
+                  <button onClick={() => signOut({ callbackUrl: '/' })} className='border border-[--primary] rounded p-1 mt-1 text-sm text-[--primary] hover:text-white hover:bg-[--primary] transition-all duration-500 ease-In-Out'>SignOut</button>
                 </div>
               </motion.div>
             )

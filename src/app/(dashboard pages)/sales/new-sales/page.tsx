@@ -49,13 +49,8 @@ const page = () => {
 
   const handleClick = async () =>{
 
-      try {
-         await postData<FormState>("/api/new-sales",salesData)
-      }
-      catch (error) {
-        console.log(error)
-      }
-
+     console.log(salesData);
+     
    
   }
 
