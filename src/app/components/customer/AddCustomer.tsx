@@ -1,8 +1,12 @@
 "use client";
 import React, { FormEvent, useContext } from "react";
 import { ContextData } from "../../../../contextapi";
+import DashboardHeader from "../dashboard/DashboardHeader";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 function AddCustomer() {
   const { customerData, setCustomerData } = useContext(ContextData);
+  const { toast } = useToast();
 
   const handleReset = (): void => {
     setCustomerData({
@@ -18,8 +22,31 @@ function AddCustomer() {
       address: "",
     });
   };
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    const lengthDoc = await axios.get(`/api/customers`, {
+      headers: {
+        data: "doc-count",
+      },
+    });
+    let length = lengthDoc.data.id;
+console.log(length);
+
+    const customerDbData = {
+      name: customerData.name,
+      mobile: customerData.mobile,
+      email: customerData.email,
+      gst: customerData.gst,
+      tax: customerData.tax,
+      due: customerData.due,
+      state: customerData.state,
+      city: customerData.city,
+      pincode: customerData.pincode,
+      address: customerData.address,
+      id: length,
+    };
+    const response = await axios.post(`/api/customers`, customerDbData);
+    console.log(response);
 
     setCustomerData({
       name: "",
@@ -33,12 +60,17 @@ function AddCustomer() {
       pincode: "",
       address: "",
     });
+    toast({
+      title: "New PopUp !",
+      description: "New Customer is added",
+    });
   };
   return (
     <>
-      <header className="w-[90%] h-[80px] mt-4 text-xl font-semibold text-gray-400 flex px-10 rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] ml-[5%] items-center  ">
+      {/*     <header className="w-[90%] h-[80px] mt-4 text-xl font-semibold text-gray-400 flex px-10 rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] ml-[5%] items-center  ">
         Add/Update Customers
-      </header>
+      </header> */}
+      <DashboardHeader title="Customers" subtitle={"new"} />
       <main>
         <section className=" min-h-[700px]  mt-10 w-[90%] ml-[5%] rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] ">
           <form
@@ -54,9 +86,9 @@ function AddCustomer() {
                 Name <span className="text-red-400">*</span>
               </label>
               <input
-                onChange={(e) =>
-                  setCustomerData({ ...customerData, name: e.target.value })
-                }
+                onChange={(e) => {
+                  setCustomerData({ ...customerData, name: e.target.value });
+                }}
                 value={customerData.name}
                 required
                 type="text"
@@ -73,14 +105,14 @@ function AddCustomer() {
                 Mobile
               </label>
               <input
-                onChange={(e) =>
-                  setCustomerData({ ...customerData, mobile: e.target.value })
-                }
+                onChange={(e) => {
+                  setCustomerData({ ...customerData, mobile: e.target.value });
+                }}
                 value={customerData.mobile}
                 className="h-10  bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="mobile"
                 id="mobile"
-                type="text"
+                type="tel"
               />
             </div>
             <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">

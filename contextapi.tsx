@@ -15,6 +15,7 @@ const ContextContent = ({ children }: children) => {
     city: "",
     pincode: "",
     address: "",
+    id:0
   });
 const [supplierData,setSupplierData] =useState({
     name: "",

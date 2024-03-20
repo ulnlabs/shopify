@@ -36,8 +36,8 @@ const cutomerName = [
     label: "Deepath",
   },
   {
-    value: "dhilip",
-    label: "Dhilip",
+    value: "98524789",
+    label: "JKING",
   },
 ]
 const sample = [
@@ -145,7 +145,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
                           <CommandItem key={item.value}
                             onSelect={handleCustomerClick}
                           >
-                            {item.label}
+                            {item.label} <p className="hidden">{item.value}</p>
                           </CommandItem>
                         ))}
                       </CommandGroup>
