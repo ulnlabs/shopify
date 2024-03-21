@@ -19,9 +19,10 @@ interface searchType {
     inputData: string[],
     searchPlaceholder?: string,
     className?:string,
+    upperClassName?:string
 }
 
-const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlaceholder,className }: searchType) => {
+const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlaceholder,className,upperClassName }: searchType) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const handleClick = (label: string) => {
         setValue(label);
@@ -39,12 +40,13 @@ const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlacehold
     },[])
 
     return (
+        //do  nothing
         <div ref={selRef} className='relative'>
             
-            <div className="  py-1 rounded-lg">
+            <div className="  py-1  rounded-lg">
                 <div className={`  px-2 py-1  border-none rounded-md cursor-pointer `} onClick={() => { setIsOpen(!isOpen) }} >
-                    <div className='flex items-center rounded-md bg-primary-gray'>
-                        <Input placeholder={placeholder || "Search..."}
+                    <div className={`flex items-center rounded-md bg-primary-gray ${upperClassName} `}>
+                        <Input placeholder={placeholder}
                             value={"" || value}
                             className={`border-none bg-primary-gray cursor-pointer ${className}`}
                             readOnly />

@@ -19,7 +19,7 @@ interface FormState {
   billTotal: number,
   billPaymentType: string,
   billAmount: any,
-  billPayNote: string,
+
 
 
 }
@@ -43,7 +43,6 @@ const page = () => {
     billTotal: 0,
     billPaymentType: "",
     billAmount: 0,
-    billPayNote: "",
   })
 
   const handleClick = () =>{

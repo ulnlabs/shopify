@@ -4,8 +4,7 @@ import { BsFillHandbagFill } from "react-icons/bs";
 import React, { useState } from 'react'
 import Link from "next/link";
 import CalenSelect from "./calselect";
-import { s_LIST_Column } from "../datatable/listColumn";
-import { p_LIST_Column } from "../datatable/listColumn";
+import { s_LIST_Column,p_LIST_Column } from "../datatable/listColumn";
 import { DataTable } from "../datatable/DataTable";
 import {format} from "date-fns"
 interface propType {
