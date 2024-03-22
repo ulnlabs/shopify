@@ -14,6 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ColumnDef } from "@tanstack/react-table";
+
+
+
+
 /* //delete the data or update here you have to use your custom function import it from your area */
 function handleDelete(row: customerList): void {}
 //see this is an example to sort your column  replace it wth yours
@@ -125,11 +129,8 @@ export const c_columns: ColumnDef<any>[] = [
   C_ID,
   C_NAME,
   C_MOBILE,
-
   C_Email,
-
   C_PAID,
-
   C_SALESDUE,
   C_RETURNDUE,
   C_STATUS,

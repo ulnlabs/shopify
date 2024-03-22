@@ -8,7 +8,7 @@ const data:customerList[]=[
     {
         cid: "1234",
         name: "jking",
-        mobile: "as;kjhkjsdf",
+        mobile: "2222",
         email: "jk@gmail.com",
        
         paid: 500,
@@ -19,7 +19,7 @@ const data:customerList[]=[
         cid: "1234",
         name: "jking",
         mobile: "as;kjhkjsdf",
-        email: "jk@gmail.com",
+        email: "ak@gmail.com",
        
         paid: 500,
         status: "active",
@@ -29,7 +29,7 @@ const data:customerList[]=[
         cid: "1234",
         name: "jking",
         mobile: "as;kjhkjsdf",
-        email: "jk@gmail.com",
+        email: "sk@gmail.com",
        
         paid: 500,
         status: "active",
