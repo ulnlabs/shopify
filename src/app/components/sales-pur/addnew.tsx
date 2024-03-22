@@ -8,10 +8,6 @@ import { Input } from '@/components/ui/input'
 import { IoMdContact } from "react-icons/io";
 
 
-
-
-
-import { sales_Column } from "../datatable/salesColumn";
 import { DataTable } from "../datatable/DataTable";
 
 import { pur_Column } from "../datatable/purColumn";
@@ -19,6 +15,62 @@ import { pur_Column } from "../datatable/purColumn";
 
 import Selections from "./selections";
 import Link from "next/link";
+
+import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineMinus } from "react-icons/ai";
+import { MdOutlineDelete } from "react-icons/md";
+
+import { ColumnDef } from "@tanstack/react-table";
+
+const i_NAME: columnHeader_dataTable = {
+  accessorKey: "name",
+  header: "Item Name",
+};
+
+let quantity = 1
+
+const i_QUANTITY: columnHeader_dataTable = {
+  accessorKey: "quantity",
+  header: "QUANTITY",
+  /*  cell: ({ row }: any) => (
+       <span className="flex gap-1 items-center">
+           <AiOutlineMinus />
+           {quantity}
+           <AiOutlinePlus />
+       </span>
+   )  */
+};
+
+const i_PRICE: columnHeader_dataTable = {
+  accessorKey: "price",
+  header: "PRICE",
+};
+
+const i_DISCOUNT: columnHeader_dataTable = {
+  accessorKey: "discount",
+  header: "DISOUNT",
+};
+
+const i_TAX: columnHeader_dataTable = {
+  accessorKey: "tax",
+  header: "TAX",
+};
+const i_SUBTOTAL: columnHeader_dataTable = {
+  accessorKey: "subtotal",
+  header: "SUB TOTAL",
+};
+
+const i_REMOVE = {
+  accessorKey: "REMOVE",
+
+  cell: ({ row }: any) => (
+    <MdOutlineDelete />
+
+  )
+};
+
+
+
 
 const sample = [
   {
@@ -83,17 +135,23 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   const [itemList, setItemList] = useState<any>([]);
 
   let quantity = 0;
-  useEffect(() => {
-    console.log("quan",itemList.quantity);
-    
-    let subtotal = itemList.length >= 1 ? itemList[itemList.length - 1].subtotal : 0
-    let newSubTotal = data.billSubtotal + subtotal;
-    let updateCharge = (newSubTotal * data.billCharges) / 100;
-    let updateDiscount = (newSubTotal * data.billDiscount) / 100;
-    let newTotal = newSubTotal + updateCharge - updateDiscount;
+  let newSubTotal = 0;
+  let updateCharge = 0;
+  let updateDiscount = 0;
+  let newTotal = 0;
 
-    /*    let subtotal = itemList.length >= 1 ? itemList[itemList.length - 1].subtotal : 0 */
-    quantity = itemList.map((item:any)=> quantity+= item.quantity )
+  useEffect(() => {
+    console.log("quan", itemList.quantity);
+
+    let subtotal = itemList.length >= 1 ? itemList[itemList.length - 1].subtotal : 0
+
+    itemList.map((item: any) => (
+      quantity += item.quantity,
+      newSubTotal += item.subtotal,
+      updateCharge = (newSubTotal * data.billCharges) / 100,
+      updateDiscount = (newSubTotal * data.billDiscount) / 100,
+      newTotal = newSubTotal + updateCharge - updateDiscount
+    ))
     console.log(quantity);
     setData({
       ...data,
@@ -120,26 +178,43 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   }, [data.billCharges, data.billDiscount, data.billDiscountType])
 
 
+  const  [updatedPrice,setUpdatedPrice] = useState<number>(0)
 
+  const  [updatedSubtotal,setUpdatedSubtotal] =useState<number>(0)
+  const  [updatedTax,setUpdatedTax]  = useState<number>(0)
+  const  [updatedDiscount,setUpdatedDiscount] = useState<number>(0)
 
-  const handleItemClick = (value: any) => {
+  const handleItemClick =  (value: any) => {
 
     let exist = itemList.find((item: any) => item.name === value.name)
+
+    console.log("price ",updatedPrice);
     
+
     if (!exist) {
-      const newItem = {...value,quantity:1}
-      setItemList([...itemList,newItem])
+      const newItem = { ...value, quantity: 1 }
+       setUpdatedPrice(newItem.price)
+       setUpdatedSubtotal(newItem.subtotal)
+       setUpdatedTax(newItem.tax)
+       setUpdatedDiscount(newItem.discount)
+       
+      setItemList([...itemList, newItem])
     }
     else {
-      const updatedItem = {...exist,quantity:exist.quantity + 1};
-      const updatedList = itemList.map((item:any)=> item.name === value.name ? updatedItem : item );
+      const updatedQuantity = exist.quantity + 1;
+
+      const updatedItem = {
+        ...exist, quantity: exist.quantity + 1, discount: updatedDiscount * updatedQuantity, price: updatedPrice * updatedQuantity, tax: updatedTax * updatedTax, subtotal: updatedSubtotal * updatedQuantity
+      };
+      const updatedList = itemList.map((item: any) => item.name === value.name ? updatedItem : item);
       setItemList(updatedList);
     }
     setInputItem("");
     setItemOpen(false);
-
   }
 
+
+  
 
   return (
     <div className='mx-10 mt-10 mb-10'>
@@ -156,7 +231,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                   setData({ ...data, customerName: e.target.value });
                 }}
               />
-
               <Link href={"/customers/new"}>
                 <BsPersonAdd className="ml-2 h-4 w-4 shrink-0  opacity-100" />
               </Link>
@@ -373,3 +447,17 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
 
 export default NewSales
+
+
+
+const sales_Column: ColumnDef<any>[] = [
+
+
+  i_NAME,
+  i_QUANTITY,
+  i_PRICE,
+  i_DISCOUNT,
+  i_TAX,
+  i_SUBTOTAL,
+  i_REMOVE,
+]; 
