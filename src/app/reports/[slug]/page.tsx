@@ -7,6 +7,7 @@ import ItemSalesReport from "@/app/components/reports/itemSalesReport/ItemSalesR
 import ItemReport from "@/app/components/reports/itemreport/ItemReport"
 import SalesReport from "@/app/components/reports/salesreport/SalesReport"
 import SalesReturnReport from "@/app/components/reports/salesreturnreport/SalesReturnReport"
+import ExpenseReport from "@/app/components/reports/expensereport/ExpenseReport"
 
 function page({params}:{params:{slug:string}}) {
     const route=params.slug
@@ -53,6 +54,9 @@ function page({params}:{params:{slug:string}}) {
             report.current_route=<SalesReturnReport />
             report.header="Sales Return Report"
             break;
+        case "expense":
+            report.current_route=<ExpenseReport />
+            report.header="Expense Report"
         
         
             

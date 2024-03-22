@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { MdOutlineMenuOpen } from "react-icons/md";
 import DataTable from '../purchasereport/Datatable';
 import { c_columns } from './Table_Return';
+import DateCalender from "@/app/components/calender/DateCalender"
 
 
 function ReturnPurchase() {
@@ -24,25 +25,33 @@ function ReturnPurchase() {
                 </div>
                 <div className="">
                     <form action="" className=' border-b-[1px] border-b-slate-400/10 grid  grid-col-1 lg:grid-cols-2 gap-y-1  p-2'>
-                        <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10  ">
+                        <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10 items-center ">
                             <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
                                 From Date :
                             </label>
-                            <input type="date" className='px-2 border rounded-md h-8 md:col-span-6 col-span-12 ' />
+                            <div className=" h-8 md:col-span-6 col-span-12 ">
+                                
+                                <DateCalender  />
+                                </div>
+                            
 
                         </div>
-                        <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10 ">
+                        <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10 items-center">
                             <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
                                 To Date:
                             </label>
-                            <input type="date" className='px-2 border rounded-md h-8 md:col-span-6 col-span-12 ' />
+                            <div className=" h-8 md:col-span-6 col-span-12 ">
+                                
+                                <DateCalender  />
+                                </div>
+                            
 
                         </div>
-                        <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+                        <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 items-center">
                             <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
                                 Supplier Name :
                             </label>
-                            <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+                            <input type="text" className=' border rounded-md h-9 md:col-span-6 col-span-12 ' />
 
                         </div>
                         

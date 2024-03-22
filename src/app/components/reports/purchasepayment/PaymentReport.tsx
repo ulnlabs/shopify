@@ -3,7 +3,7 @@ import React from 'react'
 import { useState } from 'react';
 import PurchasePayment from "./type/PurchasePayment"
 import SupplierPayments from './type/SupplierPayments';
-
+import DateCalender from "@/app/components/calender/DateCalender"
 
 
 function PaymentReport
@@ -37,32 +37,39 @@ function PaymentReport
                 </div>
                 <div className="">
                     <form action="" className=' border-b-[1px] border-b-slate-400/10 grid  grid-col-1 lg:grid-cols-2 gap-y-1  p-2'>
-                        <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10  ">
+                        <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10  items-center">
                             <label htmlFor="" className='mr-2  md:col-span-5 col-span-12 '>
                                 From Date :
                             </label>
-                            <input type="date" className='px-2 border rounded-md h-8 md:col-span-6 col-span-12 ' />
-
+                            <div className=" h-8 md:col-span-6 col-span-12 ">
+                                
+                                <DateCalender  />
+                                </div>
+                            
                         </div>
-                        <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10 ">
+                        <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10 items-center">
                             <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
                                 To Date:
                             </label>
-                            <input type="date" className='px-2 border rounded-md h-8 md:col-span-6 col-span-12 ' />
+                            <div className=" h-8 md:col-span-6 col-span-12 ">
+                                
+                                <DateCalender  />
+                                </div>
+                            
 
                         </div>
-                        <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+                        <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 items-center">
                             <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
                                 Supplier Name :
                             </label>
-                            <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+                            <input type="text" className=' border rounded-md h-9 md:col-span-6 col-span-12 ' />
 
                         </div>
-                        <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+                        <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 items-center">
                             <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
                                 Payment Type:
                             </label>
-                            <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+                            <input type="text" className=' border rounded-md h-9 md:col-span-6 col-span-12 ' />
 
                         </div>
 

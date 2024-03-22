@@ -9,7 +9,8 @@ import {
   TableFooter,
 
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
+import FromToCalendar from "@/app/components/calendar/FromToCalendar"
 
 
 
@@ -118,17 +119,9 @@ const DateSelector = () => {
       <div className="p-4 ">
                 <div className="  border p-3 border-t-2 border-t-violet-300 rounded-t-sm ">
                   <h1 className="text-lg font-semibold">Select Date</h1>
-                  <form action="" className='flex gap-4 mt-2 '>
-                    <div className="">
-
-                      <label htmlFor="Fromdate">From :</label>
-                      <input type="date" name='Fromdate' className='border p-1 rounded-md' id='Fromdate' />
-                    </div>
-                    <div className="">
-
-                      <label htmlFor="Fromdate">To :</label>
-                      <input type="date" name='Todate' className='border p-1 rounded-md' id='Fromdate' />
-                    </div>
+                  <form action="" className='sm:flex gap-4 mt-2 items-center'>
+                    <label htmlFor="date">Select Date :</label>
+                    <FromToCalendar />
                   </form>
                 </div>
 
@@ -155,7 +148,7 @@ const DateSelector = () => {
                 <Table className=" mt-3 flex flex-col justify-between w-[100%] ">
                   <TableBody className=" ">
                     {purchase.map((item, index) => (
-                      <TableRow className="border-t" key={item.index}>
+                      <TableRow className="border-t" key={index}>
                         <TableCell className="font-medium border-r-2  w-[100%]  ">{item.purchaselist}</TableCell>
                         <TableCell className="text-end">{`${item.purchaseAmount}.00`}</TableCell>
 
@@ -181,7 +174,7 @@ const DateSelector = () => {
                 <Table className=" mt-3 flex flex-col justify-between w-[100%]">
                   <TableBody className=" ">
                     {purchase.map((item, index) => (
-                      <TableRow className="border-t" key={item.index}>
+                      <TableRow className="border-t" key={index}>
                         <TableCell className="font-medium border-r-2  w-[100%]  ">{item.purchasereturn}</TableCell>
                         <TableCell className="text-end px-[35px]">{`${item.purchase_return_amount}.00`}</TableCell>
 
@@ -216,7 +209,7 @@ const DateSelector = () => {
                 <Table className=" mt-3 flex flex-col justify-between w-[100%]">
                   <TableBody className=" ">
                     {sales.map((item, index) => (
-                      <TableRow className="border-t" key={item.index}>
+                      <TableRow className="border-t" key={index}>
                         <TableCell className="font-medium border-r-2  w-[100%]  ">{item.saleitem}</TableCell>
                         <TableCell className="text-end">{`${item.salesAmount}.00`}</TableCell>
 
@@ -241,7 +234,7 @@ const DateSelector = () => {
                 <Table className=" mt-3 flex flex-col justify-between w-[100%]">
                   <TableBody className=" ">
                     {sales.map((item, index) => (
-                      <TableRow className="border-t" key={item.index}>
+                      <TableRow className="border-t" key={index}>
                         <TableCell className="font-medium border-r-2  w-[100%]  ">{item.salesReturn}</TableCell>
                         <TableCell className="text-end px-[35px]">{`${item.sales_return_Amount}.00`}</TableCell>
 

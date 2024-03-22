@@ -1,13 +1,14 @@
 "use client"
 import React from 'react'
-import DataTable from './Datatable'
-import { c_columns } from "./Table_Col"
 import { useState } from 'react';
 import { MdOutlineMenuOpen } from "react-icons/md";
+import DataTable from '../purchasereport/Datatable';
+import { c_columns } from './ExpenseReport_col';
 import DateCalender from "@/app/components/calender/DateCalender"
 
 
-function Purchasereprot() {
+function ReturnPurchase() {
+    const [date, setDate] = React.useState<Date | undefined>(new Date())
     const [Payment, setPayment] = useState([
         {
             id: 1,
@@ -19,48 +20,44 @@ function Purchasereprot() {
 
     return (
         <div className="w-[100%] flex justify-center items-center flex-col">
-            <div className="w-[98%] border border-t-2 border-t-violet-300">
+            <div className="w-[98%] border border-t-2 border-t-violet-300 rounded-t-[2px]">
                 <div className="p-2 font-medium  border-b-[1px]  border-b-slate-400/10 ">
                     <h2>Please Enter Correct Information</h2>
                 </div>
                 <div className="">
-                    <form action="" className=' border-b-[1px] border-b-slate-400/10 grid  grid-col-1 lg:grid-cols-2 gap-y-1  p-2'>
-                        <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10  items-center">
-                            <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
+                    <form action="" className=' border-b-[1px] border-b-slate-400/10 md:grid   md:grid-col-1 lg:grid-cols-2 md:gap-y-1  p-2'>
+                        <div className=" md:grid   md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10  ">
+
+                            <label htmlFor="" className=' md:col-span-5 md:mt-1 col-span-12 '>
                                 From Date :
                             </label>
                             <div className=" h-8 md:col-span-6 col-span-12 ">
                                 
-                                <DateCalender  />
-                                </div>
-                            
-
+                            <DateCalender  />
+                            </div>
+                        
+                           
                         </div>
-                        <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10 items-center">
-                            <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
+                        <div className=" md:grid md:grid-cols-12 grid   p-2 md:text-end  md:gap-x-10 ">
+                            <label htmlFor="" className='mr-2 md:col-span-5  md:mt-1 col-span-12 '>
                                 To Date:
                             </label>
                             <div className=" h-8 md:col-span-6 col-span-12 ">
                                 
-                                <DateCalender  />
-                                </div>
-                            
+                            <DateCalender  />
+                            </div>
+                        
+                           
 
                         </div>
-                        <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 items-center">
+                        <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
                             <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
-                                Supplier Name :
+                                Item Name:
                             </label>
                             <input type="text" className=' border rounded-md h-9 md:col-span-6 col-span-12 ' />
 
                         </div>
-                        <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 items-center">
-                            <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
-                                Payment Type:
-                            </label>
-                            <input type="text" className=' border rounded-md h-9 md:col-span-6 col-span-12 ' />
-
-                        </div>
+                        
 
                     </form>
                     <div className=" w-full flex gap-5 justify-center  p-2">
@@ -74,9 +71,9 @@ function Purchasereprot() {
                 </div>
             </div>
 
-            <div className="mt-4 border-t-[2px] p-2 w-full">
+            <div className="mt-4  p-2 border-t-[2px] border-t-violet-300 w-[98%] min-h-[400px] rounded-t-[2px]">
                 <div className="flex justify-between ">
-                    <div className=""></div>
+                    <div className="">Records Table</div>
                     <div className="flex items-center hover:bg-blue-300  cursor-pointer bg-blue-400 px-2 py-1 text-white rounded-md">
                         <MdOutlineMenuOpen />
                         <button className=''><span></span> Export</button>
@@ -95,4 +92,4 @@ function Purchasereprot() {
     )
 }
 
-export default Purchasereprot
+export default ReturnPurchase
