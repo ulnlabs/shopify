@@ -10,6 +10,8 @@ import SalesReturnReport from "@/app/components/reports/salesreturnreport/SalesR
 import SalesPaymentReport from "@/app/components/reports/salesPaymentreport/SalesPaymentReport";
 import StackReport from "@/app/components/reports/stockreport/StackReport";
 import ExpiredItemReport from "@/app/components/reports/Expireditem/ExpiredItemReport"
+import ExpenseReport from "@/app/components/reports/expensereport/ExpenseReport"
+
 
 function page({params}:{params:{slug:string}}) {
     const route=params.slug
@@ -68,7 +70,10 @@ function page({params}:{params:{slug:string}}) {
             report.current_route=<ExpiredItemReport/>
             report.header="Expired Item Report"
             break;
-
+        case "expense":
+            report.current_route=<ExpenseReport/>
+            report.header="Expense Report"
+            break;
         
     }
     
