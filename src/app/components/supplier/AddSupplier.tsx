@@ -1,76 +1,42 @@
 "use client";
 import React, { FormEvent, useContext } from "react";
 import { ContextData } from "../../../../contextapi";
-import DashboardHeader from "../dashboard/DashboardHeader";
-import axios from "axios";
-import { useToast } from "@/components/ui/use-toast";
-function AddCustomer() {
-  const { customerData, setCustomerData } = useContext(ContextData);
-  const { toast } = useToast();
+export default function AddSupplier() {
+  const { supplierData, setSupplierData } = useContext(ContextData);
 
   const handleReset = (): void => {
-    setCustomerData({
+    setSupplierData({
       name: "",
       mobile: "",
       email: "",
       gst: "",
       tax: "",
-      due: "",
+      openingbalance: "",
       state: "",
       city: "",
       pincode: "",
       address: "",
     });
   };
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const lengthDoc = await axios.get(`/api/customers`, {
-      headers: {
-        data: "doc-count",
-      },
-    });
-    let length = lengthDoc.data.id;
-console.log(length);
 
-    const customerDbData = {
-      name: customerData.name,
-      mobile: customerData.mobile,
-      email: customerData.email,
-      gst: customerData.gst,
-      tax: customerData.tax,
-      due: customerData.due,
-      state: customerData.state,
-      city: customerData.city,
-      pincode: customerData.pincode,
-      address: customerData.address,
-      id: length,
-    };
-    const response = await axios.post(`/api/customers`, customerDbData);
-    console.log(response);
-
-    setCustomerData({
+    setSupplierData({
       name: "",
       mobile: "",
       email: "",
       gst: "",
       tax: "",
-      due: "",
+      openingbalance: "",
       state: "",
       city: "",
       pincode: "",
       address: "",
-    });
-    toast({
-      title: "New PopUp !",
-      description: "New Customer is added",
     });
   };
   return (
     <>
-      {/*     <header className="w-[90%] h-[80px] mt-4 text-xl font-semibold text-gray-400 flex px-10 rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] ml-[5%] items-center  ">
-        Add/Update Customers
-      </header> */}
-      <DashboardHeader title="Customers" subtitle={"new"} />
+    
       <main>
         <section className=" min-h-[700px]  mt-10 w-[90%] ml-[5%] rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] ">
           <form
@@ -86,10 +52,10 @@ console.log(length);
                 Name <span className="text-red-400">*</span>
               </label>
               <input
-                onChange={(e) => {
-                  setCustomerData({ ...customerData, name: e.target.value });
-                }}
-                value={customerData.name}
+                onChange={(e) =>
+                  setSupplierData({ ...supplierData, name: e.target.value })
+                }
+                value={supplierData.name}
                 required
                 type="text"
                 id="name"
@@ -105,14 +71,14 @@ console.log(length);
                 Mobile
               </label>
               <input
-                onChange={(e) => {
-                  setCustomerData({ ...customerData, mobile: e.target.value });
-                }}
-                value={customerData.mobile}
+                onChange={(e) =>
+                  setSupplierData({ ...supplierData, mobile: e.target.value })
+                }
+                value={supplierData.mobile}
                 className="h-10  bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="mobile"
                 id="mobile"
-                type="tel"
+                type="text"
               />
             </div>
             <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
@@ -124,9 +90,9 @@ console.log(length);
               </label>
               <input
                 onChange={(e) =>
-                  setCustomerData({ ...customerData, email: e.target.value })
+                  setSupplierData({ ...supplierData, email: e.target.value })
                 }
-                value={customerData.email}
+                value={supplierData.email}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="mail"
                 id="email"
@@ -142,9 +108,9 @@ console.log(length);
               </label>
               <input
                 onChange={(e) =>
-                  setCustomerData({ ...customerData, gst: e.target.value })
+                  setSupplierData({ ...supplierData, gst: e.target.value })
                 }
-                value={customerData.gst}
+                value={supplierData.gst}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md "
                 name="gst"
                 id="gst"
@@ -160,9 +126,9 @@ console.log(length);
               </label>
               <input
                 onChange={(e) =>
-                  setCustomerData({ ...customerData, tax: e.target.value })
+                  setSupplierData({ ...supplierData, tax: e.target.value })
                 }
-                value={customerData.tax}
+                value={supplierData.tax}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 id="tax"
                 name="tax"
@@ -173,19 +139,19 @@ console.log(length);
             <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-1">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="due"
+                htmlFor="openingbalance"
               >
-                PreviousDue
+                Opening balance
               </label>
               <input
                 onChange={(e) =>
-                  setCustomerData({ ...customerData, due: e.target.value })
+                  setSupplierData({ ...supplierData, openingbalance: e.target.value })
                 }
-                value={customerData.due}
+                value={supplierData.openingbalance}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 type="text"
-                name="due"
-                id="due"
+                name="openingbalance"
+                id="openingbalance"
               />
             </div>
             <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-3">
@@ -197,9 +163,9 @@ console.log(length);
               </label>
               <input
                 onChange={(e) =>
-                  setCustomerData({ ...customerData, state: e.target.value })
+                  setSupplierData({ ...supplierData, state: e.target.value })
                 }
-                value={customerData.state}
+                value={supplierData.state}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="state"
                 type="text"
@@ -215,9 +181,9 @@ console.log(length);
               </label>
               <input
                 onChange={(e) =>
-                  setCustomerData({ ...customerData, city: e.target.value })
+                  setSupplierData({ ...supplierData, city: e.target.value })
                 }
-                value={customerData.city}
+                value={supplierData.city}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="city"
                 type="text"
@@ -233,9 +199,9 @@ console.log(length);
               </label>
               <input
                 onChange={(e) =>
-                  setCustomerData({ ...customerData, pincode: e.target.value })
+                  setSupplierData({ ...supplierData, pincode: e.target.value })
                 }
-                value={customerData.pincode}
+                value={supplierData.pincode}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="pincode"
                 type="text"
@@ -251,9 +217,9 @@ console.log(length);
               </label>
               <textarea
                 onChange={(e) =>
-                  setCustomerData({ ...customerData, address: e.target.value })
+                  setSupplierData({ ...supplierData, address: e.target.value })
                 }
-                value={customerData.address}
+                value={supplierData.address}
                 className="h-20 resize-none bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 id="address"
                 name="address"
@@ -278,4 +244,3 @@ console.log(length);
   );
 }
 
-export default AddCustomer;

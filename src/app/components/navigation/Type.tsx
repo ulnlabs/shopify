@@ -241,8 +241,8 @@ export const navItems: NavBarItem[] = [
         icon: <IoIosSettings />,
         key: "/settings",
         children: [
-            { label: 'Company Profile', key: "/settings/company-profile" },
-            { label: 'Site Settings', key: "/settings/site-settings" },
+            { label: 'Company Profile', key: "/settings/company" },
+            { label: 'Site Settings', key: "/settings/sitelist" },
             { label: 'Tax List', key: "/settings/tax-list" },
             { label: 'Units List', key: "/settings/units-list" },
             { label: 'Payment Types List', key: "/settings/payment-types-list" },

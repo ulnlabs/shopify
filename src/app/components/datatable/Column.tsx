@@ -1,8 +1,8 @@
 "use client";
+//this is a sample column it is not used anywhere
 //for hint how do make your custom columns see line 137 or below to comment
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import {
   DropdownMenu,
@@ -12,14 +12,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { useContext } from "react";
+import { UserContext } from "@/UserContext";
 import { ColumnDef } from "@tanstack/react-table";
+import axios from "axios";
 
-
+const {setIsDeleted,isDeleted}=useContext(UserContext)
 
 
 /* //delete the data or update here you have to use your custom function import it from your area */
-function handleDelete(row: customerList): void {}
+async function handleDelete(row: customerList): Promise<void> {
+
+
+  if(row._id){
+  const ID=row._id 
+
+const response= await axios.delete("/api/customers",{data:{id: ID}})
+if(response.status){
+setIsDeleted(!isDeleted)
+}
+}
+  
+}
 //see this is an example to sort your column  replace it wth yours
 const C_Email = {
   accessorKey: "email",
@@ -38,7 +52,7 @@ const C_Email = {
 
 const C_ID: columnHeader_dataTable = {
   accessorKey: "cid",
-  header: "C-ID",
+  header: "ID",
 };
 const C_NAME: columnHeader_dataTable = {
   accessorKey: "name",
@@ -54,22 +68,20 @@ const C_PAID: any = {
   header: () => <div className="text-right">Paid</div>,
   cell: ({ row }: any) => {
     const amount = parseFloat(row.getValue("paid"));
-    const formatted = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "INR",
-    }).format(amount);
+    if(!isNaN(amount)){
 
-    return <div className="text-right font-medium">{formatted}</div>;
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "INR",
+      }).format(amount);
+  
+      return <div className="text-right font-medium">{formatted}</div>;
+    }
+    return <div className="text-right font-medium">-</div>;
+
   },
 };
-const C_SALESDUE: columnHeader_dataTable = {
-  accessorKey: "salesdue",
-  header: "Sales-Due",
-};
-const C_RETURNDUE: columnHeader_dataTable = {
-  accessorKey: "returndue",
-  header: "Return-Due",
-};
+
 const C_STATUS: columnHeader_dataTable = {
   accessorKey: "status",
   header: "Status",
@@ -131,8 +143,7 @@ export const c_columns: ColumnDef<any>[] = [
   C_MOBILE,
   C_Email,
   C_PAID,
-  C_SALESDUE,
-  C_RETURNDUE,
+  
   C_STATUS,
   C_ACTION,
 ];

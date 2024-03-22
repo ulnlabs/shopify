@@ -27,18 +27,20 @@ const i_NAME: columnHeader_dataTable = {
   header: "Item Name",
 };
 
-let quantity = 1
 
-const i_QUANTITY: columnHeader_dataTable = {
+
+const i_QUANTITY: any = {
   accessorKey: "quantity",
   header: "QUANTITY",
-  /*  cell: ({ row }: any) => (
+   cell: ({ row }: any) => (
        <span className="flex gap-1 items-center">
            <AiOutlineMinus />
-           {quantity}
+           {row.quantity 
+           } 
+           
            <AiOutlinePlus />
        </span>
-   )  */
+   ) 
 };
 
 const i_PRICE: columnHeader_dataTable = {
@@ -88,6 +90,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   const cusRef = useRef<null | any>(null);
   const dateRef = useRef<null | any>(null);
   const itemRef = useRef<null | any>(null);
+  const  [quantity,setQuantity] = useState<number>(1)
   useEffect(() => {
     const handleClose = (e: any) => {
       if (!cusRef.current?.contains(e.target)) {
@@ -134,7 +137,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
   const [itemList, setItemList] = useState<any>([]);
 
-  let quantity = 0;
+
   let newSubTotal = 0;
   let updateCharge = 0;
   let updateDiscount = 0;
@@ -142,11 +145,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
   useEffect(() => {
     console.log("quan", itemList.quantity);
-
-    let subtotal = itemList.length >= 1 ? itemList[itemList.length - 1].subtotal : 0
-
     itemList.map((item: any) => (
-      quantity += item.quantity,
+      setQuantity(quantity + item.quantity),
       newSubTotal += item.subtotal,
       updateCharge = (newSubTotal * data.billCharges) / 100,
       updateDiscount = (newSubTotal * data.billDiscount) / 100,
@@ -178,43 +178,50 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   }, [data.billCharges, data.billDiscount, data.billDiscountType])
 
 
-  const  [updatedPrice,setUpdatedPrice] = useState<number>(0)
+  const [updatedPrice, setUpdatedPrice] = useState<number>(0)
 
-  const  [updatedSubtotal,setUpdatedSubtotal] =useState<number>(0)
-  const  [updatedTax,setUpdatedTax]  = useState<number>(0)
-  const  [updatedDiscount,setUpdatedDiscount] = useState<number>(0)
+  const [updatedSubtotal, setUpdatedSubtotal] = useState<number>(0)
+  const [updatedTax, setUpdatedTax] = useState<number>(0)
+  const [updatedDiscount, setUpdatedDiscount] = useState<number>(0)
 
-  const handleItemClick =  (value: any) => {
+  const handleItemClick = (value: any) => {
 
     let exist = itemList.find((item: any) => item.name === value.name)
 
-    console.log("price ",updatedPrice);
-    
+    console.log("price ", updatedPrice);
+
 
     if (!exist) {
       const newItem = { ...value, quantity: 1 }
-       setUpdatedPrice(newItem.price)
-       setUpdatedSubtotal(newItem.subtotal)
-       setUpdatedTax(newItem.tax)
-       setUpdatedDiscount(newItem.discount)
-       
+      setUpdatedPrice(newItem.price)
+      setUpdatedSubtotal(newItem.subtotal)
+      setUpdatedTax(newItem.tax)
+      setUpdatedDiscount(newItem.discount)
+
       setItemList([...itemList, newItem])
     }
     else {
       const updatedQuantity = exist.quantity + 1;
 
-      const updatedItem = {
-        ...exist, quantity: exist.quantity + 1, discount: updatedDiscount * updatedQuantity, price: updatedPrice * updatedQuantity, tax: updatedTax * updatedTax, subtotal: updatedSubtotal * updatedQuantity
-      };
-      const updatedList = itemList.map((item: any) => item.name === value.name ? updatedItem : item);
-      setItemList(updatedList);
-    }
+      if (updatedQuantity <= value.quantity) {
+
+
+        const updatedItem = {
+          ...exist, quantity: exist.quantity + 1, discount: updatedDiscount * updatedQuantity, price: updatedPrice * updatedQuantity, tax: updatedTax * updatedTax, subtotal: updatedSubtotal * updatedQuantity
+        };
+        const updatedList = itemList.map((item: any) => item.name === value.name ? updatedItem : item);
+        setItemList(updatedList);
+      } else {
+        console.log("nothing");
+        
+      }
+      }
     setInputItem("");
     setItemOpen(false);
   }
 
 
-  
+
 
   return (
     <div className='mx-10 mt-10 mb-10'>

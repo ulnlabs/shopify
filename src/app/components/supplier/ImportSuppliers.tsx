@@ -3,7 +3,7 @@ import { BsFiletypeCsv } from "react-icons/bs";
 import React, { ChangeEvent, useState, useRef } from "react";
 import papa from "papaparse";
 
-export default function ImportCustomer() {
+export default function ImportSupplier() {
   const fileRef: React.RefObject<HTMLInputElement> = useRef(null);
   const [csvData, setCsvData] = useState<any>([]);
   const [fileName, SetFileName] = useState<string>("Choose File");
@@ -68,7 +68,7 @@ export default function ImportCustomer() {
               <BsFiletypeCsv className="text-blue-600 text-2xl" />
             </span>
             <span className="text-sm col-start-2 flex items-center col-span-3 font-semibold text-gray-700 ">
-              Import Customer
+              Import Suppliers
             </span>
           </label>
         </form>
@@ -115,7 +115,7 @@ export default function ImportCustomer() {
 const dataValue:customerFileFormat[] = [
   {
     id: 1,
-    coloum: "Customer Name",
+    coloum: "Supplier Name",
     value: "Required",
   },
   {
@@ -160,7 +160,7 @@ const dataValue:customerFileFormat[] = [
   },
   {
     id: 10,
-    coloum: "Balance",
+    coloum: "Opening Balance",
     value: "Required",
   },
 ];
