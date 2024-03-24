@@ -45,8 +45,6 @@ const Selections = ({ label, setLabel, placeholder, inputData, icon, payment, se
         setIsOpen(!isOpen);
     }
 
-    const [taxCategory,setTaxCategory] = useState<string>("");
-
     return (
         <div ref={selectRef} className="relative">
             <div className="bg-primary-gray py-1 rounded-lg px-2">

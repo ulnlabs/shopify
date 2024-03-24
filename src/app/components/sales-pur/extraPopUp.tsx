@@ -7,23 +7,29 @@ const PopUp = ({ modify, setModify, itemList, inputData, setItemList, setIsPopUp
     const [tax, setTax] = useState<number>(modify.original.taxPer);
     const [taxType, setTaxType] = useState<string>(modify.original.tax_type)
     const [taxCategory, setTaxCategory] = useState<string>(modify.original.tax_category);
-    const [discount, setDiscount] = useState<any>(modify.original.discount)
     const [discountType, setDiscountType] = useState<string>(modify.original.dis_type)
+    const [discount, setDiscount] = useState<any>(discountType === "Per %" ? modify.original.discount * 100 / find.price / modify.original.quantity : modify.original.discount / modify.original.quantity)
 
 
     const handlePopUp = () => {
         const taxValue = tax * find.price / 100;
-        const DiscountValue = discountType === "Fixed" ? discount : (discount * find.price) / 100;
+        console.log(discount);
+        console.log(modify.original.quantity);
+
+
+        const DiscountValue = discountType === "Fixed" ? discount : (discount * find.price) / 100 / modify.original.quantity;
         const subTotal = taxCategory === "Exclusive" ? taxValue + find.price - DiscountValue : find.price - DiscountValue;
+        console.log(DiscountValue);
+
         const updateTax = {
             ...modify.original,
             tax_type: taxType,
             taxPer: tax,
-            tax: taxValue,
-            discount: DiscountValue,
-            dis_type:discountType,
+            tax: modify.original.quantity * taxValue,
+            discount: discountType === "Per %" ? modify.original.quantity ** 2 * DiscountValue : modify.original.quantity * DiscountValue,
+            dis_type: discountType,
             tax_category: taxCategory,
-            subtotal: subTotal
+            subtotal: modify.original.quantity * subTotal
         }
         const update = itemList.map((item: any) => item.name === modify.original.name ? updateTax : item)
         setItemList(update)
@@ -74,7 +80,7 @@ const PopUp = ({ modify, setModify, itemList, inputData, setItemList, setIsPopUp
                     <div className='bg-primary-gray py-1 rounded-lg px-2'>
                         <div className='flex items-center bg-white rounded-md'>
                             <Input type="text" className='h-10 border-none '
-                                value={discount}
+                                placeholder={discount.toString()}
                                 onChange={(e) => {
                                     setDiscount(e.target.value)
                                 }}

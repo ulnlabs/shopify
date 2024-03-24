@@ -26,6 +26,7 @@ const sample = [
   }
 ]
 const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList }: any) => {
+
   const [modify, setModify] = useState<string>("")
   const i_NAME: any = {
     accessorKey: "name",
@@ -39,15 +40,19 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     header: "QUANTITY",
     cell: ({ row }: any) => (
       <span className="flex gap-1 items-center">
-        <button onClick={() => {
-          if (row.original.quantity > 1) {
-            const check = itemList.find((item: any) => item.name === row.original.name)
-            const update = Items.find((item: any) => item.name === row.original.name)
-            const updateTax = (row.original.taxPer * update.price) / 100;
-            const updateDis = check.dis_type === "Fixed" ? row.original.discount : (row.original.discount * check.price) / 100;
-            const subTotal = check.tax_category === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
-            console.log(check.tax_category);
 
+        <button onClick={() => {
+          const check = itemList.find((item: any) => item.name === row.original.name)
+          const update = Items.find((item: any) => item.name === row.original.name)
+          if (row.original.quantity > 1) {
+            const updateTax = (row.original.taxPer * update.price) / 100;
+            console.log(row.original.quantity);
+            console.log(row.original.discount);
+
+            console.log(row.original.discount / row.original.quantity);
+
+            const updateDis = check.dis_type === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity;
+            const subTotal = check.tax_category === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
             const uplist = {
               ...check,
               quantity: --row.original.quantity,
@@ -67,7 +72,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           const update = Items.find((item: any) => item.name === row.original.name)
           if (check.quantity < update.quantity) {
             const updateTax = (row.original.taxPer * update.price) / 100;
-            const updateDis = check.dis_type === "Fixed" ? row.original.discount : row.original.discount * check.price / 100;
+            console.log(row.original.quantity);
+            console.log(row.original.discount);
+            const updateDis = check.dis_type === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity;
             const subTotal = check.tax_category === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
             const uplist = {
               ...check,
@@ -83,7 +90,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         }} >
           <AiOutlinePlus />
         </button>
-      </span>
+      </span >
     )
   };
   const i_PRICE: columnHeader_dataTable = {
@@ -237,7 +244,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           const updatedItem = {
             ...exist,
             quantity: exist.quantity + 1,
-            discount: value.discount * updatedQuantity,
+            discount: exist.discount / exist.quantity * updatedQuantity,
             /* price: value.price * updatedQuantity, */
             tax: value.tax * updatedQuantity,
             subtotal: value.subtotal * updatedQuantity
