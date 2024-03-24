@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/components/ui/use-toast";
 
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import {
@@ -19,10 +19,13 @@ import { useContext } from "react";
 import { UserContext } from "@/UserContext";
 import { ColumnDef } from "@tanstack/react-table";
 import axios from "axios";
+import { ContextData } from "../../../../../contextapi";
 export default function Page() {
-  const { toast } = useToast()
+  const { toast } = useToast();
   const [customerData, setCustomerData] = useState<customerList[]>([]);
+
   const { isDeleted, setIsDeleted } = useContext(UserContext);
+  const { selectedRow, setSelectedRow } = useContext(ContextData);
   useEffect(() => {
     async function getData(): Promise<void> {
       const response = await axios.get(`/api/customers`, {
@@ -44,17 +47,24 @@ export default function Page() {
       const response = await axios.delete("/api/customers", {
         data: { id: ID },
       });
-      if (response.status==200) {
+      if (response.status == 200) {
         console.log(response.status);
-        
+
         setIsDeleted(!isDeleted);
         toast({
-      
           title: "New Message !",
           description: " Customer is deleted successfully",
-        })
+        });
       }
     }
+  }
+  const C_GST:columnHeader_dataTable={
+    accessorKey:"gst",
+    header:"GST",
+  }
+  const C_TAX:columnHeader_dataTable={
+    accessorKey:"tax",
+    header:"TAX",
   }
   const C_Email = {
     accessorKey: "email",
@@ -113,14 +123,38 @@ export default function Page() {
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={(value) => {
+          table.toggleAllPageRowsSelected(!!value);
+          if (value) {
+            const id = customerData.map((i: any) => {
+              return i._id;
+            });
+            setSelectedRow(id);
+          } else {
+            setSelectedRow([]);
+          }
+        }}
         aria-label="Select all"
       />
     ),
     cell: ({ row }: any) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={(value) => {
+          row.toggleSelected(!!value);
+          if (value == true) {
+            setSelectedRow([...selectedRow, row.original._id]);
+          } else if (value == false) {
+            const id = row.original._id;
+            const unSelectedIndex = selectedRow.indexOf(id);
+            if (unSelectedIndex > -1) {
+              const removedArray = selectedRow;
+              removedArray.splice(unSelectedIndex, 1);
+              setSelectedRow(removedArray);
+              console.log(selectedRow);
+            }
+          }
+        }}
         aria-label="Select row"
       />
     ),
@@ -162,6 +196,8 @@ export default function Page() {
     C_MOBILE,
     C_Email,
     C_PAID,
+    C_GST,
+    C_TAX,
     C_STATUS,
     C_ACTION,
   ];
@@ -180,7 +216,6 @@ export default function Page() {
           paginater={true}
         />
       </div>
-      
     </>
   );
 }

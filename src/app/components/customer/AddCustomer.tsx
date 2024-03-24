@@ -30,7 +30,7 @@ function AddCustomer() {
       },
     });
     let length = lengthDoc.data.id;
-console.log(length);
+    console.log(length);
 
     const customerDbData = {
       name: customerData.name,
@@ -45,7 +45,7 @@ console.log(length);
       address: customerData.address,
       id: length,
     };
-    const response = await axios.post(`/api/customers`, customerDbData);
+    const response = await axios.post(`/api/customers`, customerDbData,{headers:{data:"addcust"}});
     console.log(response);
 
     setCustomerData({

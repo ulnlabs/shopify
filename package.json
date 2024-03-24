@@ -24,6 +24,7 @@
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "framer-motion": "^11.0.8",
+    "json-to-csv-export": "^2.1.1",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.352.0",
     "mongoose": "^8.2.2",
