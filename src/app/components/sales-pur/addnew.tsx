@@ -37,6 +37,8 @@ const cutomerName = [
     label: "Deepath",
   },
   {
+    value: "98524789",
+    label: "JKING",
     value: "999",
     label: "Dhilip",
   },

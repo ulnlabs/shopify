@@ -20,7 +20,7 @@ function SideBar() {
   const pathname = usePathname();
   const { toggleNav, setToggleNav } = useContext(UserContext)
   return (
-    <div className={cn('w-[280px] md:relative absolute top-0 z-[10] left-0 min-h-screen bg-[--primary] rounded-lg md:translate-x-0 transition duration-500 ease-In-Out', toggleNav ? "translate-x-0" : "-translate-x-[100%]")}>
+    <div className={cn('w-[280px] md:relative absolute top-0 z-[10] left-0 min-h-screen bg-[--primary] rounded-r-lg md:translate-x-0 transition duration-500 ease-In-Out', toggleNav ? "translate-x-0" : "-translate-x-[100%]")}>
       <div className="flex flex-col gap-2 items-center px-2">
         <h1 className="w-full px-4 md:flex hidden items-center gap-2 bg-white rounded-lg mt-2">
           <Image
