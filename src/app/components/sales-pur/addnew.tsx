@@ -6,77 +6,17 @@ import React, { useState, useEffect, useRef } from 'react'
 import { format } from "date-fns"
 import { Input } from '@/components/ui/input'
 import { IoMdContact } from "react-icons/io";
-
-
 import { DataTable } from "../datatable/DataTable";
-
-import { pur_Column } from "../datatable/purColumn";
-
-
 import Selections from "./selections";
 import Link from "next/link";
-
 import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
-
 import { ColumnDef } from "@tanstack/react-table";
-
-const i_NAME: columnHeader_dataTable = {
-  accessorKey: "name",
-  header: "Item Name",
-};
-
-
-
-const i_QUANTITY: any = {
-  accessorKey: "quantity",
-  header: "QUANTITY",
-   cell: ({ row }: any) => (
-       <span className="flex gap-1 items-center">
-           <AiOutlineMinus />
-           {row.quantity 
-           } 
-           
-           <AiOutlinePlus />
-       </span>
-   ) 
-};
-
-const i_PRICE: columnHeader_dataTable = {
-  accessorKey: "price",
-  header: "PRICE",
-};
-
-const i_DISCOUNT: columnHeader_dataTable = {
-  accessorKey: "discount",
-  header: "DISOUNT",
-};
-
-const i_TAX: columnHeader_dataTable = {
-  accessorKey: "tax",
-  header: "TAX",
-};
-const i_SUBTOTAL: columnHeader_dataTable = {
-  accessorKey: "subtotal",
-  header: "SUB TOTAL",
-};
-
-const i_REMOVE = {
-  accessorKey: "REMOVE",
-
-  cell: ({ row }: any) => (
-    <MdOutlineDelete />
-
-  )
-};
-
-
-
+import PopUp from "./extraPopUp";
 
 const sample = [
   {
-
     name: "Deepath",
     quantity: 2,
     price: 200000000,
@@ -85,88 +25,192 @@ const sample = [
     subtotal: 10,
   }
 ]
-const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem }: any) => {
+const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList }: any) => {
+  const [modify, setModify] = useState<string>("")
+  const i_NAME: any = {
+    accessorKey: "name",
+    header: "Item Name",
+    cell: ({ row }: any) => (
+      <p>{row.original.name}</p>
+    )
+  };
+  const i_QUANTITY: any = {
+    accessorKey: "quantity",
+    header: "QUANTITY",
+    cell: ({ row }: any) => (
+      <span className="flex gap-1 items-center">
+        <button onClick={() => {
+          if (row.original.quantity > 1) {
+            const check = itemList.find((item: any) => item.name === row.original.name)
+            const update = Items.find((item: any) => item.name === row.original.name)
+            const updateTax = (row.original.taxPer * update.price) / 100;
+            const updateDis = check.dis_type === "Fixed" ? row.original.discount : (row.original.discount * check.price) / 100;
+            const subTotal = check.tax_category === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
+            console.log(check.tax_category);
 
+            const uplist = {
+              ...check,
+              quantity: --row.original.quantity,
+              discount: row.original.quantity * updateDis,
+              tax: row.original.quantity * updateTax,
+              subtotal: row.original.quantity * subTotal
+            }
+            const upQuantity = itemList.map((item: any) => item.name === row.original.name ? uplist : item)
+            setItemList(upQuantity)
+          }
+        }} >
+          <AiOutlineMinus />
+        </button>
+        {row.original.quantity}
+        <button onClick={() => {
+          const check = itemList.find((item: any) => item.name === row.original.name)
+          const update = Items.find((item: any) => item.name === row.original.name)
+          if (check.quantity < update.quantity) {
+            const updateTax = (row.original.taxPer * update.price) / 100;
+            const updateDis = check.dis_type === "Fixed" ? row.original.discount : row.original.discount * check.price / 100;
+            const subTotal = check.tax_category === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
+            const uplist = {
+              ...check,
+              quantity: ++row.original.quantity,
+              /* price: row.original.quantity * update.price, */
+              discount: row.original.quantity * updateDis,
+              tax: row.original.quantity * updateTax,
+              subtotal: row.original.quantity * subTotal
+            }
+            const upQuantity = itemList.map((item: any) => item.name === row.original.name ? uplist : item)
+            setItemList(upQuantity)
+          }
+        }} >
+          <AiOutlinePlus />
+        </button>
+      </span>
+    )
+  };
+  const i_PRICE: columnHeader_dataTable = {
+    accessorKey: "price",
+    header: "PRICE",
+  };
+  const i_DISCOUNT: columnHeader_dataTable = {
+    accessorKey: "discount",
+    header: "DISOUNT",
+  };
+  const i_TAX: columnHeader_dataTable = {
+    accessorKey: "tax",
+    header: "TAX",
+  };
+  const [isPopUp, setIsPopUp] = useState<boolean>(false);
+  const i_TAXTYPE: any = {
+    accessorKey: "tax_type",
+    header: "TAX %",
+    cell: (({ row }: any) => (
+      <button onClick={() => {
+        setModify(row);
+        setIsPopUp(true);
+      }}>
+        {row.original.tax_type}
+      </button>
+    ))
+  };
+  const i_SUBTOTAL: columnHeader_dataTable = {
+    accessorKey: "subtotal",
+    header: "SUB TOTAL",
+  };
+  const i_REMOVE = {
+    accessorKey: "REMOVE",
+    cell: ({ row }: any) => (
+      <button onClick={() => {
+        setItemList(itemList.filter((item: any) => row.original.name !== item.name))
+      }} >
+        <MdOutlineDelete />
+      </button>
+    )
+  };
+  const sales_Column: ColumnDef<any>[] = [
+    i_NAME,
+    i_QUANTITY,
+    i_PRICE,
+    i_DISCOUNT,
+    i_TAX,
+    i_TAXTYPE,
+    i_SUBTOTAL,
+    i_REMOVE,
+  ];
+  const pur_Column: ColumnDef<any>[] = [
+    i_NAME,
+    i_QUANTITY,
+    i_PRICE,
+    i_DISCOUNT,
+    i_TAX,
+    i_TAXTYPE,
+    i_SUBTOTAL,
+    i_REMOVE,
+  ]
   const cusRef = useRef<null | any>(null);
   const dateRef = useRef<null | any>(null);
   const itemRef = useRef<null | any>(null);
-  const  [quantity,setQuantity] = useState<number>(1)
   useEffect(() => {
     const handleClose = (e: any) => {
       if (!cusRef.current?.contains(e.target)) {
         setCustomerOpen(false);
       }
-      if (!itemRef.current?.contains(e.target)) {
+      /* if (!itemRef.current?.contains(e.target)) {
         setItemOpen(false);
-      }
+      } */
     }
     document.addEventListener('click', handleClose)
   }, [])
-
   const [customerOpen, setCustomerOpen] = useState<boolean>(false)
-
   const { billDate } = data;
-
-
-  const [itemOpen, setItemOpen] = useState<boolean>(false);
-
-
+  /*   const [itemOpen, setItemOpen] = useState<boolean>(false);
+   */
   const [statusValue, setStatusValue] = useState("")
-
   useEffect(() => {
     setData({ ...data, billStatus: statusValue });
   }, [statusValue]);
-
   const [taxType, setTaxType] = useState("");
-
   useEffect(() => {
     setData({ ...data, billTaxType: taxType });
   }, [taxType]);
-
   const [disType, setDisType] = useState("");
   useEffect(() => {
     setData({ ...data, billDiscountType: disType });
-    console.log("type", disType);
-
   }, [disType]);
-
   const [payType, setPayType] = useState("");
   useEffect(() => {
     setData({ ...data, billPaymentType: payType });
   }, [payType]);
-
-  const [itemList, setItemList] = useState<any>([]);
-
-
+  let quantity = 0;
   let newSubTotal = 0;
   let updateCharge = 0;
   let updateDiscount = 0;
   let newTotal = 0;
-
   useEffect(() => {
-    console.log("quan", itemList.quantity);
     itemList.map((item: any) => (
-      setQuantity(quantity + item.quantity),
       newSubTotal += item.subtotal,
-      updateCharge = (newSubTotal * data.billCharges) / 100,
-      updateDiscount = (newSubTotal * data.billDiscount) / 100,
-      newTotal = newSubTotal + updateCharge - updateDiscount
+      quantity += item.quantity
     ))
-    console.log(quantity);
-    setData({
-      ...data,
+    updateCharge = (newSubTotal * data.billCharges) / 100
+    updateDiscount = (newSubTotal * data.billDiscount) / 100
+    newTotal = newSubTotal + updateCharge - updateDiscount
+    setData((prevData: any) => ({
+      ...prevData,
       billQuantity: quantity,
       billSubtotal: newSubTotal,
-      billOtherCharge: updateCharge || data.billOtherCharge,
-      billOverallDis: updateDiscount || data.billOtherCharge,
+      billOtherCharge: updateCharge || prevData.billOtherCharge,
+      billOverallDis: updateDiscount || prevData.billOtherCharge,
       billTotal: newTotal,
-    })
+    }));
+
   }, [itemList])
+
+  const [taxValue, setTaxValue] = useState<number>(1);
+  const [discountValue, setDiscountValue] = useState<number>(1);
 
   useEffect(() => {
     const updateOnChange = () => {
-      let newOtherCharge = (data.billCharges * data.billSubtotal) / 100
-      let newDiscount = data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Per %" ? ((data.billDiscount * data.billSubtotal) / 100) : 0
+      const newOtherCharge = (data.billCharges * taxValue || 0) / 100;
+      const subTotal = newOtherCharge + data.billSubtotal;
+      const newDiscount = data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Per %" ? ((data.billDiscount * subTotal) / 100) : 0;
       setData({
         ...data,
         billOtherCharge: newOtherCharge,
@@ -178,53 +222,75 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   }, [data.billCharges, data.billDiscount, data.billDiscountType])
 
 
-  const [updatedPrice, setUpdatedPrice] = useState<number>(0)
-
-  const [updatedSubtotal, setUpdatedSubtotal] = useState<number>(0)
-  const [updatedTax, setUpdatedTax] = useState<number>(0)
-  const [updatedDiscount, setUpdatedDiscount] = useState<number>(0)
-
   const handleItemClick = (value: any) => {
-
     let exist = itemList.find((item: any) => item.name === value.name)
-
-    console.log("price ", updatedPrice);
-
-
-    if (!exist) {
-      const newItem = { ...value, quantity: 1 }
-      setUpdatedPrice(newItem.price)
-      setUpdatedSubtotal(newItem.subtotal)
-      setUpdatedTax(newItem.tax)
-      setUpdatedDiscount(newItem.discount)
-
-      setItemList([...itemList, newItem])
+    console.log(value);
+    if (value.quantity > 0) {
+      if (!exist) {
+        const newItem = { ...value, quantity: 1 }
+        setItemList([...itemList, newItem])
+      }
+      else {
+        const updatedQuantity = exist.quantity + 1
+        if ((exist.quantity + 1) <= value.quantity) {
+          console.log(value.discount);
+          const updatedItem = {
+            ...exist,
+            quantity: exist.quantity + 1,
+            discount: value.discount * updatedQuantity,
+            /* price: value.price * updatedQuantity, */
+            tax: value.tax * updatedQuantity,
+            subtotal: value.subtotal * updatedQuantity
+          };
+          const updatedList = itemList.map((item: any) => item.name === value.name ? updatedItem : item);
+          setItemList(updatedList);
+        } else {
+          console.log("nothing");
+        }
+      }
     }
-    else {
-      const updatedQuantity = exist.quantity + 1;
-
-      if (updatedQuantity <= value.quantity) {
 
 
-        const updatedItem = {
-          ...exist, quantity: exist.quantity + 1, discount: updatedDiscount * updatedQuantity, price: updatedPrice * updatedQuantity, tax: updatedTax * updatedTax, subtotal: updatedSubtotal * updatedQuantity
-        };
-        const updatedList = itemList.map((item: any) => item.name === value.name ? updatedItem : item);
-        setItemList(updatedList);
-      } else {
-        console.log("nothing");
-        
-      }
-      }
     setInputItem("");
-    setItemOpen(false);
+
   }
 
 
 
+  const taxex = [
+    {
+      label: "GST 5%",
+      value: 5,
+    },
+    {
+      label: "VAT 10%",
+      value: 10,
+    }
+  ]
+  const discountType = [
+    {
+      label: "Fixed",
 
+    },
+    {
+      label: "Per %"
+    }
+  ]
   return (
     <div className='mx-10 mt-10 mb-10'>
+      {isPopUp &&
+        <PopUp
+          isPopUp={isPopUp}
+          setIsPopUp={setIsPopUp}
+          modify={modify}
+          itemList={itemList}
+          setItemList={setItemList}
+          placeholder="Type"
+          inputData={taxex}
+          icon={false}
+          Items={Items}
+        />
+      }
       <section>
         <div className="grid grid-cols-12 gap-5 md:gap-10">
           <div ref={cusRef} className="  relative  col-start-1 md:col-span-6 col-span-full">
@@ -287,7 +353,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         {
           !isSales &&
           <div className="mt-5 mb-10 col-span-full relative ">
-            <Selections inputData={["Active", "Final"]} cValue={statusValue} placeholder="Status" setCValue={setStatusValue} icon={true} />
+            <Selections inputData={["Active", "Final"]} label={statusValue} placeholder="Status" setLabel={setStatusValue} icon={true} />
           </div>
         }
         <div ref={itemRef} className="mt-5 relative">
@@ -295,7 +361,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
             <Input placeholder="Item Name / Barcode / Item Number" value={inputItem}
               onClick={() => {
-                setItemOpen(true);
+
               }}
               onChange={(e) => {
                 setInputItem(e.target.value)
@@ -303,7 +369,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             />
           </div>
           {
-            inputItem && itemOpen &&
+            inputItem &&
             <div className="mt-2 z-10 border rounded-lg bg-white absolute w-full">
               {
                 Items.map((item: any, index: any) => {
@@ -313,7 +379,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                         className="px-3 py-1 cursor-pointer"
                         onClick={() => {
                           handleItemClick(item)
-
                         }}>
                         {item.name}
                       </p>
@@ -357,14 +422,14 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                 setData({ ...data, billCharges: e.target.value })
               }}
               onKeyDown={(e) => {
-                if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete") {
+                if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== ".") {
                   e.preventDefault();
                 }
               }}
               placeholder="Other Charges" />
           </div>
           <div className="md:col-start-4 col-start-7 h-auto col-end-13 relative md:col-end-7  bg-primary-gray">
-            <Selections inputData={["GST 5%", "VAT 5%"]} cValue={taxType} placeholder="Type" setCValue={setTaxType} icon={false} />
+            <Selections inputData={taxex} value setValue={setTaxValue} label={taxType} placeholder="Type" setLabel={setTaxType} icon={false} />
           </div>
         </div>
         <div className="grid  items-center grid-cols-subgrid grid-rows-subgrid gap-2 col-start-1 px-1 bg-primary-gray col-span-12 md:col-span-6 rounded-lg ">
@@ -373,15 +438,14 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               onChange={(e) => { setData({ ...data, billDiscount: e.target.value }) }}
               className={` w-full border rounded-md px-2 h-10 outline-none  ${data.billDiscountType ? "" : "pointer-events-none"} `}
               onKeyDown={(e) => {
-                if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete") {
+                if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key) {
                   e.preventDefault();
                 }
               }}
-
               placeholder="Overall Discount" />
           </div>
           <div className="md:col-start-4 col-start-7 col-end-13 relative md:col-end-7  bg-primary-gray">
-            <Selections inputData={["Per %", "Fixed"]} cValue={disType} placeholder="Type" setCValue={setDisType} icon={false} />
+            <Selections inputData={discountType} setValue={setDiscountValue} label={disType} placeholder="Type" setLabel={setDisType} icon={false} />
           </div>
         </div>
         <div className="grid items-center  grid-rows-subgrid gap-2 col-start-1 px-2 bg-primary-gray col-span-12 md:col-span-6 rounded-lg ">
@@ -391,7 +455,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               className=" w-full rounded-md px-2 h-auto resize-none outline-none"
               placeholder="Note"
               onChange={(e) => { setData({ ...data, billNote: e.target.value }) }}
-
             />
           </div>
         </div>
@@ -431,7 +494,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       </section>
       <section className="grid grid-cols-12 md:gap-10 gap-5">
         <div className="mt-5 col-start-1 col-span-6 relative ">
-          <Selections inputData={["Cash", "Credit Card", "Debit Card", "Paytm"]} cValue={payType} placeholder="Payment Type" setCValue={setPayType} icon={false} payment={true} />
+          <Selections inputData={["Cash", "Credit Card", "Debit Card", "Paytm"]} label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} />
         </div>
         <div className="col-span-6 gird items-center border bg-primary-gray py-1 px-2 rounded-lg col-start-7 mt-5 ">
           <Input type="text"
@@ -441,12 +504,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             value={data.billTotal}
           />
         </div>
-
       </section >
-
-
     </div>
-
   )
 }
 
@@ -456,15 +515,3 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 export default NewSales
 
 
-
-const sales_Column: ColumnDef<any>[] = [
-
-
-  i_NAME,
-  i_QUANTITY,
-  i_PRICE,
-  i_DISCOUNT,
-  i_TAX,
-  i_SUBTOTAL,
-  i_REMOVE,
-]; 

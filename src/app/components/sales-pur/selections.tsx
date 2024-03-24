@@ -14,38 +14,41 @@ import {
 
 
 interface selectionProp {
-    cValue?: string,
-    setCValue: Dispatch<SetStateAction<string>>,
+    label?: string,
+    setLabel: Dispatch<SetStateAction<string>>,
     placeholder?: string,
-    inputData: string[],
+    inputData: any,
     icon?: boolean,
     payment?: boolean,
-
+    setValue?: any
+    values?: boolean
+    id?:string
 }
 
-const Selections = ({ cValue, setCValue, placeholder, inputData, icon, payment }: selectionProp) => {
+const Selections = ({ label, setLabel, placeholder, inputData, icon, payment, setValue, values,id }: selectionProp) => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const selectRef = useRef<null | any>(null)
 
-    useEffect(()=>{
-        const handleClose = (e:any) =>{
-            if(!selectRef.current?.contains(e.target)){
+    useEffect(() => {
+        const handleClose = (e: any) => {
+            if (!selectRef.current?.contains(e.target)) {
                 setIsOpen(false)
             }
         }
-        document.addEventListener('click',handleClose)
+        document.addEventListener('click', handleClose)
     })
-
-    const handleStatusClick = (label: string): void => {
-        setCValue(label);
+    const handleStatusClick = (item: any): void => {
+        setLabel(item.label);
+        values && setValue(item.value)
         setIsOpen(!isOpen);
     }
 
+    const [taxCategory,setTaxCategory] = useState<string>("");
 
     return (
-        <div ref={selectRef}>
+        <div ref={selectRef} className="relative">
             <div className="bg-primary-gray py-1 rounded-lg px-2">
 
                 <div className={` flex items-center ${icon ? "bg-primary-gray" : "bg-white border"}   rounded-md cursor-pointer `} onClick={() => { setIsOpen(!isOpen) }} >
@@ -53,7 +56,8 @@ const Selections = ({ cValue, setCValue, placeholder, inputData, icon, payment }
                         <IoMdContact className="mr-2 h-4 w-4 shrink-0 opacity-50" />
                     }
                     <Input placeholder={placeholder}
-                        value={"" || cValue}
+                    id={id}
+                        value={"" || label}
                         className={`${icon ? "border" : " border-none"} cursor-pointer`}
                         readOnly />
                     {!icon &&
@@ -68,16 +72,15 @@ const Selections = ({ cValue, setCValue, placeholder, inputData, icon, payment }
                         <Command className="rounded-lg border bg-white py-1  ">
                             <CommandList>
                                 <CommandGroup>
-                                    {inputData.map((item, index) => (
+                                    {inputData.map((item: any, index: any) => (
                                         <CommandItem key={index}
                                             className="cursor-pointer px-2 py-1  rounded-md"
                                             onSelect={() => { handleStatusClick(item) }}
                                         >
-                                            {item}
+                                            {item.label}
                                         </CommandItem>
                                     ))}
                                 </CommandGroup>
-
                             </CommandList>
                         </Command>
                     </div>

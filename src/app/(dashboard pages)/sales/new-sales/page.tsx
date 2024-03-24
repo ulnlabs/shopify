@@ -19,9 +19,9 @@ interface FormState {
   billTotal: number,
   billPaymentType: string,
   billAmount: any,
- 
 
-  }
+
+}
 
 
 
@@ -53,6 +53,8 @@ const page = () => {
 
   const handleClick = async () => {
     console.log(salesData);
+    console.log(itemList);
+
 
   }
   const customerName = [
@@ -84,46 +86,61 @@ const page = () => {
 
   }, [salesData.customerName])
 
-    const [inputItem,setInputItem] = useState<any>("");
+  const [inputItem, setInputItem] = useState<any>("");
 
-    const Items = [
-      {
+  const Items = [
+    {
 
-        name: "Deepath",
-        quantity: 0,
-        price: 200000000,
-        discount: 10,
-        tax: 1,
-        subtotal: 10,
-      },
-      {
+      name: "Deepath",
+      quantity: 10,
+      price: 200,
+      discount: 0,
+      tax_type: "VAT 5%",
+      tax: 10,
+      tax_category: "Exclusive",
+      dis_type: "Fixed",
+      taxPer: 5,
+      unitcost: 200,
+      subtotal: 210,
+    },
+    {
 
-        name: "fire10",
-        quantity: 2,
-        price: 200000000,
-        discount: 10,
-        tax: 1,
-        subtotal: 10,
-      },
-      {
+      name: "fire10",
+      quantity: 5,
+      price: 200,
+      discount: 0,
+      tax_type: "VAT 5%",
+      tax: 10,
+      taxPer: 5,
+      tax_category: "Exclusive",
+      dis_type: "Fixed",
+      unitcost: 200,
+      subtotal: 210,
+    },
+    {
 
-        name: "dhilip",
-        quantity: 2,
-        price: 200000000,
-        discount: 10,
-        tax: 1,
-        subtotal: 10,
-      }
-    ]
-  
-    const [product,setProduct] = useState<any>("")
+      name: "dhilip",
+      quantity: 2,
+      price: 200,
+      discount: 0,
+      tax_type: "VAT 5%",
+      dis_type: "Fixed",
+      tax: 10,
+      taxPer: 5,
+      unitcost: 200,
+      subtotal: 210,
+      tax_category: "Exclusive",
+    }
+  ]
 
-    useEffect(() => {
-      setProduct(Items.filter((item: any) => {
-        return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
-      })
-      )
-    }, [inputItem])
+  const [product, setProduct] = useState<any>("")
+  const [itemList, setItemList] = useState<any>([]);
+  useEffect(() => {
+    setProduct(Items.filter((item: any) => {
+      return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
+    })
+    )
+  }, [inputItem])
 
 
 
@@ -131,7 +148,18 @@ const page = () => {
     <div className="w-full ">
       <h1 className="px-10 pt-5 ">New Sales</h1>
 
-      <NewSales placeholder="Search Customer" data={salesData} setData={setSalesData}  inputItem={inputItem} setInputItem={setInputItem} Items={product} customerData={cus} isSales={true} />
+      <NewSales
+        placeholder="Search Customer"
+        data={salesData}
+        setData={setSalesData}
+        inputItem={inputItem}
+        setInputItem={setInputItem}
+        Items={product}
+        customerData={cus}
+        isSales={true}
+        itemList={itemList}
+        setItemList={setItemList}
+      />
       <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
         <Link href={"../../dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
