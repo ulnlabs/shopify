@@ -97,9 +97,17 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     accessorKey: "price",
     header: "PRICE",
   };
-  const i_DISCOUNT: columnHeader_dataTable = {
+  const i_DISCOUNT: any = {
     accessorKey: "discount",
     header: "DISOUNT",
+    cell: (({ row }: any) => (
+      <button onClick={() => {
+        setModify(row);
+        setIsPopUp(true);
+      }}>
+        {row.original.discount}
+      </button>
+    ))
   };
   const i_TAX: columnHeader_dataTable = {
     accessorKey: "tax",
@@ -210,12 +218,13 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
   }, [itemList])
 
-  const [taxValue, setTaxValue] = useState<number>(1);
-  const [discountValue, setDiscountValue] = useState<number>(1);
+  const [taxValue, setTaxValue] = useState<number>(0);
 
   useEffect(() => {
     const updateOnChange = () => {
-      const newOtherCharge = (data.billCharges * taxValue || 0) / 100;
+      console.log(taxValue);
+      
+      const newOtherCharge = (data.billCharges * taxValue) / 100;
       const subTotal = newOtherCharge + data.billSubtotal;
       const newDiscount = data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Per %" ? ((data.billDiscount * subTotal) / 100) : 0;
       setData({
@@ -436,7 +445,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               placeholder="Other Charges" />
           </div>
           <div className="md:col-start-4 col-start-7 h-auto col-end-13 relative md:col-end-7  bg-primary-gray">
-            <Selections inputData={taxex} value setValue={setTaxValue} label={taxType} placeholder="Type" setLabel={setTaxType} icon={false} />
+            <Selections inputData={taxex} values setValue={setTaxValue} label={taxType} placeholder="Type" setLabel={setTaxType} icon={false} />
           </div>
         </div>
         <div className="grid  items-center grid-cols-subgrid grid-rows-subgrid gap-2 col-start-1 px-1 bg-primary-gray col-span-12 md:col-span-6 rounded-lg ">
@@ -452,7 +461,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               placeholder="Overall Discount" />
           </div>
           <div className="md:col-start-4 col-start-7 col-end-13 relative md:col-end-7  bg-primary-gray">
-            <Selections inputData={discountType} setValue={setDiscountValue} label={disType} placeholder="Type" setLabel={setDisType} icon={false} />
+            <Selections inputData={discountType}  label={disType} placeholder="Type" setLabel={setDisType} icon={false} />
           </div>
         </div>
         <div className="grid items-center  grid-rows-subgrid gap-2 col-start-1 px-2 bg-primary-gray col-span-12 md:col-span-6 rounded-lg ">

@@ -15,18 +15,15 @@ const PopUp = ({ modify, setModify, itemList, inputData, setItemList, setIsPopUp
         const taxValue = tax * find.price / 100;
         console.log(discount);
         console.log(modify.original.quantity);
-
-
-        const DiscountValue = discountType === "Fixed" ? discount : (discount * find.price) / 100 / modify.original.quantity;
+        const DiscountValue = discountType === "Fixed" ? discount : (discount * find.price) / 100;
         const subTotal = taxCategory === "Exclusive" ? taxValue + find.price - DiscountValue : find.price - DiscountValue;
         console.log(DiscountValue);
-
         const updateTax = {
             ...modify.original,
             tax_type: taxType,
             taxPer: tax,
             tax: modify.original.quantity * taxValue,
-            discount: discountType === "Per %" ? modify.original.quantity ** 2 * DiscountValue : modify.original.quantity * DiscountValue,
+            discount: discountType === "Per %" ? modify.original.quantity  * DiscountValue : modify.original.quantity * DiscountValue,
             dis_type: discountType,
             tax_category: taxCategory,
             subtotal: modify.original.quantity * subTotal
