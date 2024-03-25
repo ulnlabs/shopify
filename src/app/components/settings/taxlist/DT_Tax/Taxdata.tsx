@@ -69,18 +69,18 @@ export default function DataTable<TData, TValue>({
   return (
     <>
       
-      <div className="flex items-center p-4">
+      <div className="flex items-center gap-4 p-4">
         <Input
           placeholder="Filter Tax ...."
           value={(table.getColumn("taxname")?.getFilterValue() as string) ?? ""}
           onChange={(event) => 
             table.getColumn("taxname")?.setFilterValue(event.target.value)
           }
-          className="w-[70%]"
+          className="w-[400px]"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="ml-auto w-[300px]">
               Columns
             </Button>
           </DropdownMenuTrigger>
@@ -160,8 +160,13 @@ export default function DataTable<TData, TValue>({
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
-      <div className="flex items-center justify-end space-x-2 p-4">
-        <Button
+      <div className="flex  space-x-2 p-4 justify-between">
+        <div className="">
+
+        </div>
+        <div className="flex gap-3 cursor-pointer">
+
+        <Button className="w-[100px]"
           variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
@@ -170,6 +175,7 @@ export default function DataTable<TData, TValue>({
           Previous
         </Button>
         <Button
+        className="w-[100px]"
           variant="outline"
           size="sm"
           onClick={() => table.nextPage()}
@@ -177,6 +183,7 @@ export default function DataTable<TData, TValue>({
         >
           Next
         </Button>
+        </div>
       </div>
     </>
   );

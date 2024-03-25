@@ -60,8 +60,9 @@ const C_ACTION = {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className=" bg-blue-300 p-2 rounded-md ">{`Action ->`} </span>
+          <Button variant="ghost" className="h-9   bg-blue-300  rounded-md">
+            <h1 className=" "> Action</h1>
+           <BiCaretDown />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

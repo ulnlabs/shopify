@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import { useState } from 'react';
-import DataTable from "@/app/components/settings/payment_type/DT-payment/PayData"
+import DataTable from "@/app/components/settings/taxlist//DT_Tax/Taxdata"
 import { c_columns } from "@/app/components/settings/payment_type/DT-payment/P-column";
 
 
