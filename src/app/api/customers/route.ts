@@ -120,6 +120,7 @@ export const DELETE = async (req: Request) => {
 console.log("api/customers/delete");
 
   const header=req.headers.get("data")
+  
   try {
     await connectDB();
   } catch (error) {
@@ -166,3 +167,27 @@ if(header=="deleterow"){
 
   return NextResponse.json({ message: "interanl server error" },{status:500});
 };
+
+export async function PUT(req:Request){
+  console.log("/api/customers/put");
+  
+  const header= req.headers.get("data")
+  const {data}=await req.json()
+  console.log();
+  
+  try {
+    await connectDB();
+   const response= await customerModel.updateOne({_id:data._id},data)
+   
+   if(response.acknowledged==true) {
+
+     return NextResponse.json(
+       { message: "ok" })
+   }
+  } catch (error) {
+    return NextResponse.json(
+      { message: "internal server error" },
+     
+    );
+  }
+}

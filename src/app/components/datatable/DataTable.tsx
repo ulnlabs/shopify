@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import csvDownload from 'json-to-csv-export'
+import csvDownload from "json-to-csv-export";
 import {
   ColumnDef,
   flexRender,
@@ -13,7 +13,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { motion,AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -58,7 +58,9 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const { selectedRow, setSelectedRow } = useContext(ContextData);
-  const { isDeleted, setIsDeleted } = useContext(UserContext);
+  const { isChanged, setIsChanged } = useContext(UserContext);
+  console.log("dataTable",isChanged);
+  
   const { toast } = useToast();
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -97,33 +99,32 @@ export function DataTable<TData, TValue>({
           data: selectedRow,
         });
         if (response.status == 200) {
-          setIsDeleted(!isDeleted);
+          setIsChanged(!isChanged);
           toast({
             title: "New Message !",
-            description: " Customer(s) is deleted successfully",
+            description: " Customer(s) is Deleted successfully",
           });
           setSelectedRow([]);
         }
       } catch (error) {}
     }
   };
-  const exportCsv=async ()=>{
-  const custData=data.filter((item:any)=>{
-    return selectedRow.includes(item._id)
-  })
-  const firstIndex=custData[0]
-  const header=  Object.keys(firstIndex as string[])
-  console.log(header);
-  
-   const dataToConvert = {
-    data: custData,
-    filename: 'customer-list',
-    delimiter: ',',
-    headers: header
-  }
-  csvDownload(dataToConvert)
-  }
+  const exportCsv = async () => {
+    const custData = data.filter((item: any) => {
+      return selectedRow.includes(item._id);
+    });
+    const firstIndex = custData[0];
+    const header = Object.keys(firstIndex as string[]);
+    console.log(header);
 
+    const dataToConvert = {
+      data: custData,
+      filename: "customer-list",
+      delimiter: ",",
+      headers: header,
+    };
+    csvDownload(dataToConvert);
+  };
 
   /* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
   return (
@@ -171,15 +172,22 @@ export function DataTable<TData, TValue>({
       </div>
       <AnimatePresence mode="wait">
         {selectedRow.length > 0 && (
-
-      <motion.div  exit={{x:100,opacity:0}} animate={{x:0,opacity:1}} initial={{opacity:0,x:100}} transition={{duration:.5,type:"spring"}} className="flex justify-end h-16  gap-2">
-          <Button variant={"outline"} onClick={() => deleteCustomer("rows")}>
-            Delete
-          </Button>
-        <Button variant={"outline"} onClick={exportCsv}>Exoport CSV</Button>
-      </motion.div>
+          <motion.div
+            exit={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            initial={{ opacity: 0, x: 100 }}
+            transition={{ duration: 0.5, type: "spring" }}
+            className="flex justify-end h-16  gap-2"
+          >
+            <Button variant={"outline"} onClick={() => deleteCustomer("rows")}>
+              Delete
+            </Button>
+            <Button variant={"outline"} onClick={exportCsv}>
+              Exoport CSV
+            </Button>
+          </motion.div>
         )}
-        </AnimatePresence>
+      </AnimatePresence>
       <div className="rounded-md border">
         <Table className="">
           <TableHeader>

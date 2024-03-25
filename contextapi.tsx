@@ -8,9 +8,7 @@ const ContextContent = ({ children }: children) => {
     name: "",
     mobile: "",
     email: "",
-    gst: "",
-    tax: "",
-    due: "",
+    
     state: "",
     city: "",
     pincode: "",

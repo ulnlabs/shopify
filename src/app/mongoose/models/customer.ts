@@ -13,9 +13,7 @@ const customer = new mongoose.Schema({
     type: String,
   },
   email: String,
-  gst: String,
-  tax: String,
-  due: String,
+ 
   state: String,
   city: String,
   pincode: String,
