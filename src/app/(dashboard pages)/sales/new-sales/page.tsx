@@ -3,35 +3,9 @@ import NewSales from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-interface FormState {
-  customerName: string,
-  billDate: Date,
-  billStatus: string,
-  billQuantity: number,
-  billCharges: any,
-  billTaxType: string,
-  billDiscount: any,
-  billDiscountType: string,
-  billNote: string,
-  billSubtotal: number,
-  billOtherCharge: number,
-  billOverallDis: number
-  billTotal: number,
-  billPaymentType: string,
-  billAmount: any,
-
-
-}
-
-
-
-
+import { FormState } from "@/app/components/sales-pur/global";
 
 const page = () => {
-
-
-
-
 
   const [salesData, setSalesData] = useState<FormState>({
     customerName: "",

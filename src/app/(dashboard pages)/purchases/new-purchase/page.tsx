@@ -3,26 +3,7 @@ import NewSales from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-interface FormState {
-  customerName: string,
-  billDate: Date,
-  billStatus: string,
-  billQuantity: number,
-  billCharges: any,
-  billTaxType: string,
-  billDiscount: any,
-  billDiscountType: string,
-  billNote: string,
-  billSubtotal: number,
-  billOtherCharge: number,
-  billOverallDis: number
-  billTotal: number,
-  billPaymentType: string,
-  billAmount: any,
-  billPayNote: string,
-
-
-}
+import { FormState } from "@/app/components/sales-pur/global";
 
 const page = () => {
 
@@ -33,9 +14,9 @@ const page = () => {
     billStatus: "",
     billQuantity: 0,
     billCharges: 0,
-    billTaxType: "none",
+    billTaxType: "",
     billDiscount: 0,
-    billDiscountType: "none",
+    billDiscountType: "",
     billNote: "",
     billSubtotal: 0,
     billOtherCharge: 0,
@@ -43,7 +24,6 @@ const page = () => {
     billTotal: 0,
     billPaymentType: "",
     billAmount: 0,
-    billPayNote: "",
   })
 
   const customerName = [
@@ -83,35 +63,45 @@ const page = () => {
       name: "Deepath",
       quantity: 10,
       price: 200,
-      discount: 10,
-      tax_type: "tax 15",
-      tax: 20,
+      discount: 0,
+      tax_type: "VAT 5%",
+      tax: 10,
+      tax_category: "Exclusive",
+      dis_type: "Fixed",
+      taxPer: 5,
       unitcost: 200,
-      subtotal: 10,
+      subtotal: 210,
     },
     {
 
       name: "fire10",
       quantity: 5,
-      price: 200000000,
-      discount: 10,
-      tax_type: "tax 15",
-      tax: 20,
+      price: 200,
+      discount: 0,
+      tax_type: "VAT 5%",
+      tax: 10,
+      taxPer: 5,
+      tax_category: "Exclusive",
+      dis_type: "Fixed",
       unitcost: 200,
-      subtotal: 10,
+      subtotal: 210,
     },
     {
 
       name: "dhilip",
       quantity: 2,
-      price: 200000000,
-      discount: 10,
-      tax_type: "tax 15",
-      tax: 20,
+      price: 200,
+      discount: 0,
+      tax_type: "VAT 5%",
+      dis_type: "Fixed",
+      tax: 10,
+      taxPer: 5,
       unitcost: 200,
-      subtotal: 10,
+      subtotal: 210,
+      tax_category: "Exclusive",
     }
   ]
+
 
   const [product, setProduct] = useState<any>("")
   const [itemList, setItemList] = useState<any>([]);
@@ -136,10 +126,10 @@ const page = () => {
       <h1 className="px-10 pt-5 ">New Purchase</h1>
 
       <NewSales
+        isSales={false}
+        placeholder="Search Customer"
         data={purchaseData}
         setData={setPurchaseData}
-        placeholder="Select Supplier"
-        isSales={false}
         inputItem={inputItem}
         setInputItem={setInputItem}
         Items={product}

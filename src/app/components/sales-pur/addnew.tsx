@@ -14,6 +14,7 @@ import { AiOutlineMinus } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
 import { ColumnDef } from "@tanstack/react-table";
 import PopUp from "./extraPopUp";
+import { AnimatePresence, motion } from "framer-motion";
 
 const sample = [
   {
@@ -118,6 +119,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     accessorKey: "tax_type",
     header: "TAX %",
     cell: (({ row }: any) => (
+
       <button onClick={() => {
         setModify(row);
         setIsPopUp(true);
@@ -223,7 +225,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   useEffect(() => {
     const updateOnChange = () => {
       console.log(taxValue);
-      
+
       const newOtherCharge = (data.billCharges * taxValue) / 100;
       const subTotal = newOtherCharge + data.billSubtotal;
       const newDiscount = data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Per %" ? ((data.billDiscount * subTotal) / 100) : 0;
@@ -292,21 +294,60 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       label: "Per %"
     }
   ]
+  const framerTemplate = (variants: any) => {
+    return (
+      {
+        initial: "initial",
+        animate: "enter",
+        exit: "initial",
+        variants
+      }
+    )
+  }
+  const popBg = {
+    initial: {
+      opacity: 0,
+      Transition: {
+        duration: 0.5,
+        ease: [0.43, 0.13, 0.23, 0.96]
+      }
+    },
+    enter: {
+      opacity: 1,
+      Transition: {
+        duration: 0.5,
+        ease: [0.43, 0.13, 0.23, 0.96]
+      }
+    },
+
+  }
   return (
     <div className='mx-10 mt-10 mb-10'>
-      {isPopUp &&
-        <PopUp
-          isPopUp={isPopUp}
-          setIsPopUp={setIsPopUp}
-          modify={modify}
-          itemList={itemList}
-          setItemList={setItemList}
-          placeholder="Type"
-          inputData={taxex}
-          icon={false}
-          Items={Items}
-        />
-      }
+      <AnimatePresence mode="wait">
+        {isPopUp &&
+
+
+          <motion.div className="fixed inset-0 z-50 flex justify-center items-center backdrop-filter backdrop-blur-md"
+            {...framerTemplate(popBg)}
+          >
+
+            <PopUp
+              framerTemplate={framerTemplate}
+              isPopUp={isPopUp}
+              setIsPopUp={setIsPopUp}
+              modify={modify}
+              itemList={itemList}
+              setItemList={setItemList}
+              placeholder="Type"
+              inputData={taxex}
+              icon={false}
+              Items={Items}
+            />
+          </motion.div>
+
+
+        }
+      </AnimatePresence>
       <section>
         <div className="grid grid-cols-12 gap-5 md:gap-10">
           <div ref={cusRef} className="  relative  col-start-1 md:col-span-6 col-span-full">
@@ -461,7 +502,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               placeholder="Overall Discount" />
           </div>
           <div className="md:col-start-4 col-start-7 col-end-13 relative md:col-end-7  bg-primary-gray">
-            <Selections inputData={discountType}  label={disType} placeholder="Type" setLabel={setDisType} icon={false} />
+            <Selections inputData={discountType} label={disType} placeholder="Type" setLabel={setDisType} icon={false} />
           </div>
         </div>
         <div className="grid items-center  grid-rows-subgrid gap-2 col-start-1 px-2 bg-primary-gray col-span-12 md:col-span-6 rounded-lg ">
