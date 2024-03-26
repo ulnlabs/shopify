@@ -19,8 +19,7 @@ import {
 
 
 import { sales_Column } from "../datatable/salesColumn";
-import { DataTable } from "../datatable/DataTable";
-
+import DataTable from "../datatable/DataTable";
 import { pur_Column } from "../datatable/purColumn";
 
 
