@@ -4,14 +4,12 @@ import { useState } from 'react';
 import Taxdata from "@/app/components/settings/taxlist/DT_Tax/Taxdata"
 import { RiEdit2Fill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
-import { MdOutlineDeleteForever } from "react-icons/md";
 import { BiCaretDown } from "react-icons/bi";
 //for hint how do make your custom columns see line 137 or below to comment
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import AddTax from '../popup/AddTax';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MoreHorizontal, ArrowUpDown, Currency } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,10 +20,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ColumnDef } from "@tanstack/react-table";
-
-
-
-// Function to delete a currency from the list
 export const data =
   [
     {
@@ -48,10 +42,6 @@ export const data =
 
 
 function Taxlist() {
-
-
-
-
 
   const Tax_percentage: columnHeader_dataTable = {
     accessorKey: "taxpercentage",
@@ -156,7 +146,7 @@ function Taxlist() {
 
 
   const [Tax, setTax] = useState(data);
-  function handleDelete(row: customerList): void {
+  function handleDelete(row: any): void {
 
 
     setTax(Tax.filter((item) => item.id !== row.id));
