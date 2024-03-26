@@ -8,14 +8,15 @@ const ContextContent = ({ children }: children) => {
     name: "",
     mobile: "",
     email: "",
-    gst: "",
-    tax: "",
-    due: "",
+    
     state: "",
     city: "",
     pincode: "",
     address: "",
+    id:0
   });
+  const [selectedRow, setSelectedRow] = useState<string[]>([]);
+
 const [supplierData,setSupplierData] =useState({
     name: "",
     mobile: "",
@@ -31,7 +32,7 @@ const [supplierData,setSupplierData] =useState({
 
   return (
     <>
-      <ContextData.Provider value={{ customerData, setCustomerData ,supplierData,setSupplierData}}>
+      <ContextData.Provider value={{selectedRow, setSelectedRow, customerData, setCustomerData ,supplierData,setSupplierData}}>
         {children}
       </ContextData.Provider>
     </>

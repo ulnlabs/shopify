@@ -1,5 +1,5 @@
 import React from 'react'
-import Newexp from '@/app/components/expenses/new expense/Newexp'
+import Newexp from '@/app/components/expenses/Newexp'
 
 function page() {
   return (

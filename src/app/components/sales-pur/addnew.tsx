@@ -1,4 +1,5 @@
 "use client"
+import { BsPersonAdd } from "react-icons/bs"; 
 import { BiCart } from "react-icons/bi";
 import { AiOutlineCalendar } from "react-icons/ai";
 import React, { useState, useEffect, useRef } from 'react'
@@ -36,7 +37,8 @@ const cutomerName = [
     label: "Deepath",
   },
   {
-    value: "dhilip",
+    
+    value: "999",
     label: "Dhilip",
   },
 ]
@@ -130,7 +132,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
                 setCustomerOpen(!customerOpen)
               }} className=" cursor-pointer  " />
               <Link href={""}>
-                <IoMdContact className="ml-2 h-4 w-4 shrink-0  opacity-50" />
+                <BsPersonAdd className="ml-2 h-4 w-4 shrink-0  opacity-50" />
               </Link>
             </div>
             {
@@ -145,7 +147,7 @@ const NewSales = ({ data, setData, placeholder, isSales }: any) => {
                           <CommandItem key={item.value}
                             onSelect={handleCustomerClick}
                           >
-                            {item.label}
+                            {item.label} <p className="hidden">{item.value}</p>
                           </CommandItem>
                         ))}
                       </CommandGroup>

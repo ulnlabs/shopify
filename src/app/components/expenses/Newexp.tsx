@@ -1,7 +1,7 @@
 "use client";
 import React, { FormEvent, useContext, useState } from "react";
-import DashboardHeader from "../../dashboard/DashboardHeader";
-import SearchSelect from "../../sales-pur/search";
+import DashboardHeader from "../dashboard/DashboardHeader";
+import SearchSelect from "../sales-pur/search";
 function Newexp() {
 const [expensesData,setExpenses] = useState<any>({})
   const handleReset = (): void => {

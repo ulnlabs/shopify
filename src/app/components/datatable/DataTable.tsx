@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import csvDownload from "json-to-csv-export";
 import {
   ColumnDef,
   flexRender,
@@ -11,9 +12,8 @@ import {
   getFilteredRowModel,
   SortingState,
   useReactTable,
-
 } from "@tanstack/react-table";
-
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,7 +40,11 @@ interface DataTableProps<TData, TValue> {
   rows?: boolean;
   paginater?: boolean;
 }
-
+import { useContext } from "react";
+import { ContextData } from "../../../../contextapi";
+import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
+import { UserContext } from "@/UserContext";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -53,6 +57,12 @@ export default function DataTable<TData, TValue>({
   paginater,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const { selectedRow, setSelectedRow } = useContext(ContextData);
+  const { isChanged, setIsChanged } = useContext(UserContext);
+  console.log("dataTable",isChanged);
+  
+  const { toast } = useToast();
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
@@ -80,46 +90,104 @@ export default function DataTable<TData, TValue>({
       rowSelection,
     },
   });
+
+  const deleteCustomer = async (param: string) => {
+    if (param == "rows") {
+      try {
+        const response = await axios.delete("/api/customers", {
+          headers: { data: "deleterow" },
+          data: selectedRow,
+        });
+        if (response.status == 200) {
+          setIsChanged(!isChanged);
+          toast({
+            title: "New Message !",
+            description: " Customer(s) is Deleted successfully",
+          });
+          setSelectedRow([]);
+        }
+      } catch (error) {}
+    }
+  };
+  const exportCsv = async () => {
+    const custData = data.filter((item: any) => {
+      return selectedRow.includes(item._id);
+    });
+    const firstIndex = custData[0];
+    const header = Object.keys(firstIndex as string[]);
+    console.log(header);
+
+    const dataToConvert = {
+      data: custData,
+      filename: "customer-list",
+      delimiter: ",",
+      headers: header,
+    };
+    csvDownload(dataToConvert);
+  };
+
   /* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
   return (
     <>
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => 
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+        {veiw.filter && (
+          <Input
+            placeholder="Search..."
+            onChange={(event) => {
+              table.setGlobalFilter(event.target.value);
+              console.log(table.getColumn("mobile"));
+            }}
+            className="max-w-sm"
+          />
+        )}
 
+        {veiw.column && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value: any) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+      <AnimatePresence mode="wait">
+        {selectedRow.length > 0 && (
+          <motion.div
+            exit={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            initial={{ opacity: 0, x: 100 }}
+            transition={{ duration: 0.5, type: "spring" }}
+            className="flex justify-end h-16  gap-2"
+          >
+            <Button variant={"outline"} onClick={() => deleteCustomer("rows")}>
+              Delete
+            </Button>
+            <Button variant={"outline"} onClick={exportCsv}>
+              Exoport CSV
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="rounded-md border">
         <Table className="">
           <TableHeader>
@@ -131,9 +199,9 @@ export default function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
@@ -162,8 +230,7 @@ export default function DataTable<TData, TValue>({
                 <TableCell
                   colSpan={columns.length}
                   className="h-24 text-center"
-                >
-                </TableCell>
+                ></TableCell>
               </TableRow>
             )}
           </TableBody>
