@@ -15,6 +15,7 @@ import { MdOutlineDelete } from "react-icons/md";
 import { ColumnDef } from "@tanstack/react-table";
 import PopUp from "./extraPopUp";
 import { AnimatePresence, motion } from "framer-motion";
+import { columnHeader_dataTable } from "../../../../global";
 
 const sample = [
   {
@@ -437,7 +438,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                         onClick={() => {
                           handleItemClick(item)
                         }}>
-                        {item.name}
+                        {item.name} - {item.quantity}
                       </p>
                     </div>
                   )
