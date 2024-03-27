@@ -29,8 +29,6 @@ const profileVarient = {
 
 function Header() {
   const {data:session} = useSession()
-  console.log(session);
-  
   const [toggleprofile, setToggleProfile] = useState<Boolean>(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const profileCardRef = useRef<HTMLDivElement>(null);
