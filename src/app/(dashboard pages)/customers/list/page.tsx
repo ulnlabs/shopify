@@ -221,7 +221,7 @@ opacity:1,
     x:0,
     transition:{
       duration:0.5,
-      type:"spring",
+     
       stiffness:100
     }
 
@@ -253,6 +253,7 @@ opacity:1,
                 filter={true}
                 rows={true}
                 paginater={true}
+                route="/api/customers"
               />
             </motion.div>
          </>
@@ -266,7 +267,7 @@ opacity:1,
             exit={{ y: 1000 }}
             initial={{  y: -500 }}
             animate={{ y: 0 }}
-            transition={{ duration: .5,type: "spring",stiffness:100 }}
+            transition={{ duration: .5,stiffness:100 }}
             className=" bg-white absolute "
           >
             <UpdateData
