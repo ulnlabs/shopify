@@ -4,7 +4,7 @@ import DashboardHeader from '@/app/components/dashboard/DashboardHeader'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import useSWR from 'swr'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 export default function page() {
     const [brand, setBrand] = useState<string>("")
     const [category, setCategory] = useState<string>("")
@@ -12,18 +12,24 @@ export default function page() {
     const [tax, setTax] = useState<string>("")
     const [discountType, setDiscountType] = useState<string>("")
     type InventoryItem = {
-        select?: boolean
-        itemCode?: string | undefined
-        itemName?: string | undefined
-        brand?: string | undefined
-        category?: string | undefined
-        unit?: string | undefined
-        stockQty?: number | undefined
-        minQty?: number | undefined
-        purchaseprice?: number | undefined
-        finalsalesprice?: number | undefined
-        tax?: number | undefined
-        status?: string | undefined
+        itemCode?: string
+        itemName?: string
+        brand?: string
+        category?: string
+        unit?: string
+        minQty?: number
+        expdate?: Date
+        barcode?: string
+        description?: string
+        price?: number
+        tax?: number
+        purchaseprice?: number
+        taxtype?: string
+        profitmargin?: number
+        saleprice?: number
+        discountType?: number
+        discount?: number
+        currentstock?: number
     }
     const [formDetails, setFormDetails] = useState<InventoryItem>()
 
@@ -41,20 +47,21 @@ export default function page() {
     const { data: brandData, error: brandError } = useSWR(
         '/api/brand', brandRoute
     )
-    useEffect(() => {
-        if (brandData) {
-
-        }
-    })
     const [BrandPopupState, setBrandPopupState] = useState<boolean>(false)
+    const addItemEvent = async (event:React.FormEvent) => {
+        event.preventDefault();
+        console.log(formDetails)
+    }
     return (
         <div className='w-full py-2 px-4'>
             <div className="py-2 w-full relative">
-                {
-                    BrandPopupState && <BrandAddPopup close={setBrandPopupState} />
-                }
+                <AnimatePresence mode='wait'>
+                    {
+                        BrandPopupState && <BrandAddPopup close={setBrandPopupState} />
+                    }
+                </AnimatePresence>
                 <DashboardHeader title='New Item' subtitle='Add/Update Items' breadcrumb={[{ title: 'Dashboard', path: '/dashboard' }, { title: 'item List', path: '/items/list' }, { title: 'New item', path: '/items/new' },]} />
-                <form action="" method="post" className='w-full'>
+                <form onSubmit={addItemEvent} action="" method="post" className='w-full'>
                     <div className="grid grid-cols-1 grid-row-4 min-h-fit mt-4 border-t-2 border-[--primary] rounded-sm shadow p-4 place-items-stretch w-full">
                         <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-min border-b gap-6 py-4 ">
                             <div className=" grid-cols-1 lg:col-start-1 auto-rows-min  lg:col-span-3 row-span-1 flex flex-col gap-2 ">
@@ -88,7 +95,7 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="expireDate">Expire Date</label>
-                                <input type="date" id='expireDate' onChange={(e: any) => setFormDetails({ ...formDetails, expireDate: e.target.value })} className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="date" id='expireDate' onChange={(e: any) => setFormDetails({ ...formDetails, expdate: e.target.value })} className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="barcode">Barcode</label>
@@ -102,7 +109,7 @@ export default function page() {
                         <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-3 border-b gap-6 py-4 ">
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="price">Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Price' onChange={(e: any) => setFormDetails({ ...formDetails, finalsalesprice: e.target.value })} id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Price' onChange={(e: any) => setFormDetails({ ...formDetails, price: e.target.value })} id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="tax">Tax<span className='text-red-400'>*</span></label>
@@ -114,7 +121,7 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="taxType">Tax Type<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Tax Type' onChange={(e: any) => setFormDetails({ ...formDetails, tax: e.target.value })} id='taxType' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Tax Type' onChange={(e: any) => setFormDetails({ ...formDetails, taxtype: e.target.value })} id='taxType' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="profitMargin">Profit Margin(%)<span className='text-red-400'>*</span></label>
@@ -122,7 +129,7 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="salesPrice">Sales Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Sales Price' onChange={(e: any) => setFormDetails({ ...formDetails, salesprice: e.target.value })} id='salesPrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Sales Price' onChange={(e: any) => setFormDetails({ ...formDetails, saleprice: e.target.value })} id='salesPrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
 
                         </div>
@@ -189,8 +196,10 @@ const BrandAddPopup = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) 
     return (
         <div className='flex h-screen absolute z-50 w-full top-0 left-0 backdrop-blur-[1px]  items-center justify-center' >
             <motion.div
+                exit={{ opacity: 0 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .5, type: "tween" }}
                 className='flex justify-center items-center'>
                 <motion.div
+                    exit={{ opacity: 0, y: -50 }} initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2, duration: .5, type: "tween" }}
                     className='bg-white p-4 rounded-lg shadow-lg'>
                     <form method="post" onSubmit={addBrand} className='w-fit flex flex-col gap-4'>
                         <h1 className='text-xl font-semibold'>Add New Brand</h1>
