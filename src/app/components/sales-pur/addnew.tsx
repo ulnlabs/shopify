@@ -27,7 +27,7 @@ const sample = [
     subtotal: 10,
   }
 ]
-const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList }: any) => {
+const NewSales = ({ data, setData, isLoading,placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList }: any) => {
 
   const [modify, setModify] = useState<string>("")
   const i_NAME: any = {
@@ -429,8 +429,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           {
             inputItem &&
             <div className="mt-2 z-10 border rounded-lg bg-white absolute w-full">
-              {
-                Items.map((item: any, index: any) => {
+              { 
+                Items?.map((item: any, index: any) => {
                   return (
                     <div className="">
                       <p key={index}
@@ -444,12 +444,10 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                   )
                 })
               }
-              {Items.filter((item: any) => {
-                return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
-              }).length === 0 && (
+              {Items?.length === 0 && inputItem && (
                   <div className="">
                     <p className="px-3 py-1 text-center">
-                      Item Not Found
+                     Item Not Found
                     </p>
                   </div>
                 )}

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { FormState } from "../../../../../global";
 import axios from "axios";
+import useSWR from 'swr';
 
 
 const page = () => {
@@ -12,7 +13,7 @@ const page = () => {
   const [inputItem, setInputItem] = useState<any>("");
   const [product, setProduct] = useState<any>([])
 
-  useEffect(() => {
+/*   useEffect(() => {
     const getData = async () => {
       try {
         if(inputItem) {
@@ -29,7 +30,26 @@ const page = () => {
       }
     }  
     getData();
-  },[inputItem])
+  },[inputItem]) */
+
+
+  const getData = async (url:string) => {
+    
+    const response = await axios.put(url,{data:inputItem});
+    return response.data;
+  }
+  
+
+    
+     const { data, error } = useSWR(/* inputItem ?  */"/api/sales" /* : null */, getData)
+
+    console.log(data);
+    
+ 
+    
+  
+
+
 
   const [salesData, setSalesData] = useState<FormState>({
     customerName: "",
@@ -75,31 +95,27 @@ const page = () => {
   ]
 
   const [cus, setCus] = useState<any>("");
-
   useEffect(() => {
     setCus(customerName.filter((item: any) => {
       return salesData.customerName === "" ? true : item.value.toLowerCase().includes(salesData.customerName.toLowerCase())
     })
     )
-
   }, [salesData.customerName])
-
   
-
   const [itemList, setItemList] = useState<any>([]);
   
   
   return (
     <div className="w-full ">
       <h1 className="px-10 pt-5 ">New Sales</h1>
-
       <NewSales
         placeholder="Search Customer"
         data={salesData}
         setData={setSalesData}
         inputItem={inputItem}
         setInputItem={setInputItem}
-        Items={product}
+        Items={data}
+        /* isLoading={isLoading} */
         customerData={cus}
         isSales={true}
         itemList={itemList}

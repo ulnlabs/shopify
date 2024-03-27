@@ -13,17 +13,17 @@ import { connectDB } from "@/app/mongoose/db";
 export const PUT = async (req: Request) => {
     try {
         const { data } = await req.json();
+        let search = new RegExp(data, 'i');
         console.log(data);
-        let search = new RegExp( data, 'i');
         await connectDB();
-        const value = await items.find({name:search});
+        const value = await items.find({ $or: [{ name: search }, { item_no: search }] });
         console.log(value);
-        
-            return NextResponse.json(value)
-       
+  
+    
+    return NextResponse.json(value)
     }
     catch (err) {
-        console.log(err);
+        return new Response('Internal server error',{status:500})
     }
 }
 
