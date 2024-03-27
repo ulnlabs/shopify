@@ -1,11 +1,10 @@
 import React from 'react'
-import AddCustomer from '../../components/customer/AddCustomer'
+import Newexp from '@/app/components/expenses/Newexp'
+
 function page() {
-    
   return (
     <div>
-customer none
-
+      <Newexp />
     </div>
   )
 }

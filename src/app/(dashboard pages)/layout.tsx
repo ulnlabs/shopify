@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import SideBar from "../components/navigation/SideBar";
 import Header from "../components/navigation/Header";
 import { UserProvider } from "@/UserContext";
-
+import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,16 +21,18 @@ export default function RootLayout({
 }>) {
   return (
     <UserProvider>
-    
-    <div className="min-h-screen max-w-screen flex justify-between">
-      <SideBar />
-      <div className="w-full max-h-screen overflow-hidden">
-        <Header />
-        <div className="w-full max-h-[calc(100vh_-_60px)] overflow-y-scroll flex flex-col items-center justify-start scrollbar-hide">
-          {children}
+
+      <div className="min-h-screen max-w-screen flex justify-between">
+        <SideBar />
+        <div className="w-full max-h-screen overflow-hidden">
+          <Header />
+          <div className="w-full max-h-[calc(100vh_-_60px)] overflow-y-scroll flex flex-col items-center justify-start scrollbar-hide">
+            {children}
+          </div>
         </div>
       </div>
-    </div>
-  </UserProvider>    
+      <Toaster />
+    </UserProvider>
+
   );
 }

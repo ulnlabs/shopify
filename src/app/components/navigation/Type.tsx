@@ -28,12 +28,12 @@ export const navItems: NavBarItem[] = [
                 key: "/sales/pos",
             },
             {
-                label: "New Sale",
-                key: "/sales/new-sale",
+                label: "New Sales",
+                key: "/sales/new-sales",
             },
             {
                 label: "Sales List",
-                key: "/sales/list",
+                key: "/sales/sales-list",
             },
             {
                 label: "New Sales Return",
@@ -72,15 +72,15 @@ export const navItems: NavBarItem[] = [
         children: [
             {
                 label: 'New Purchase',
-                key: "/purchases/new"
+                key: "/purchases/new-purchase"
             },
             {
                 label: 'Purchases List',
-                key: "/purchases/list"
+                key: "/purchases/purchase-list"
             },
             {
                 label: 'New Purchase Return',
-                key: "/purchases/return-new"
+                key: "/purchases/new-return"
             },
             {
                 label: 'Purchase Returns List',
@@ -241,14 +241,12 @@ export const navItems: NavBarItem[] = [
         icon: <IoIosSettings />,
         key: "/settings",
         children: [
-            { label: 'Company Profile', key: "/settings/company-profile" },
-            { label: 'Site Settings', key: "/settings/site-settings" },
-            { label: 'Tax List', key: "/settings/tax-list" },
-            { label: 'Units List', key: "/settings/units-list" },
-            { label: 'Payment Types List', key: "/settings/payment-types-list" },
-            { label: 'Currency List', key: "/settings/currency-list" },
+            { label: 'Company Profile', key: "/settings/company" },
+            { label: 'Site Settings', key: "/settings/sitelist" },
+            { label: 'Tax List', key: "/settings/taxlist" },
+            { label: 'Units List', key: "/settings/unitlist" },
+            { label: 'Payment Types List', key: "/settings/payment-type" },
             { label: 'Change Password', key: "/settings/change-password" },
-            { label: 'Database Backup', key: "/settings/database-backup" },
         ]
     }
 ]
