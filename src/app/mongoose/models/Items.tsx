@@ -1,23 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IShopifyItem extends Document {
-  itemCode: string;
-  itemName: string;
-  suppliers: string;
-  purchasePrice: number;
-  profitMargin: number;
-  salesPrice: number;
-  minQty: number;
-  expireDate: Date;
-  description: string;
-  tax: number;
-  finalPrice: number;
-  discountType: string;
-  discount: number;
-  currentOpeningStock: number;
-  adjustmentNote: string;
-}
-
 const ShopifyItemSchema: Schema = new Schema({
   itemCode: {
     type: String,
