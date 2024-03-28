@@ -1,17 +1,20 @@
 import mongoose from "mongoose";
-const Unitmodel = new mongoose.Schema({
+
+const UnitSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
     },
     description: {
-        type: String
+        type: String,
+        default: ""
     }
-})
-const Unit = mongoose.models.Unit || mongoose.model<unitType>("Unit ", Unitmodel)
-export default Unit
+});
 
-export interface unitType{
-    name:string;
-    description?:string
+const Unit = mongoose.models.Unit || mongoose.model<unitType>("Unit", UnitSchema);
+export default Unit;
+
+export interface unitType {
+    name: string;
+    description: string;
 }

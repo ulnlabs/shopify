@@ -11,7 +11,10 @@ export default function page() {
     const [unit, setUnit] = useState<string>("")
     const [tax, setTax] = useState<string>("")
     const [discountType, setDiscountType] = useState<string>("")
-
+    const [CategoryPopupState, setCategoryPopupState] = useState<boolean>(false)
+    const [UnitPopupState, setUnitPopupState] = useState<boolean>(false)
+    const [TaxPopupState, setTaxPopupState] = useState<boolean>(false)
+    const [taxType, setTaxType] = useState<string>("")
     type InventoryItem = {
         itemCode?: string
         itemName?: string
@@ -33,7 +36,6 @@ export default function page() {
         currentstock?: number
     }
     const [formDetails, setFormDetails] = useState<InventoryItem>()
-
     const brandRoute = async () => {
         const res = await fetch('/api/brand', {
             method: 'PUT'
@@ -54,13 +56,41 @@ export default function page() {
         })
         const data = await res.json()
         const tax = data.map((item: any) => {
-            return item.name + ` (${item.percentage}%)`
+            return `${item.value}`
         })
         console.log("arr", tax);
         return tax
     }
     const { data: taxData, error: taxError } = useSWR(
         '/api/tax', taxFetch
+    )
+    const categoryFetch = async () => {
+        const res = await fetch('/api/category', {
+            method: 'PUT'
+        })
+        const data = await res.json()
+        const category = data.map((item: any) => {
+            return item.name
+        })
+        console.log("arr", category);
+        return category
+    }
+    const { data: categoryData, error: categoryError } = useSWR(
+        '/api/category', categoryFetch
+    )
+    const unitFetch = async () => {
+        const res = await fetch('/api/unit', {
+            method: 'PUT'
+        })
+        const data = await res.json()
+        const unit = data.map((item: any) => {
+            return item.name
+        })
+        console.log("arr", unit);
+        return unit
+    }
+    const { data: unitData, error: unitError } = useSWR(
+        '/api/unit', unitFetch
     )
     const [BrandPopupState, setBrandPopupState] = useState<boolean>(false)
     const addItemEvent = async (event: React.FormEvent) => {
@@ -71,8 +101,9 @@ export default function page() {
             brand: brand,
             category: category,
             unit: unit,
-            discountType: discountType
-
+            discountType: discountType,
+            tax: parseInt(tax),
+            taxtype:taxType
         })
         console.log(formDetails)
     }
@@ -102,6 +133,21 @@ export default function page() {
                         BrandPopupState && <BrandAddPopup close={setBrandPopupState} />
                     }
                 </AnimatePresence>
+                <AnimatePresence mode='wait'>
+                    {
+                        CategoryPopupState && <CategoryAddPopup close={setCategoryPopupState} />
+                    }
+                </AnimatePresence>
+                <AnimatePresence mode='wait'>
+                    {
+                        UnitPopupState ? <UnitPopUp close={setUnitPopupState} /> : null
+                    }
+                </AnimatePresence>
+                <AnimatePresence mode='wait'>
+                    {
+                        TaxPopupState && <TaxAddPopUp close={setTaxPopupState} />
+                    }
+                </AnimatePresence>
                 <DashboardHeader title='New Item' subtitle='Add/Update Items' breadcrumb={[{ title: 'Dashboard', path: '/dashboard' }, { title: 'item List', path: '/items/list' }, { title: 'New item', path: '/items/new' },]} />
                 <form onSubmit={addItemEvent} action="" method="post" className='w-full'>
                     <div className="grid grid-cols-1 grid-row-4 min-h-fit mt-4 border-t-2 border-[--primary] rounded-sm shadow p-4 place-items-stretch w-full">
@@ -125,11 +171,21 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="category">Category<span className='text-red-400'>*</span></label>
-                                <Selector commonTitle='Select category' changeState={setCategory} currentstate={category} data={[]} />
+                                <div className="w-full flex items-center justify-center">
+                                    <Selector commonTitle='Select Category' changeState={setCategory} currentstate={category} data={categoryData ? categoryData : []} />
+                                    <div className=" flex-1 p-3 border rounded cursor-pointer" onClick={() => setCategoryPopupState(true)}>
+                                        <AiOutlinePlus className='' />
+                                    </div>
+                                </div>
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="unit">Unit<span className='text-red-400'>*</span></label>
-                                <Selector key={'unit'} commonTitle='Select Unit' changeState={setUnit} currentstate={unit} data={[]} />
+                                <div className="w-full flex items-center justify-center">
+                                    <Selector commonTitle='Select Unit' changeState={setUnit} currentstate={unit} data={unitData ? unitData : []} />
+                                    <div className=" flex-1 p-3 border rounded cursor-pointer" onClick={() => setUnitPopupState(true)}>
+                                        <AiOutlinePlus className='' />
+                                    </div>
+                                </div>
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="minimumQty">Minimum Qty.<span className='text-red-400'>*</span></label>
@@ -155,15 +211,20 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="tax">Tax<span className='text-red-400'>*</span></label>
-                                <Selector changeState={setTax} data={taxData ? taxData : []} commonTitle='Select Tax' currentstate={tax} />
+                                <div className="w-full flex items-center justify-center">
+                                    <Selector commonTitle='Select Tax' changeState={setTax} currentstate={tax} data={taxData ? taxData : []} />
+                                    <div className=" flex-1 p-3 border rounded cursor-pointer" onClick={() => setTaxPopupState(true)}>
+                                        <AiOutlinePlus className='' />
+                                    </div>
+                                </div>
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="purchasePrice">Purchase Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Purchase Price' onChange={purchasepriceEvent} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input value={formDetails?.price *(formDetails?.price/100 * formDetails?.tax)} type="text" placeholder='Purchase Price' disabled onChange={purchasepriceEvent} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
-                                <label htmlFor="taxType">Tax Type<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Tax Type' onChange={(e: any) => setFormDetails({ ...formDetails, taxtype: e.target.value })} id='taxType' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <label htmlFor="taxType">Tax Type (%)<span className='text-red-400'>*</span></label>
+                                <Selector commonTitle='Select Tax Type' changeState={setTaxType} currentstate={taxType} data={['inclusive', 'exclusive']} />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="profitMargin">Profit Margin(%)<span className='text-red-400'>*</span></label>
@@ -249,11 +310,120 @@ const BrandAddPopup = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) 
                         <input type="text" name='name' id='name' placeholder='Brand Name' className='border p-2 outline-none text-gray-800' />
                         <input type="text" name='desc' id='desc' placeholder='Description' className='border p-2 outline-none text-gray-800' />
                         <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
-                        <button onClick={() => close(false)} className='bg-red-400 w-full px-4 py-2 rounded-lg text-white'>Close</button>
+                        <button type='reset' onClick={() => close(false)} className='bg-red-400 w-full px-4 py-2 rounded-lg text-white'>Close</button>
                     </form>
                 </motion.div>
             </motion.div>
         </div >
     )
 
+}
+
+const CategoryAddPopup = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
+    const addCategory = async (e: React.FormEvent) => {
+        e.preventDefault()
+        const formDetails = new FormData(e.target as HTMLFormElement)
+        await fetch('/api/category', {
+            method: 'POST',
+            body: formDetails
+        }).then((res) => {
+            if (res.status === 200) {
+                close(false)
+                alert('Saved')
+            }
+        }).catch((err) => {
+            console.log(err)
+            alert('Something went wrong')
+        })
+    }
+    return (
+        <div className='flex h-screen absolute z-50 w-full top-0 left-0 backdrop-blur-[1px]  items-center justify-center' >
+            <motion.div
+                exit={{ opacity: 0 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .5, type: "tween" }} >
+                <motion.div
+                    exit={{ opacity: 0, y: -50 }} initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2, duration: .5, type: "tween" }}
+                    className='bg-white p-4 rounded-lg shadow-lg'>
+                    <form method="post" onSubmit={addCategory} className='w-fit flex flex-col gap-4'>
+                        <h1 className='text-xl font-semibold'>Add New Category</h1>
+                        <input type="text" name='name' id='name' placeholder='Category Name' className='border p-2 outline-none text-gray-800' />
+                        <input type="text" name='description' id='description' placeholder='Description' className='border p-2 outline-none text-gray-800' />
+                        <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
+                        <button type='reset' onClick={() => close(false)} className='bg-red-400 w-full px-4 py-2 rounded-lg text-white'>Close</button>
+                    </form>
+                </motion.div>
+            </motion.div>
+        </div >
+    )
+}
+
+const UnitPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
+    const addUnit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        const formDetails = new FormData(e.target as HTMLFormElement)
+        await fetch('/api/unit', {
+            method: 'POST',
+            body: formDetails
+        }).then((res) => {
+            if (res.status === 200) {
+                close(false)
+                alert('Saved')
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+    return (
+        <div className='flex h-screen absolute z-50 w-full top-0 left-0 backdrop-blur-[1px]  items-center justify-center' >
+            <motion.div
+                exit={{ opacity: 0 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .5, type: "tween" }} >
+                <motion.div
+                    exit={{ opacity: 0, y: -50 }} initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2, duration: .5, type: "tween" }}
+                    className='bg-white p-4 rounded-lg shadow-lg'>
+                    <form method="post" onSubmit={addUnit} className='w-fit flex flex-col gap-4'>
+                        <h1 className='text-xl font-semibold'>Add New Unit</h1>
+                        <input type="text" name='name' id='name' placeholder='Unit Name' className='border p-2 outline-none text-gray-800' />
+                        <input type="text" name='description' id='description' placeholder='Description' className='border p-2 outline-none text-gray-800' />
+                        <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
+                        <button type='reset' onClick={() => close(false)} className='bg-red-400 w-full px-4 py-2 rounded-lg text-white'>Close</button>
+                    </form>
+                </motion.div>
+            </motion.div>
+        </div >
+    )
+}
+
+const TaxAddPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
+    const addTax = async (e: React.FormEvent) => {
+        e.preventDefault()
+        const formDetails = new FormData(e.target as HTMLFormElement)
+        await fetch('/api/tax', {
+            method: 'POST',
+            body: formDetails
+        }).then((res) => {
+            if (res.status === 200) {
+                close(false)
+                alert('Saved')
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+    return (
+        <div className='flex h-screen absolute z-50 w-full top-0 left-0 backdrop-blur-[1px]  items-center justify-center' >
+            <motion.div
+                exit={{ opacity: 0 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .5, type: "tween" }} >
+                <motion.div
+                    exit={{ opacity: 0, y: -50 }} initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2, duration: .5, type: "tween" }}
+                    className='bg-white p-4 rounded-lg shadow-lg'>
+                    <form method="post" onSubmit={addTax} className='w-fit flex flex-col gap-4'>
+                        <h1 className='text-xl font-semibold'>Add New Tax</h1>
+                        <input type="text" name='name' id='name' placeholder='Tax Name' className='border p-2 outline-none text-gray-800' />
+                        <input type="text" name='value' id='value' placeholder='value' className='border p-2 outline-none text-gray-800' />
+                        <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
+                        <button type='reset' onClick={() => close(false)} className='bg-red-400 w-full px-4 py-2 rounded-lg text-white'>Close</button>
+                    </form>
+                </motion.div>
+            </motion.div>
+        </div >
+    )
 }
