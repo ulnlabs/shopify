@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { use } from 'react'
 import { useState } from 'react';
 import Taxdata from "@/app/components/settings/taxlist/DT_Tax/Taxdata"
 import { RiEdit2Fill } from "react-icons/ri";
@@ -9,18 +9,25 @@ import { BiCaretDown } from "react-icons/bi";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import AddTax from '../popup/AddTax';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import { ColumnDef } from "@tanstack/react-table";
-export const data =
+import Edit from "@/app/components/settings/popup/Edit"
+import { log } from 'console';
+ interface initial{
+  id:number|null,
+  taxname:string,
+  taxpercentage:string
+    
+}
+export const data  =
   [
     {
       id: 1,
@@ -38,7 +45,6 @@ export const data =
       taxpercentage: "4.50"
     },
   ]
-
 
 
 function Taxlist() {
@@ -106,7 +112,9 @@ function Taxlist() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem className="flex justify-between" onClick={() => {
-              handleDelete(row.original);
+              setEdit(true);
+             
+              
             }}>
               <h1>
 
@@ -144,23 +152,31 @@ function Taxlist() {
     C_ACTION,
   ];
 
-
+  const user=(NewTax:any)=>{
+    NewTax.id=Tax.length+1;
+    setTax([...Tax,NewTax])
+   
+  }
   const [Tax, setTax] = useState(data);
   function handleDelete(row: any): void {
-
-
     setTax(Tax.filter((item) => item.id !== row.id));
-
 
   }
 
   const [popup, setpopup] = useState<boolean | null>(false)
+  const [edit, setEdit] = useState<boolean | null>(false)
+
+  const [initial,setinitial]=useState<initial>({id:null,taxname:"",taxpercentage:""})
+  
+
+
+
   return (
     <div className="relative">
       <div className=" h-screen ">
         <AnimatePresence mode='wait'>
           {
-            popup && <AddTax close={setpopup} />
+            popup && <AddTax close={setpopup} dataset={user}  />||edit&&<Edit close={setpopup} setinitial={setinitial} />
           }
         </AnimatePresence>
         <div className="mx-auto w-[95%] p-5 mt-3">
@@ -186,3 +202,4 @@ function Taxlist() {
 }
 
 export default Taxlist
+

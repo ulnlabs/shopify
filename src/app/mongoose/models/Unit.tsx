@@ -8,10 +8,10 @@ const Unitmodel = new mongoose.Schema({
         type: String
     }
 })
-const Unit = mongoose.models.Unit || mongoose.model<unitType>("Unit ", Unitmodel)
+const Unit = mongoose.models.Unit || mongoose.model<unitType>("Unit", Unitmodel)
 export default Unit
 
-export interface unitType{
+ interface unitType{
     name:string;
     description?:string
 }
