@@ -56,13 +56,11 @@ const page = () => {
   ]
 
   const [cus, setCus] = useState<any>("");
-
   useEffect(() => {
     setCus(customerName.filter((item: any) => {
       return  item.value.toLowerCase().includes(salesData.customerName.toLowerCase())
     })
     )
-
   }, [salesData.customerName])
 
 
@@ -73,14 +71,14 @@ const page = () => {
   return (
     <div className="w-full ">
       <h1 className="px-10 pt-5 ">New Sales</h1>
-
       <NewSales
         placeholder="Search Customer"
         data={salesData}
         setData={setSalesData}
         inputItem={inputItem}
         setInputItem={setInputItem}
-        Items={product}
+        Items={data}
+        /* isLoading={isLoading} */
         customerData={cus}
         isSales={true}
         itemList={itemList}

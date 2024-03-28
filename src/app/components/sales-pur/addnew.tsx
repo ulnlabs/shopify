@@ -467,7 +467,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
               }).length === 0 && (
                   <div className="">
                     <p className="px-3 py-1 text-center">
-                      Item Not Found
+                     Item Not Found
                     </p>
                   </div>
                 )}
