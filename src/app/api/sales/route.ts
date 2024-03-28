@@ -1,21 +1,22 @@
 import { NextResponse } from "next/server";
-import mongoose from "mongoose";
+/* import mongoose from "mongoose"; */
 import { items } from "@/app/mongoose/models/item";
-const mongoDB = async () => {
+import { connectDB } from "@/app/mongoose/db";
+/* const mongoDB = async () => {
     try {
         await mongoose.connect(process.env.D_MONGODB_URI!);
     } catch (error: any) {
         console.error(`Error: ${error}`);
     }
 
-}
+} */
 
 export const PUT = async (req: Request) => {
     try {
         const { data } = await req.json();
         console.log(data);
         let search = new RegExp( data, 'i');
-        await mongoDB();
+        await connectDB();
         const value = await items.find({name:search});
         console.log(value);
         

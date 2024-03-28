@@ -5,31 +5,12 @@ import { useEffect, useState } from "react";
 
 import { FormState } from "../../../../../global";
 import axios from "axios";
-
+import useSWR from "swr"
 
 const page = () => {
 
   const [inputItem, setInputItem] = useState<any>("");
   const [product, setProduct] = useState<any>([])
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        if(inputItem) {
-          console.log("test input");
-
-          const data = await axios.put("/api/sales/",{data:inputItem});
-          setProduct(data.data);
-
-        } 
-        
-      }
-      catch (err) {
-        console.log(err);
-      }
-    }  
-    getData();
-  },[inputItem])
 
   const [salesData, setSalesData] = useState<FormState>({
     customerName: "",
@@ -78,17 +59,17 @@ const page = () => {
 
   useEffect(() => {
     setCus(customerName.filter((item: any) => {
-      return salesData.customerName === "" ? true : item.value.toLowerCase().includes(salesData.customerName.toLowerCase())
+      return  item.value.toLowerCase().includes(salesData.customerName.toLowerCase())
     })
     )
 
   }, [salesData.customerName])
 
-  
+
 
   const [itemList, setItemList] = useState<any>([]);
-  
-  
+
+
   return (
     <div className="w-full ">
       <h1 className="px-10 pt-5 ">New Sales</h1>
@@ -104,7 +85,7 @@ const page = () => {
         isSales={true}
         itemList={itemList}
         setItemList={setItemList}
-        />
+      />
       <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
         <Link href={"../../dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
@@ -159,17 +140,69 @@ const items = [
      tax_category: "Exclusive",
     }
   ] */
+
+
+
+
+
+
+
+/* 
+  const [item, setItem] = useState<any>([])
+  const [isExist,setIsExist] = useState(false) */
+  /* 
+    useEffect(() => {
+      const getData = async () => {
+        try {
+          if(inputItem) {
+            console.log("test input");
   
+            const data = await axios.put("/api/sales/",{data:inputItem});
+            setProduct(data.data);
   
-  
-  
-  
-  
-  
-  /*  useEffect(() => {
-      setProduct(items.filter((item: any) => {
+          } 
+          
+        }
+        catch (err) {
+          console.log(err);
+        }
+      }  
+      getData();
+    },[inputItem]) */
+
+/* 
+
+  const getData = async (url: string) => {
+    const response = await axios.put(url, { data: inputItem });
+    return response.data;
+  }
+
+  const { data, error } = useSWR(!isExist ? "/api/sales" : null, getData);
+
+  useEffect(() => {
+    console.log(data);
+    if (data !== undefined) {
+      console.log(data);
+
+      setItem((prevData: any) => prevData.concat(data));
+    }
+  }, [data])
+
+  useEffect(() => {
+    console.log(item);
+    let exist = item.find((items: any) => items.name === item.name)
+    if (exist && inputItem !== "") {
+      setIsExist(true)
+    }
+    if (item !== undefined) {
+      console.log('store');
+      console.log(item);
+
+      setProduct(item?.filter((item: any) => {
         return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
-      })
-      )
-    }, [inputItem])
-     */
+      }
+      ))
+    }
+
+  }, [inputItem])
+ */

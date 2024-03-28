@@ -2,7 +2,7 @@
 import { BsPersonAdd } from "react-icons/bs";
 import { BiCart } from "react-icons/bi";
 import { AiOutlineCalendar } from "react-icons/ai";
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, ChangeEvent } from 'react'
 import { format } from "date-fns"
 import { Input } from '@/components/ui/input'
 import { IoMdContact } from "react-icons/io";
@@ -16,6 +16,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import PopUp from "./extraPopUp";
 import { AnimatePresence, motion } from "framer-motion";
 import { columnHeader_dataTable } from "../../../../global";
+import axios from "axios";
 
 const sample = [
   {
@@ -27,8 +28,10 @@ const sample = [
     subtotal: 10,
   }
 ]
-const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList }: any) => {
-
+const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items ,*/ inputItem, setInputItem, itemList, setItemList }: any) => {
+  const [Items, setItem] = useState<any | undefined>([])
+  console.log(Items);
+  
   const [modify, setModify] = useState<string>("")
   const i_NAME: any = {
     accessorKey: "name",
@@ -43,7 +46,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     cell: ({ row }: any) => (
       <span className="flex gap-1 items-center">
 
-        <button onClick={() => {
+        {/*  <button onClick={() => {
           const check = itemList.find((item: any) => item.name === row.original.name)
           const update = Items.find((item: any) => item.name === row.original.name)
           if (row.original.quantity > 1) {
@@ -67,9 +70,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           }
         }} >
           <AiOutlineMinus />
-        </button>
+        </button> */}
         {row.original.quantity}
-        <button onClick={() => {
+        {/*  <button onClick={() => {
           const check = itemList.find((item: any) => item.name === row.original.name)
           const update = Items.find((item: any) => item.name === row.original.name)
           if (check.quantity < update.quantity) {
@@ -81,7 +84,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             const uplist = {
               ...check,
               quantity: ++row.original.quantity,
-              /* price: row.original.quantity * update.price, */
+
               discount: row.original.quantity * updateDis,
               tax: row.original.quantity * updateTax,
               subtotal: row.original.quantity * subTotal
@@ -91,7 +94,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           }
         }} >
           <AiOutlinePlus />
-        </button>
+        </button> */}
       </span >
     )
   };
@@ -322,6 +325,20 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     },
 
   }
+
+  const fetchItem = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value) {
+
+      const response = await axios.put("/api/sales", { data: e.target.value });
+      const original = response.data.map((item:any) => item)
+      setItem(...Items,original)
+      console.log(response.data);
+      console.log(Items);
+      
+      
+    }
+  }
+
   return (
     <div className='mx-10 mt-10 mb-10'>
       <AnimatePresence mode="wait">
@@ -417,20 +434,21 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         <div ref={itemRef} className="mt-5 relative">
           <div className="flex items-center border py-1 bg-primary-gray px-2 rounded-lg">
             <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
-            <Input placeholder="Item Name / Barcode / Item Number" value={inputItem}
+            <Input placeholder="Item Name / Barcode / Item Number"
               onClick={() => {
 
               }}
-              onChange={(e) => {
-                setInputItem(e.target.value)
-              }}
+              onChange={fetchItem}
+
             />
           </div>
           {
-            inputItem &&
+         
             <div className="mt-2 z-10 border rounded-lg bg-white absolute w-full">
               {
                 Items.map((item: any, index: any) => {
+                console.log(item)
+                
                   return (
                     <div className="">
                       <p key={index}
@@ -444,7 +462,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                   )
                 })
               }
-              {Items.filter((item: any) => {
+              {Items?.filter((item: any) => {
                 return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
               }).length === 0 && (
                   <div className="">
