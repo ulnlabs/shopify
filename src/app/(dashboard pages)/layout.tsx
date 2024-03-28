@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import SideBar from "../components/navigation/SideBar";
 import Header from "../components/navigation/Header";
 import { UserProvider } from "@/UserContext";
-
+import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -31,6 +31,8 @@ export default function RootLayout({
           </div>
         </div>
       </div>
+      <Toaster />
     </UserProvider>
+
   );
 }
