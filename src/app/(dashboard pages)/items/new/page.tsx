@@ -11,6 +11,7 @@ export default function page() {
     const [unit, setUnit] = useState<string>("")
     const [tax, setTax] = useState<string>("")
     const [discountType, setDiscountType] = useState<string>("")
+
     type InventoryItem = {
         itemCode?: string
         itemName?: string
@@ -27,7 +28,7 @@ export default function page() {
         taxtype?: string
         profitmargin?: number
         saleprice?: number
-        discountType?: number
+        discountType?: string
         discount?: number
         currentstock?: number
     }
@@ -47,10 +48,51 @@ export default function page() {
     const { data: brandData, error: brandError } = useSWR(
         '/api/brand', brandRoute
     )
+    const taxFetch = async () => {
+        const res = await fetch('/api/tax', {
+            method: 'PUT'
+        })
+        const data = await res.json()
+        const tax = data.map((item: any) => {
+            return item.name + ` (${item.percentage}%)`
+        })
+        console.log("arr", tax);
+        return tax
+    }
+    const { data: taxData, error: taxError } = useSWR(
+        '/api/tax', taxFetch
+    )
     const [BrandPopupState, setBrandPopupState] = useState<boolean>(false)
-    const addItemEvent = async (event:React.FormEvent) => {
+    const addItemEvent = async (event: React.FormEvent) => {
         event.preventDefault();
+        console.log(category, brand, unit, discountType)
+        await setFormDetails({
+            ...formDetails,
+            brand: brand,
+            category: category,
+            unit: unit,
+            discountType: discountType
+
+        })
         console.log(formDetails)
+    }
+    useEffect(() => {
+        console.log(brand, category, unit, tax, discountType)
+        setFormDetails({
+            ...formDetails,
+            tax: parseFloat(tax),
+            purchaseprice: parseFloat(formDetails?.price as unknown as string),
+            taxtype: tax,
+            discountType: discountType
+        })
+    }, [brand, category, unit, tax, discountType])
+    const purchasepriceEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormDetails({
+            ...formDetails,
+            [e.target.name]: e.target.value
+        })
+        const profitMargin = parseInt(formDetails?.profitmargin as unknown as string) / 100
+        const saleprice = parseFloat(formDetails?.price as unknown as string) + (parseFloat(formDetails?.price as unknown as string) * profitMargin)
     }
     return (
         <div className='w-full py-2 px-4'>
@@ -113,11 +155,11 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="tax">Tax<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Tax' onChange={(e: any) => setFormDetails({ ...formDetails, tax: e.target.value })} id='tax' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <Selector changeState={setTax} data={taxData ? taxData : []} commonTitle='Select Tax' currentstate={tax} />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="purchasePrice">Purchase Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Purchase Price' onChange={(e: any) => setFormDetails({ ...formDetails, purchaseprice: e.target.value })} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Purchase Price' onChange={purchasepriceEvent} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="taxType">Tax Type<span className='text-red-400'>*</span></label>
@@ -197,6 +239,7 @@ const BrandAddPopup = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) 
         <div className='flex h-screen absolute z-50 w-full top-0 left-0 backdrop-blur-[1px]  items-center justify-center' >
             <motion.div
                 exit={{ opacity: 0 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .5, type: "tween" }}
+
                 className='flex justify-center items-center'>
                 <motion.div
                     exit={{ opacity: 0, y: -50 }} initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2, duration: .5, type: "tween" }}
