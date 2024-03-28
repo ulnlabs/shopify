@@ -26,56 +26,56 @@ function Companyprofile() {
     <>
       <div className="">
         <form action="" className='  grid  grid-col-1 lg:grid-cols-2 gap-y-3  p-10'>
-          <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10  ">
+          <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-5  ">
             <label htmlFor="companyName" className='mr-2 md:col-span-5 col-span-12 '>
               Company Name <span className=' text-red-600'> *</span>
             </label>
             <input type="text" id="companyName" name="companyName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
-          <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="mobile" className='mr-2 md:col-span-5 col-span-12 '>
               Mobile  <span className=' text-red-600'> *</span>
             </label>
             <input type="text" name="mobile" id="mobile" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="email" className='mr-2 md:col-span-5 col-span-12 '>
               Email  <span className=' text-red-600'> *</span>
             </label>
             <input type="text" name="email" id="email" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="gstNo" className='mr-2 md:col-span-5 col-span-12 '>
               GST Number  <span className=' text-red-600'> *</span>
             </label>
             <input type="text" name="gstNo" id="gstNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="vatNo" className='mr-2 md:col-span-5 col-span-12 '>
               VAT Number  <span className=' text-red-600'> *</span>
             </label>
             <input type="text" name="vatNo" id="vatNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="bankdetails" className='mr-2 md:col-span-5 col-span-12 '>
               Bank Details  <span className=' text-red-600'> *</span>
             </label>
             <input type="text" name="bankdetails" id="bankdetails" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="panNo" className='mr-2 md:col-span-5 col-span-12 '>PAN Number
               <span className=' text-red-600'> *</span>
             </label>
             <input type="text" name="panNo" id="panNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="country" className='mr-2 md:col-span-5 col-span-12 '>
               Country <span className=' text-red-600'> *</span>
             </label>
@@ -89,7 +89,7 @@ function Companyprofile() {
             
            </select>
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="city" className='mr-2 md:col-span-5 col-span-12 '>
               City <span className=' text-red-600'> *</span>
             </label>
@@ -100,14 +100,14 @@ function Companyprofile() {
             
            </select>
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="postalcode" className='mr-2 md:col-span-5 col-span-12 '>
               Postal Code <span className=' text-red-600'> *</span>
             </label>
             <input type="text" name="postalcode" id="postalcode" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="state" className='mr-2 md:col-span-5 col-span-12 '>
               State <span className=' text-red-600'> *</span>
             </label>
@@ -118,7 +118,7 @@ function Companyprofile() {
             
            </select>
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
+          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="address" className='mr-2 md:col-span-5 col-span-12 '>
               Address <span className=' text-red-600'> *</span>
             </label>
@@ -166,3 +166,4 @@ function Companyprofile() {
 }
 
 export default Companyprofile;
+
