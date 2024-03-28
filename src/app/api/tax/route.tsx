@@ -7,3 +7,10 @@ export const PUT = async (req: Request) => {
     const tax = await taxModel.find()
     return NextResponse.json(tax, { status: 200 })
 }
+
+export const POST = async (req: Request) => {
+    const {name,description}=await req.json();
+    const Tax = await taxModel.create({name,description})
+    return NextResponse.json(Tax, { status: 200 })
+}
+
