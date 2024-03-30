@@ -2,9 +2,7 @@ type customerAdd = {
   name: string;
   mobile: string;
   email: string;
-  gst: string;
-  tax: string;
-  due: string;
+  _id?: string
   state: string;
   city: string;
   pincode: string;

@@ -1,11 +1,10 @@
 import React from 'react'
-import AddCustomer from '../../components/customer/AddCustomer'
+import AddTax from "@/app/components/settings/popup/AddTax"
+
 function page() {
-    
   return (
     <div>
-customer none
-
+        <AddTax />
     </div>
   )
 }

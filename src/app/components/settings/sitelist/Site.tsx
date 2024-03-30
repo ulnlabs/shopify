@@ -1,118 +1,103 @@
 "use client";
-import React, { FormEvent, useContext } from "react";
-import { ContextData } from "../../../../../contextapi";
+import React, {useState } from "react";
 
 function Companyprofile() {
-  const {formData,setFormData}=useContext(ContextData)
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const handleReset=():void => {
-    setFormData({
-      name: "",
-      mobile: "",
-      email: "",
-      gst: "",
-      tax: "",
-      due: "",
-      state: "",
-      city: "",
-      pincode: "",
-      address: "",
-    });
-
-
+  function handleFileChange(e:any){
+    const file =e.target.files?.[0];
+    if(file){
+      const reader=new FileReader();
+      reader.onloadend=()=>{
+        if(typeof reader.result=="string"){
+          setSelectedImage(reader.result)
+          
+        }
+      }
+      reader.readAsDataURL(file)
+    }
   }
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    console.log(formData);
-
-    setFormData({
-      name: "",
-      mobile: "",
-      email: "",
-      gst: "",
-      tax: "",
-      due: "",
-      state: "",
-      city: "",
-      pincode: "",
-      address: "",
-    });
-
-  };
-  const countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
 
   return (
     <>
-      <div className="">
-      <form action="" className=' lg:col-span-4  grid md:grid-rows-6  md:grid-flow-col grid-col-12 grid-row-12 gap-4 md:gap-9 p-10'>
-        <div className=" grid gap-3">
-          <label htmlFor=""  className='mr-2'>
-            Site Name <span className=' text-red-600'> *</span>
+    <div className="">
+    <form action="" className='  flex flex-col   lg:grid lg:grid-cols-2 gap-y-3  p-5'>
+      <div className=" md:grid md:grid-cols-12 grid   p-2 md:text-end  md:gap-x-5  ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+   Site Name <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+
+      </div>
+      <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+       Time Zone  <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+
+      </div>
+      <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+      Date Format  <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+
+      </div>
+      <div className=" md:grid md:grid-cols-12  grid   p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+     Time Format  <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+
+      </div>
+      <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+      Currency  <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+
+      </div>
+      <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
+          <label htmlFor=""  className=' md:col-span-5 col-span-1 basis-1/4 sm:text-stat md:text-end md:mr-[10%] '>
+          Enable Round Off
           </label>
-          <input type="text" className=' border rounded-md h-8' />
+          <input type="checkbox" className=' cursor-pointer md:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
 
         </div>
-        <div className=" grid gap-3">
-          <label htmlFor="" className='mr-2 '>
-            Time Zone <span className=' text-red-600'> *</span>
+        <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
+          <label htmlFor=""  className=' md:col-span-5 col-span-1 basis-1/4 sm:text-stat md:text-end md:mr-[10%] '>
+          Disable Tax
           </label>
-          <input type="text" className=' border rounded-md h-8' />
+          <input type="checkbox" className=' cursor-pointer md:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
 
         </div>
-        <div className="grid gap-3">
-          <label htmlFor="">
-            Date Format <span className=' text-red-600'> *</span>
-          </label>
-          <input type="text" className=' border rounded-md h-8' />
+      <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+        Language <span className=' text-red-600'> *</span>
+        </label>
+        <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
-        </div>
-        <div className=" grid gap-3">
-          <label htmlFor="">
-           Time Format <span className=' text-red-600'> *</span>
-          </label>
-          <input type="text" className=' border rounded-md h-8' />
+      </div>
+      <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
+        <label htmlFor=""  className='mr-2 md:col-span-5 col-span-12 '>
+     Site logo <span className=' text-red-600'> *</span>
+        </label>
+        <input type="file" onChange={handleFileChange} className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
+      </div>
+      <div className="md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5">
+        <div className="md:col-span-5 col-span-12 "></div>
+        <div className=" border rounded-md h-[100px] col-span-4  ">
+        {selectedImage&&
+        <img src={selectedImage} className="w-full h-full" ></img>}
+          
         </div>
-        <div className="grid gap-3 grid-cols-12">
-          <label htmlFor="" className="md:col-span-6 md:col-end-7">
-           Rounded Amount
-          </label>
-          <input type="checkbox"  className="md:col-span-4  h-8 " />
-        </div>
-        <div className="grid gap-3 grid-cols-12">
-          <label htmlFor="" className="md:col-span-6 md:col-end-7 ">
-           Disable Tax
-          </label>
-          <input type="checkbox"  className="md:col-span-4  h-8 " />
-        </div>
-        <div className="grid gap-3">
-          <label htmlFor="">
-          Currency <span className=' text-red-600'> *</span>
-          </label>
-          <select className="border h-8 rounded-md">
-            {countries.map((country,index)=>(
-              <option key={index} value={country}>{country}</option>
-            ))}
-          </select>
-
-        </div>
-        <div className="grid gap-3">
-          <label htmlFor="">
-            Language <span className=' text-red-600'> *</span>
-          </label>
-          <input type="text" className=' border rounded-md h-8' />
-
-        </div>
-        <div className="grid gap-3 grid-cols-12">
-          <label htmlFor="" className="md:col-span-4 md:col-end-5">
-            Site Logo
-          </label>
-          <input type="file"  className="md:col-span-8 md:col-end-13" />
-        </div>
-       
-       
-      </form>
-    </div>
+        
+      </div>
+      
+    </form>
+  </div>
+ 
     </>
   );
 }

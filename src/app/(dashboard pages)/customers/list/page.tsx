@@ -1,12 +1,12 @@
 "use client";
-import { DataTable } from "@/app/components/datatable/DataTable";
 import { useEffect, useState } from "react";
 import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast"
-
+import { useToast } from "@/components/ui/use-toast";
+import UpdateData from "@/app/components/customer/UpdateData";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import DataTable from "@/app/components/datatable/DataTable";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,10 +19,15 @@ import { useContext } from "react";
 import { UserContext } from "@/UserContext";
 import { ColumnDef } from "@tanstack/react-table";
 import axios from "axios";
+import { ContextData } from "../../../../../contextapi";
+import { AnimatePresence, motion } from "framer-motion";
 export default function Page() {
-  const { toast } = useToast()
+  const { toast } = useToast();
   const [customerData, setCustomerData] = useState<customerList[]>([]);
-  const { isDeleted, setIsDeleted } = useContext(UserContext);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [updateCust, setUpdateCust] = useState({});
+  const { isChanged, setIsChanged } = useContext(UserContext);
+  const { selectedRow, setSelectedRow } = useContext(ContextData);
   useEffect(() => {
     async function getData(): Promise<void> {
       const response = await axios.get(`/api/customers`, {
@@ -33,29 +38,46 @@ export default function Page() {
       const data = response.data;
 
       setCustomerData(data);
+      console.log(data);
     }
     getData();
-  }, [isDeleted]);
+  }, [isChanged]);
 
   async function handleDelete(row: customerList): Promise<void> {
     if (row._id) {
       const ID = row._id;
 
       const response = await axios.delete("/api/customers", {
+        headers: { data: "deletesingle" },
         data: { id: ID },
       });
-      if (response.status==200) {
+      if (response.status == 200) {
         console.log(response.status);
-        
-        setIsDeleted(!isDeleted);
+
+        setIsChanged(!isChanged);
         toast({
-      
           title: "New Message !",
-          description: " Customer is deleted successfully",
-        })
+          description: " Customer is Deleted successfully",
+        });
       }
     }
   }
+
+  const handleUpdate: (data: any) => void = (data) => {
+    setUpdateCust(() => ({
+      name: data.name,
+      mobile: data.mobile,
+      email: data.email,
+      state: data.state,
+      city: data.city,
+      pincode: data.pincode,
+      address: data.address,
+      id: data.id,
+      _id: data._id,
+    }));
+    setIsUpdate(true);
+  };
+
   const C_Email = {
     accessorKey: "email",
     header: ({ column }: any) => {
@@ -83,7 +105,10 @@ export default function Page() {
     accessorKey: "mobile",
     header: "Mobile",
   };
-
+  const C_PINCODE: columnHeader_dataTable = {
+    accessorKey: "pincode",
+    header: "Pincode",
+  };
   const C_PAID: any = {
     accessorKey: "paid",
     header: () => <div className="text-right">Paid</div>,
@@ -101,10 +126,6 @@ export default function Page() {
     },
   };
 
-  const C_STATUS: columnHeader_dataTable = {
-    accessorKey: "status",
-    header: "Status",
-  };
   const C_SELECT = {
     id: "select",
     header: ({ table }: any) => (
@@ -113,20 +134,44 @@ export default function Page() {
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={(value) => {
+          table.toggleAllPageRowsSelected(!!value);
+          if (value) {
+            const id = customerData.map((i: any) => {
+              return i._id;
+            });
+            setSelectedRow(id);
+          } else {
+            setSelectedRow([]);
+          }
+        }}
         aria-label="Select all"
       />
     ),
     cell: ({ row }: any) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={(value) => {
+          row.toggleSelected(!!value);
+          if (value == true) {
+            setSelectedRow([...selectedRow, row.original._id]);
+          } else if (value == false) {
+            const id = row.original._id;
+            const unSelectedIndex = selectedRow.indexOf(id);
+            if (unSelectedIndex > -1) {
+              const removedArray = selectedRow;
+              removedArray.splice(unSelectedIndex, 1);
+              setSelectedRow(removedArray);
+              console.log(selectedRow);
+            }
+          }
+        }}
         aria-label="Select row"
       />
     ),
   };
   const C_ACTION = {
-    accessorKey: "action",
+    accessorKey: "Action",
     cell: ({ row }: any) => {
       return (
         <DropdownMenu>
@@ -146,10 +191,9 @@ export default function Page() {
               Delete Customer
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => console.log("jking")}>
+            <DropdownMenuItem onClick={() => handleUpdate(row.original)}>
               Update customer
             </DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -161,26 +205,79 @@ export default function Page() {
     C_NAME,
     C_MOBILE,
     C_Email,
+    C_PINCODE,
     C_PAID,
-    C_STATUS,
+
     C_ACTION,
   ];
+const tableAnimtion={
+  hidden:{
+    opacity:0,
+    x:-1000,
+    
+  },
+  visible:{
+opacity:1,
+    x:0,
+    transition:{
+      duration:0.5,
+     
+      stiffness:100
+    }
 
+  },
+  exit:{
+    x:1000,
+    transition:{
+      duration:0.2,
+    }
+  }
+}
   return (
     <>
-      <DashboardHeader title="customers" />
+      <AnimatePresence mode="wait">
+        {!isUpdate && (
+         <>
+         
+         
+            <DashboardHeader title="customers" />
+            
+            <motion.div  variants={tableAnimtion}
+            animate="visible"
+            initial="hidden"
+            exit="exit" className="container mx-auto py-3">
+              <DataTable
+                columns={c_columns}
+                data={customerData}
+                column={true}
+                filter={true}
+                rows={true}
+                paginater={true}
+                route="/api/customers"
+              />
+            </motion.div>
+         </>
+          
+        )}
+      </AnimatePresence>
 
-      <div className="container mx-auto py-3">
-        <DataTable
-          columns={c_columns}
-          data={customerData}
-          column={true}
-          filter={true}
-          rows={true}
-          paginater={true}
-        />
-      </div>
-      
+      <AnimatePresence mode="wait">
+        {isUpdate && (
+          <motion.div
+            exit={{ y: 1000 }}
+            initial={{  y: -500 }}
+            animate={{ y: 0 }}
+            transition={{ duration: .5,stiffness:100 }}
+            className=" bg-white absolute "
+          >
+            <UpdateData
+              data={updateCust}
+              route={"/api/customers"}
+              setUpdate={setIsUpdate}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

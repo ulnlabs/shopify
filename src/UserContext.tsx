@@ -7,10 +7,10 @@ export const UserProvider: any = ({ children }: { children: any }) => {
   const [toggleNav, setToggleNav] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
-const [isDeleted,setIsDeleted] = useState<boolean>(false)
+const [isChanged, setIsChanged] = useState<boolean>(false)
   return (
     <UserContext.Provider
-      value={{ toggleNav, setToggleNav, isOpen, setIsOpen,isDeleted,setIsDeleted }}
+      value={{ toggleNav, setToggleNav, isOpen, setIsOpen,isChanged,setIsChanged }}
     >
       {children}
     </UserContext.Provider>

@@ -13,9 +13,7 @@ function AddCustomer() {
       name: "",
       mobile: "",
       email: "",
-      gst: "",
-      tax: "",
-      due: "",
+      
       state: "",
       city: "",
       pincode: "",
@@ -30,31 +28,29 @@ function AddCustomer() {
       },
     });
     let length = lengthDoc.data.id;
-console.log(length);
+    console.log(length);
 
     const customerDbData = {
       name: customerData.name,
       mobile: customerData.mobile,
       email: customerData.email,
-      gst: customerData.gst,
-      tax: customerData.tax,
-      due: customerData.due,
+      
       state: customerData.state,
       city: customerData.city,
       pincode: customerData.pincode,
       address: customerData.address,
       id: length,
     };
-    const response = await axios.post(`/api/customers`, customerDbData);
+    const response = await axios.post(`/api/customers`, customerDbData, {
+      headers: { data: "addcust" },
+    });
     console.log(response);
 
     setCustomerData({
       name: "",
       mobile: "",
       email: "",
-      gst: "",
-      tax: "",
-      due: "",
+      
       state: "",
       city: "",
       pincode: "",
@@ -101,10 +97,12 @@ console.log(length);
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="mobile"
+                
               >
-                Mobile
+                Mobile <span className="text-red-400">*</span>
               </label>
               <input
+              required
                 onChange={(e) => {
                   setCustomerData({ ...customerData, mobile: e.target.value });
                 }}
@@ -133,7 +131,7 @@ console.log(length);
                 type="email"
               />
             </div>
-            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
+          {/*   <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="gst"
@@ -150,8 +148,8 @@ console.log(length);
                 id="gst"
                 type="text"
               />
-            </div>
-            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
+            </div> */}
+           {/*  <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="tax"
@@ -168,9 +166,9 @@ console.log(length);
                 name="tax"
                 type="text"
               />
-            </div>
+            </div> */}
             {/* second column */}
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-1">
+          {/*   <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-1">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="due"
@@ -187,8 +185,8 @@ console.log(length);
                 name="due"
                 id="due"
               />
-            </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-3">
+            </div> */}
+          <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="state"
@@ -206,7 +204,7 @@ console.log(length);
                 id="state"
               />
             </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-5">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-1">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="city"
@@ -224,7 +222,7 @@ console.log(length);
                 id="city"
               />
             </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-7">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-3">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="pincode"
@@ -242,9 +240,9 @@ console.log(length);
                 id="pincode"
               />
             </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-9">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-4 grid grid-cols-5 col-span-12 grid-rows-5    md:row-start-5">
               <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 row-span-1  md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="address"
               >
                 Address
@@ -254,7 +252,7 @@ console.log(length);
                   setCustomerData({ ...customerData, address: e.target.value })
                 }
                 value={customerData.address}
-                className="h-20 resize-none bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
+                className=" resize-none bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md row-span-4 "
                 id="address"
                 name="address"
               />

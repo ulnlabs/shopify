@@ -1,12 +1,14 @@
 'use client'
-import { signIn} from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { AnimatePresence, motion } from "framer-motion";
 export default function Home() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
   const [user, setUser] = useState({
     email: '',
     password: ''
@@ -14,6 +16,8 @@ export default function Home() {
   const router = useRouter()
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null)
+    setStatus('Signing in...')
     const logger = await signIn('credentials', {
       email: user.email,
       password: user.password,
@@ -23,18 +27,30 @@ export default function Home() {
       router.push("/dashboard")
       return
     }
+    setStatus(null)
     setError("Invalid email or password. Please try again.");
+    setInterval(() => {
+      setError(null)
+    }, 10000)
   }
   return (
     <>
-      {error && (
-        <div className="fixed bg-opacity-75 top-0 flex items-center justify-center py-4 w-full">
-          <div className="bg-white border-l-4 border-r-4 border-purple-400 text-gray-600 px-4 py-3 rounded-lg shadow-lg" role="alert">
-            <strong className="font-bold">Error! </strong>
-            <span className="block sm:inline">{error}</span>
-          </div>
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {error && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            role="alert"
+            className="fixed bg-opacity-75 top-0 flex items-center justify-center py-4 w-full">
+            <div className="bg-white border-l-4 border-r-4 border-purple-400 text-gray-600 px-4 py-3 rounded-lg shadow-lg" role="alert">
+              <strong className="font-bold">Error! </strong>
+              <span className="block sm:inline">{error}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
         <div className="max-w-md w-full space-y-8">
           <div>
@@ -109,7 +125,9 @@ export default function Home() {
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent rounded-md bg-purple-600 text-white font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-inset"
             >
-              Sign in
+              {
+                status ? status : 'Sign in'
+              }
             </button>
           </form>
         </div>

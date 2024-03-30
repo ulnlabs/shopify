@@ -6,7 +6,7 @@ import React, { useState, useEffect, useRef, ChangeEvent } from 'react'
 import { format } from "date-fns"
 import { Input } from '@/components/ui/input'
 import { IoMdContact } from "react-icons/io";
-import { DataTable } from "../datatable/DataTable";
+import DataTable from "../datatable/DataTable";
 import Selections from "./selections";
 import Link from "next/link";
 import { AiOutlinePlus } from "react-icons/ai";
