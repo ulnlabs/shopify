@@ -14,8 +14,8 @@ const page = () => {
 
   const [salesData, setSalesData] = useState<FormState>({
     customerName: "",
+    customerId : 0,
     billDate: new Date,
-    billStatus: "",
     billQuantity: 0,
     billCharges: 0,
     billTaxType: "",
@@ -33,6 +33,16 @@ const page = () => {
   const handleClick = async () => {
     console.log(salesData);
     console.log(itemList);
+    try {
+      const { data } = await axios.post("/api/sales", {
+        sales: salesData,
+        items: itemList
+      })
+      console.log(data);
+    }
+    catch (err) {
+      console.log(err);
+    }
 
 
   }
@@ -40,25 +50,29 @@ const page = () => {
     {
       value: "Fire10",
       label: "Fire10",
+      id:1,
     },
     {
       value: "deepath",
       label: "Deepath",
+      id:2,
     },
     {
       value: "deepak",
       label: "Deepak",
+      id:3,
     },
     {
       value: "999",
       label: "Dhilip",
+      id:4,
     },
   ]
 
   const [cus, setCus] = useState<any>("");
   useEffect(() => {
     setCus(customerName.filter((item: any) => {
-      return  item.value.toLowerCase().includes(salesData.customerName.toLowerCase())
+      return item.value.toLowerCase().includes(salesData.customerName.toLowerCase())
     })
     )
   }, [salesData.customerName])
@@ -77,8 +91,7 @@ const page = () => {
         setData={setSalesData}
         inputItem={inputItem}
         setInputItem={setInputItem}
-        Items={data}
-        /* isLoading={isLoading} */
+        /* Items={data} */
         customerData={cus}
         isSales={true}
         itemList={itemList}
@@ -148,25 +161,25 @@ const items = [
 /* 
   const [item, setItem] = useState<any>([])
   const [isExist,setIsExist] = useState(false) */
-  /* 
-    useEffect(() => {
-      const getData = async () => {
-        try {
-          if(inputItem) {
-            console.log("test input");
-  
-            const data = await axios.put("/api/sales/",{data:inputItem});
-            setProduct(data.data);
-  
-          } 
-          
-        }
-        catch (err) {
-          console.log(err);
-        }
-      }  
-      getData();
-    },[inputItem]) */
+/*
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        if(inputItem) {
+          console.log("test input");
+ 
+          const data = await axios.put("/api/sales/",{data:inputItem});
+          setProduct(data.data);
+ 
+        } 
+        
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }  
+    getData();
+  },[inputItem]) */
 
 /* 
 

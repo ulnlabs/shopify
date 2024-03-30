@@ -31,7 +31,7 @@ const sample = [
 const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items ,*/ inputItem, setInputItem, itemList, setItemList }: any) => {
   const [Items, setItem] = useState<any | undefined>([])
   console.log(Items);
-  
+
   const [modify, setModify] = useState<string>("")
   const i_NAME: any = {
     accessorKey: "name",
@@ -46,7 +46,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
     cell: ({ row }: any) => (
       <span className="flex gap-1 items-center">
 
-        {/*  <button onClick={() => {
+        <button onClick={() => {
           const check = itemList.find((item: any) => item.name === row.original.name)
           const update = Items.find((item: any) => item.name === row.original.name)
           if (row.original.quantity > 1) {
@@ -70,9 +70,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
           }
         }} >
           <AiOutlineMinus />
-        </button> */}
+        </button>
         {row.original.quantity}
-        {/*  <button onClick={() => {
+        <button onClick={() => {
           const check = itemList.find((item: any) => item.name === row.original.name)
           const update = Items.find((item: any) => item.name === row.original.name)
           if (check.quantity < update.quantity) {
@@ -94,7 +94,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
           }
         }} >
           <AiOutlinePlus />
-        </button> */}
+        </button>
       </span >
     )
   };
@@ -327,17 +327,19 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
   }
 
   const fetchItem = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputItem(e.target.value)
     if (e.target.value) {
 
       const response = await axios.put("/api/sales", { data: e.target.value });
-      const original = response.data.map((item:any) => item)
-      setItem(...Items,original)
+      const original = response.data.map((item: any) => item)
+      setItem(original)
       console.log(response.data);
       console.log(Items);
-      
-      
+
+
     }
   }
+
 
   return (
     <div className='mx-10 mt-10 mb-10'>
@@ -393,7 +395,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
                           <p key={index}
                             className="px-3 py-1 cursor-pointer"
                             onClick={() => {
-                              setData({ ...data, customerName: item.value });
+                              setData({ ...data, customerName: item.value , customerId : item.id});
+                              
+                              
                               setCustomerOpen(false);
                             }}>
                             {item.label}
@@ -407,7 +411,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
                   }).length === 0 && (
                       <div className="">
                         <p className="px-3 py-1 text-center">
-                          Item Not Found
+                          Customer Not Found
                         </p>
                       </div>
                     )}
@@ -443,12 +447,12 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
             />
           </div>
           {
-         
+            inputItem &&
             <div className="mt-2 z-10 border rounded-lg bg-white absolute w-full">
               {
                 Items.map((item: any, index: any) => {
-                console.log(item)
-                
+                  console.log(item)
+
                   return (
                     <div className="">
                       <p key={index}
@@ -467,7 +471,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
               }).length === 0 && (
                   <div className="">
                     <p className="px-3 py-1 text-center">
-                     Item Not Found
+                      Item Not Found
                     </p>
                   </div>
                 )}
@@ -570,7 +574,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
       </section>
       <section className="grid grid-cols-12 md:gap-10 gap-5">
         <div className="mt-5 col-start-1 col-span-6 relative ">
-          <Selections inputData={["Cash", "Credit Card", "Debit Card", "Paytm"]} label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} />
+          <Selections inputData={[{laebl:"Cash"},{label:"Credit Card"} , {label:"Debit Card"}, {label:"Paytm"}]} label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} />
         </div>
         <div className="col-span-6 gird items-center border bg-primary-gray py-1 px-2 rounded-lg col-start-7 mt-5 ">
           <Input type="text"

@@ -5,13 +5,12 @@ export type items = {
     name: String,
 
 }
-
 const SalesSchema = new Schema({
-    cud_id: {
+    c_id: {
         type: String,
         required: true
     },
-    name: {
+    c_name: {
         type: String,
         required: true
     },
@@ -19,7 +18,11 @@ const SalesSchema = new Schema({
         type: Date,
         required: true
     },
-    item: {
+    items: [{
+        id: {
+            type: Number,
+            required: true
+        },
         name: {
             type: String,
             required: true
@@ -39,34 +42,8 @@ const SalesSchema = new Schema({
         tax: {
             type: Number,
             required: true
-        },
-        subtotal: {
-            type: Number,
-            required: true
-        },
-    },
-    quantity: {
-        type: String,
-        required: true
-    },
-    charges: {
-        value: {
-            type: Number,
-        },
-        valueType: {
-            type: String,
         }
-    },
-    discount: {
-        disType: {
-            type: String,
-            required: true
-        },
-        discountvalue: {
-            type: Number,
-            required: true
-        },
-    },
+    }],
     note: {
         type: String,
     },
