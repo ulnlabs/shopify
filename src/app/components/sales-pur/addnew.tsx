@@ -16,7 +16,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import PopUp from "./extraPopUp";
 import { AnimatePresence, motion } from "framer-motion";
 import { columnHeader_dataTable } from "../../../../global";
-import axios from "axios";
+
 
 const sample = [
   {
@@ -28,9 +28,8 @@ const sample = [
     subtotal: 10,
   }
 ]
-const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items ,*/ inputItem, setInputItem, itemList, setItemList }: any) => {
-  const [Items, setItem] = useState<any | undefined>([])
-  console.log(Items);
+const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList }: any) => {
+
 
   const [modify, setModify] = useState<string>("")
   const i_NAME: any = {
@@ -50,19 +49,19 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
           const check = itemList.find((item: any) => item.name === row.original.name)
           const update = Items.find((item: any) => item.name === row.original.name)
           if (row.original.quantity > 1) {
-            const updateTax = (row.original.taxPer * update.price) / 100;
+            const updateTax = (row.original.taxAmount / row.original.quantity);
             console.log(row.original.quantity);
-            console.log(row.original.discount);
-
+            console.log(updateTax);
             console.log(row.original.discount / row.original.quantity);
 
-            const updateDis = check.dis_type === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity;
-            const subTotal = check.tax_category === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
+            const updateDis = check.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity;
+            const subTotal = check.taxType === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
+            
             const uplist = {
               ...check,
               quantity: --row.original.quantity,
               discount: row.original.quantity * updateDis,
-              tax: row.original.quantity * updateTax,
+              taxAmount: row.original.quantity * updateTax,
               subtotal: row.original.quantity * subTotal
             }
             const upQuantity = itemList.map((item: any) => item.name === row.original.name ? uplist : item)
@@ -76,17 +75,19 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
           const check = itemList.find((item: any) => item.name === row.original.name)
           const update = Items.find((item: any) => item.name === row.original.name)
           if (check.quantity < update.quantity) {
-            const updateTax = (row.original.taxPer * update.price) / 100;
+            const updateTax = (row.original.taxAmount / row.original.quantity);
+            console.log(row.original.taxAmount);
             console.log(row.original.quantity);
+            
             console.log(row.original.discount);
-            const updateDis = check.dis_type === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity;
-            const subTotal = check.tax_category === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
+            const updateDis = check.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity;
+            const subTotal = check.taxType === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
             const uplist = {
               ...check,
               quantity: ++row.original.quantity,
 
               discount: row.original.quantity * updateDis,
-              tax: row.original.quantity * updateTax,
+              taxAmount: row.original.quantity * updateTax,
               subtotal: row.original.quantity * subTotal
             }
             const upQuantity = itemList.map((item: any) => item.name === row.original.name ? uplist : item)
@@ -114,21 +115,21 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
       </button>
     ))
   };
-  const i_TAX: columnHeader_dataTable = {
+  const i_TAX_AMOUNT: columnHeader_dataTable = {
+    accessorKey: "taxAmount",
+    header: "TAX Amount",
+  };
+  console.log(itemList);
+  const [isPopUp, setIsPopUp] = useState<boolean>(false);
+  const i_TAX: any = {
     accessorKey: "tax",
     header: "TAX",
-  };
-  const [isPopUp, setIsPopUp] = useState<boolean>(false);
-  const i_TAXTYPE: any = {
-    accessorKey: "tax_type",
-    header: "TAX %",
     cell: (({ row }: any) => (
-
       <button onClick={() => {
         setModify(row);
         setIsPopUp(true);
       }}>
-        {row.original.tax_type}
+        {row.original.tax}
       </button>
     ))
   };
@@ -152,7 +153,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
     i_PRICE,
     i_DISCOUNT,
     i_TAX,
-    i_TAXTYPE,
+    i_TAX_AMOUNT,
     i_SUBTOTAL,
     i_REMOVE,
   ];
@@ -162,10 +163,12 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
     i_PRICE,
     i_DISCOUNT,
     i_TAX,
-    i_TAXTYPE,
+    i_TAX_AMOUNT,
     i_SUBTOTAL,
     i_REMOVE,
   ]
+
+
   const cusRef = useRef<null | any>(null);
   const dateRef = useRef<null | any>(null);
   const itemRef = useRef<null | any>(null);
@@ -261,7 +264,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
             quantity: exist.quantity + 1,
             discount: exist.discount / exist.quantity * updatedQuantity,
             /* price: value.price * updatedQuantity, */
-            tax: value.tax * updatedQuantity,
+            taxAmount: value.taxAmount * updatedQuantity,
             subtotal: value.subtotal * updatedQuantity
           };
           const updatedList = itemList.map((item: any) => item.name === value.name ? updatedItem : item);
@@ -282,11 +285,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
   const taxex = [
     {
       label: "GST 5%",
-      value: 5,
     },
     {
       label: "VAT 10%",
-      value: 10,
     }
   ]
   const discountType = [
@@ -328,17 +329,17 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
 
   const fetchItem = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputItem(e.target.value)
-    if (e.target.value) {
-
-      const response = await axios.put("/api/sales", { data: e.target.value });
-      const original = response.data.map((item: any) => item)
-      setItem(original)
-      console.log(response.data);
-      console.log(Items);
-
-
-    }
+    /*  if (e.target.value) {
+       const response = await axios.put("/api/sales", { data: e.target.value }
+       );
+       const original = response.data.map((item: any) => item)
+       setItem(original)
+       console.log(response.data);
+       console.log(Items);
+ 
+     } */
   }
+
 
 
   return (
@@ -395,9 +396,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
                           <p key={index}
                             className="px-3 py-1 cursor-pointer"
                             onClick={() => {
-                              setData({ ...data, customerName: item.value , customerId : item.id});
-                              
-                              
+                              setData({ ...data, customerName: item.value, customerId: item.id });
+
+
                               setCustomerOpen(false);
                             }}>
                             {item.label}
@@ -574,7 +575,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, /* Items 
       </section>
       <section className="grid grid-cols-12 md:gap-10 gap-5">
         <div className="mt-5 col-start-1 col-span-6 relative ">
-          <Selections inputData={[{laebl:"Cash"},{label:"Credit Card"} , {label:"Debit Card"}, {label:"Paytm"}]} label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} />
+          <Selections inputData={[{ laebl: "Cash" }, { label: "Credit Card" }, { label: "Debit Card" }, { label: "Paytm" }]} label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} />
         </div>
         <div className="col-span-6 gird items-center border bg-primary-gray py-1 px-2 rounded-lg col-start-7 mt-5 ">
           <Input type="text"

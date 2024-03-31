@@ -5,7 +5,7 @@ const ShopifyItemSchema: Schema = new Schema({
     type: String,
     required: true
   },
-  itemName: {
+  name: {
     type: String,
     required: true
   },
@@ -20,7 +20,7 @@ const ShopifyItemSchema: Schema = new Schema({
     type: String,
     required: true
   },
-  minQty: {
+  quantity: {
     type: Number,
     required: true
   },

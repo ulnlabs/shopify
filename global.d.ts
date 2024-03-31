@@ -49,7 +49,7 @@ type supplierColumn = {
 export interface FormState {
   customerName: string,
   customerId:number,
-  billDate: Date,
+  billDate: Date ,
   billStatus?: string,
   billQuantity: number,
   billCharges: any,

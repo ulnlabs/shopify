@@ -1,10 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
 
-export type items = {
-    name: String,
-
-}
 const SalesSchema = new Schema({
     c_id: {
         type: String,
@@ -18,11 +14,15 @@ const SalesSchema = new Schema({
         type: Date,
         required: true
     },
+    salesCode : {
+        type:String,
+        required:true
+    },
     items: [{
-        id: {
-            type: Number,
+        itemCode: {
+            type: String,
             required: true
-        },
+          },
         name: {
             type: String,
             required: true
@@ -39,19 +39,35 @@ const SalesSchema = new Schema({
             type: Number,
             required: true
         },
-        tax: {
-            type: Number,
+        discountType: {
+            type: String,
             required: true
-        }
+          },
+        tax: {
+            type: String,
+            required: true
+        },
+        taxType: {
+            type: String,
+            required:true
+          },
     }],
     note: {
         type: String,
     },
-    subtotal: {
-        type: String,
+    otherCharges:{
+        type:Number,
+
     },
-    total: {
-        type: String,
+    taxType:{
+      type:String,  
+    },
+    discount:{
+        type:Number,
+        
+    },
+    discountType:{
+      type:String  
     },
     paymentType: {
         type: String,

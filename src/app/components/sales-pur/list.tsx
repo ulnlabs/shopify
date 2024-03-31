@@ -5,18 +5,84 @@ import React, { useState } from 'react'
 import Link from "next/link";
 import CalenSelect from "./calselect";
 import DataTable from "../datatable/DataTable";
-import { s_LIST_Column,p_LIST_Column } from "../datatable/listColumn";
 import {format} from "date-fns"
+
+import { ColumnDef } from "@tanstack/react-table";
+import { columnHeader_dataTable } from "../../../../global";
 interface propType {
     Customer: string[],
     page: string,
     isSales?: boolean,
     path : string,
+    list:any[],
 }
-const List = ({ Customer, page,isSales,path }: propType) => {
+const List = ({ Customer, page,isSales,path,list }: propType) => {
     const [from, setFrom] = useState<Date | undefined>(new Date);
     const [end, setEnd] = useState<Date | undefined>(new Date);
-    const sample = [
+
+
+ const DATE: columnHeader_dataTable = {
+    accessorKey: "date",
+    header: "DATE",
+};
+const SALES_CODE : columnHeader_dataTable = {
+    accessorKey:"salesCode",
+    header:"Sales Code"
+}
+const c_NAME: columnHeader_dataTable = {
+    accessorKey: "c_name",
+    header: "CUSTOMER NAME",
+};
+
+const TOTAL: columnHeader_dataTable = {
+    accessorKey: "total",
+    header: "TOTAL",
+};
+
+
+const USER: columnHeader_dataTable = {
+    accessorKey: "user",
+    header: "CREATED BY",
+};
+
+const ACTION: any = {
+    accessorKey: "action",
+    header: "ACTION",
+    
+};
+
+const s_NAME: columnHeader_dataTable = {
+
+    accessorKey: "name",
+    header: "SUPPLIER NAME",
+}
+
+
+const s_LIST_Column: ColumnDef<any> []=  [
+
+    DATE,
+    c_NAME,
+    SALES_CODE,
+    TOTAL,
+    USER,
+    ACTION,
+
+];
+
+const p_LIST_Column: ColumnDef<any> []=  [
+
+
+    DATE,
+    s_NAME,
+    TOTAL,
+    USER,
+    ACTION,
+
+];
+
+
+
+  /*   const list = [
         {
             date : format(new Date, "dd-MM-yy"),
             name: "Deepath",
@@ -24,7 +90,9 @@ const List = ({ Customer, page,isSales,path }: propType) => {
             user:"Fire10",
             action:"delete"
         }
-    ]
+    ] */
+
+    
     return (
         <div className="mb-10">
             <section className="grid gap-5 ">
@@ -74,14 +142,14 @@ const List = ({ Customer, page,isSales,path }: propType) => {
                 {  isSales ?
                 <DataTable
                     columns={s_LIST_Column}
-                    data={sample}
+                    data={list}
                     rows={true}
                     paginater={true}
                     filter={true}
                 /> : 
                 <DataTable
                 columns={p_LIST_Column}
-                data={sample}
+                data={list}
                 rows={true}
                 paginater={true}
                 filter={true}

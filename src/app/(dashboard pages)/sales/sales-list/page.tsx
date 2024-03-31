@@ -1,5 +1,7 @@
+'use client'
 import List from '@/app/components/sales-pur/list'
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 
 const page = () => {
   const Customer = [
@@ -9,10 +11,26 @@ const page = () => {
     "Deepath",
     "Deepath",
 ]
+  const [salesList,setSalesList] = useState<any[]>([])
+  useEffect(()=>{
+    const fetchSales = async () => {
+     const response = await axios.get('/api/sales',{
+        headers:{
+          data:"getSales"
+        }
+      })
+      setSalesList(response.data)
+      console.log(response.data);
+      
+    }
+
+    fetchSales();
+  },[])
+
   return (
     <div className='w-full px-10'> 
         <h1>Sales List</h1>
-        <List Customer={Customer} path='new-sales' page="Sales" isSales={true} />
+        <List list={salesList} Customer={Customer} path='new-sales' page="Sales" isSales={true} />
     </div>
   )
 }

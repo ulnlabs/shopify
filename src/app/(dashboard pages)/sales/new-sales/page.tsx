@@ -5,17 +5,46 @@ import { useEffect, useState } from "react";
 
 import { FormState } from "../../../../../global";
 import axios from "axios";
-import useSWR from "swr"
+import { headers } from "next/headers";
+
 
 const page = () => {
 
+  
+  
+
+  const [item, setItem] = useState<any>([]);
+
   const [inputItem, setInputItem] = useState<any>("");
   const [product, setProduct] = useState<any>([])
+  useEffect(() => {
+    const fetchItem = async () => {
+
+      const response = await axios.get("/api/sales",
+        {
+          headers: {
+            data: "getItems"
+          }
+        },);
+      setItem(response.data)
+
+    }
+    fetchItem();
+  }, []);
+
+
+  useEffect(() => {
+    setProduct(item?.filter((item: any) => {
+      return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
+    }
+    ))
+  }, [inputItem])
+
 
   const [salesData, setSalesData] = useState<FormState>({
     customerName: "",
-    customerId : 0,
-    billDate: new Date,
+    customerId: 0,
+    billDate: new Date ,
     billQuantity: 0,
     billCharges: 0,
     billTaxType: "",
@@ -31,14 +60,13 @@ const page = () => {
   })
 
   const handleClick = async () => {
-    console.log(salesData);
-    console.log(itemList);
     try {
       const { data } = await axios.post("/api/sales", {
         sales: salesData,
         items: itemList
       })
       console.log(data);
+      
     }
     catch (err) {
       console.log(err);
@@ -50,22 +78,22 @@ const page = () => {
     {
       value: "Fire10",
       label: "Fire10",
-      id:1,
+      id: 1,
     },
     {
       value: "deepath",
       label: "Deepath",
-      id:2,
+      id: 2,
     },
     {
       value: "deepak",
       label: "Deepak",
-      id:3,
+      id: 3,
     },
     {
       value: "999",
       label: "Dhilip",
-      id:4,
+      id: 4,
     },
   ]
 
@@ -91,7 +119,7 @@ const page = () => {
         setData={setSalesData}
         inputItem={inputItem}
         setInputItem={setInputItem}
-        /* Items={data} */
+        Items={product}
         customerData={cus}
         isSales={true}
         itemList={itemList}
@@ -101,6 +129,18 @@ const page = () => {
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
         <Link href={"../../dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
       </div>
+
+          <button onClick={()=>{
+      const text = "Vat 5%";
+       const tex = text.match(/\d+/g)!.map(Number);
+       console.log(tex[0] * 5);
+       
+      
+       console.log(new Date); 
+      
+      
+    }}>test</button>
+
     </div>
   );
 };
@@ -166,7 +206,7 @@ const items = [
     const getData = async () => {
       try {
         if(inputItem) {
-          console.log("test input");
+
  
           const data = await axios.put("/api/sales/",{data:inputItem});
           setProduct(data.data);
@@ -175,7 +215,6 @@ const items = [
         
       }
       catch (err) {
-        console.log(err);
       }
     }  
     getData();
@@ -191,29 +230,11 @@ const items = [
   const { data, error } = useSWR(!isExist ? "/api/sales" : null, getData);
 
   useEffect(() => {
-    console.log(data);
     if (data !== undefined) {
-      console.log(data);
 
       setItem((prevData: any) => prevData.concat(data));
     }
   }, [data])
 
-  useEffect(() => {
-    console.log(item);
-    let exist = item.find((items: any) => items.name === item.name)
-    if (exist && inputItem !== "") {
-      setIsExist(true)
-    }
-    if (item !== undefined) {
-      console.log('store');
-      console.log(item);
 
-      setProduct(item?.filter((item: any) => {
-        return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
-      }
-      ))
-    }
-
-  }, [inputItem])
  */
