@@ -56,7 +56,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
             const updateDis = check.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity;
             const subTotal = check.taxType === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
-            
+
             const uplist = {
               ...check,
               quantity: --row.original.quantity,
@@ -78,7 +78,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             const updateTax = (row.original.taxAmount / row.original.quantity);
             console.log(row.original.taxAmount);
             console.log(row.original.quantity);
-            
+
             console.log(row.original.discount);
             const updateDis = check.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity;
             const subTotal = check.taxType === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis;
@@ -212,10 +212,16 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     itemList.map((item: any) => (
       newSubTotal += item.subtotal,
       quantity += item.quantity
+
+
     ))
-    updateCharge = (newSubTotal * data.billCharges) / 100
-    updateDiscount = (newSubTotal * data.billDiscount) / 100
-    newTotal = newSubTotal + updateCharge - updateDiscount
+
+
+    const taxPer = (data.billTaxType && data.billTaxType.match) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
+    updateCharge = (taxPer * data.billCharges) / 100
+    updateDiscount = data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Per %" ? ((newSubTotal + updateCharge) * data.billDiscount) / 100 : 0
+    newTotal = newSubTotal + updateCharge - updateDiscount;
+    console.log(quantity);
     setData((prevData: any) => ({
       ...prevData,
       billQuantity: quantity,
@@ -225,15 +231,17 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       billTotal: newTotal,
     }));
 
+    console.log(data.billQuantity);
+
   }, [itemList])
 
-  const [taxValue, setTaxValue] = useState<number>(0);
+
 
   useEffect(() => {
     const updateOnChange = () => {
-      console.log(taxValue);
 
-      const newOtherCharge = (data.billCharges * taxValue) / 100;
+      const taxPer = (data.billTaxType && data.billTaxType.match) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
+      const newOtherCharge = (data.billCharges * taxPer) / 100;
       const subTotal = newOtherCharge + data.billSubtotal;
       const newDiscount = data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Per %" ? ((data.billDiscount * subTotal) / 100) : 0;
       setData({
@@ -242,9 +250,10 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         billOverallDis: newDiscount,
         billTotal: data.billSubtotal + newOtherCharge - newDiscount,
       })
+
     }
     updateOnChange();
-  }, [data.billCharges, data.billDiscount, data.billDiscountType])
+  }, [data.billCharges, data.billDiscount, data.billDiscountType, data.billTaxType])
 
 
   const handleItemClick = (value: any) => {
@@ -263,7 +272,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             ...exist,
             quantity: exist.quantity + 1,
             discount: exist.discount / exist.quantity * updatedQuantity,
-            /* price: value.price * updatedQuantity, */
             taxAmount: value.taxAmount * updatedQuantity,
             subtotal: value.subtotal * updatedQuantity
           };
@@ -510,7 +518,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               placeholder="Other Charges" />
           </div>
           <div className="md:col-start-4 col-start-7 h-auto col-end-13 relative md:col-end-7  bg-primary-gray">
-            <Selections inputData={taxex} values setValue={setTaxValue} label={taxType} placeholder="Type" setLabel={setTaxType} icon={false} />
+            <Selections inputData={taxex} label={taxType} placeholder="Type" setLabel={setTaxType} icon={false} />
           </div>
         </div>
         <div className="grid  items-center grid-cols-subgrid grid-rows-subgrid gap-2 col-start-1 px-1 bg-primary-gray col-span-12 md:col-span-6 rounded-lg ">

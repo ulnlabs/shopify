@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 
 import { FormState } from "../../../../../global";
 import axios from "axios";
-import { headers } from "next/headers";
+import { useAnimation } from "framer-motion";
 
 
 const page = () => {
 
-  
-  
+
+
 
   const [item, setItem] = useState<any>([]);
 
@@ -44,7 +44,7 @@ const page = () => {
   const [salesData, setSalesData] = useState<FormState>({
     customerName: "",
     customerId: 0,
-    billDate: new Date ,
+    billDate: new Date,
     billQuantity: 0,
     billCharges: 0,
     billTaxType: "",
@@ -59,21 +59,38 @@ const page = () => {
     billAmount: 0,
   })
 
+  const controls = useAnimation();
+
+  const [isComfirm, setIsComfirm] = useState<boolean>(false)
   const handleClick = async () => {
-    try {
-      const { data } = await axios.post("/api/sales", {
-        sales: salesData,
-        items: itemList
-      })
-      console.log(data);
-      
-    }
-    catch (err) {
-      console.log(err);
-    }
+    await controls.start({ y: 0, transition: { duration: 0.5, ease: "easeOut" } });
+
+    // Scroll to top after animation completes
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
 
+
+    if (salesData.customerName && itemList.length > 0 && salesData.billPaymentType) {
+
+
+      try {
+        const { data } = await axios.post("/api/sales", {
+          sales: salesData,
+          items: itemList
+        })
+        console.log(data);
+
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+    else {
+      console.log("Please Fill All The Field");
+
+    }
   }
+
   const customerName = [
     {
       value: "Fire10",
@@ -130,16 +147,16 @@ const page = () => {
         <Link href={"../../dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
       </div>
 
-          <button onClick={()=>{
-      const text = "Vat 5%";
-       const tex = text.match(/\d+/g)!.map(Number);
-       console.log(tex[0] * 5);
-       
-      
-       console.log(new Date); 
-      
-      
-    }}>test</button>
+      {/* <button onClick={() => {
+        const text = "Vat 5%";
+        const tex = text.match(/\d+/g)!.map(Number);
+        console.log(tex[0] * 5);
+
+
+        console.log(new Date);
+
+
+      }}>test</button> */}
 
     </div>
   );
