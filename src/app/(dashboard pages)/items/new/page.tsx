@@ -9,7 +9,7 @@ export default function page() {
     const [brand, setBrand] = useState<string>("")
     const [category, setCategory] = useState<string>("")
     const [unit, setUnit] = useState<string>("")
-    const [tax, setTax] = useState<string>("")
+    const [tax, setTax] = useState<number>()
     const [discountType, setDiscountType] = useState<string>("")
     const [CategoryPopupState, setCategoryPopupState] = useState<boolean>(false)
     const [UnitPopupState, setUnitPopupState] = useState<boolean>(false)
@@ -26,7 +26,7 @@ export default function page() {
         barcode?: string
         description?: string
         price?: number
-        tax?: number
+        tax?: Number
         purchaseprice?: number
         taxtype?: string
         profitmargin?: number
@@ -102,28 +102,42 @@ export default function page() {
             category: category,
             unit: unit,
             discountType: discountType,
-            tax: parseInt(tax),
-            taxtype:taxType
+            tax: Number(tax),
+            taxtype: taxType
         })
         console.log(formDetails)
     }
     useEffect(() => {
-        console.log(brand, category, unit, tax, discountType)
+        const handler = async () => {
+            const purchasePrice = await Number(formDetails?.price) + ((Number(formDetails?.price) / 100) * Number(tax))
+            await setFormDetails({
+                ...formDetails,
+                tax: Number(tax),
+            })
+            console.log(tax);
+            console.log(purchasePrice);
+            await setFormDetails({
+                ...formDetails,
+                purchaseprice: purchasePrice
+            })
+        }
+        handler()
+    }, [tax])
+    useEffect(() => {
         setFormDetails({
             ...formDetails,
-            tax: parseFloat(tax),
-            purchaseprice: parseFloat(formDetails?.price as unknown as string),
-            taxtype: tax,
-            discountType: discountType
+            taxtype: taxType
         })
-    }, [brand, category, unit, tax, discountType])
-    const purchasepriceEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormDetails({
-            ...formDetails,
-            [e.target.name]: e.target.value
-        })
-        const profitMargin = parseInt(formDetails?.profitmargin as unknown as string) / 100
-        const saleprice = parseFloat(formDetails?.price as unknown as string) + (parseFloat(formDetails?.price as unknown as string) * profitMargin)
+    }, [taxType])
+    const onChangeEvent = async (e: any, event: string) => {
+        let crtdata = await Number(e.target.value);
+        console.log("v", crtdata, typeof (crtdata));
+        switch (event) {
+            case "price":
+                break;
+            case "profitmarigin":
+                break;
+        }
     }
     return (
         <div className='w-full py-2 px-4'>
@@ -207,7 +221,7 @@ export default function page() {
                         <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-3 border-b gap-6 py-4 ">
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="price">Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Price' onChange={(e: any) => setFormDetails({ ...formDetails, price: e.target.value })} id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Price' onChange={e => onChangeEvent(e, 'price')} value={formDetails?.price} id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="tax">Tax<span className='text-red-400'>*</span></label>
@@ -220,7 +234,7 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="purchasePrice">Purchase Price<span className='text-red-400'>*</span></label>
-                                <input value={formDetails?.price *(formDetails?.price/100 * formDetails?.tax)} type="text" placeholder='Purchase Price' disabled onChange={purchasepriceEvent} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input value={formDetails?.purchaseprice ? formDetails.purchaseprice : ''} type="text" placeholder='Purchase Price' disabled onChange={e => onChangeEvent(e, "pruchaseprice")} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="taxType">Tax Type (%)<span className='text-red-400'>*</span></label>
