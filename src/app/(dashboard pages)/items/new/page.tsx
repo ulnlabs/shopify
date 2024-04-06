@@ -103,7 +103,7 @@ export default function page() {
             unit: unit,
             discountType: discountType,
             tax: parseInt(tax),
-            taxtype:taxType
+            taxtype: taxType
         })
         console.log(formDetails)
     }
@@ -207,7 +207,16 @@ export default function page() {
                         <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-3 border-b gap-6 py-4 ">
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="price">Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Price' onChange={(e: any) => setFormDetails({ ...formDetails, price: e.target.value })} id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Price' onChange={(e: any) => {
+
+                                    const price = e.target.value;
+                                    const tax = formDetails!.tax
+                                    const purchasePrice = price * (price / 100 * tax)
+
+                                    setFormDetails({ ...formDetails, price: price, purchaseprice:  purchasePrice})
+                                }}
+
+                                    id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="tax">Tax<span className='text-red-400'>*</span></label>
@@ -220,7 +229,7 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="purchasePrice">Purchase Price<span className='text-red-400'>*</span></label>
-                                <input value={formDetails?.price *(formDetails?.price/100 * formDetails?.tax)} type="text" placeholder='Purchase Price' disabled onChange={purchasepriceEvent} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input value={formDetails?.purchaseprice/* .price *(formDetails?.price/100 * formDetails?.tax) */ || ""} type="text" placeholder='Purchase Price' disabled onChange={purchasepriceEvent} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="taxType">Tax Type (%)<span className='text-red-400'>*</span></label>

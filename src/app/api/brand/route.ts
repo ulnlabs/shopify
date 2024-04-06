@@ -14,5 +14,7 @@ export async function POST(req: Request) {
     const name = formdata.get("name")
     const desc = formdata.get("desc")
     const brand = await Brand.create({ name, desc })
+    console.log(brand);
+    
     return NextResponse.json(brand, { status: 200 })
 }

@@ -14,5 +14,7 @@ export const POST = async (req: Request) => {
     const name = formdata.get("name")
     const description = formdata.get("description")
     const category = await Category.create({ name, description })
+    console.log(category);
+    
     return NextResponse.json(category, { status: 200 })
 }
