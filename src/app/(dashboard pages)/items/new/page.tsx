@@ -31,11 +31,6 @@ export default function page() {
     const [UnitPopupState, setUnitPopupState] = useState<boolean>(false)
     const [TaxPopupState, setTaxPopupState] = useState<boolean>(false)
     const [taxType, setTaxType] = useState<string>("")
-    const [taxValue,setTaxValue] = useState<number>(0)
-
-    useEffect(()=>{
-        const taxes = tax.match(/\d/g)
-    })
 
     type InventoryItem = {
         itemCode?: string
@@ -43,21 +38,40 @@ export default function page() {
         brand?: string
         category?: string
         unit?: string
-        minQty?: number
+        minQty: number
         expdate?: Date
         barcode?: string
         description?: string
-        price?: number
-        tax?: Number
+        price: number
+        tax?: string
         purchaseprice?: number
         taxtype?: string
-        profitmargin?: number
+        profitmargin: number
         saleprice?: number
         discountType?: string
-        discount?: number
+        discount: number
         currentstock?: number
     }
-    const [formDetails, setFormDetails] = useState<InventoryItem>()
+    const [formDetails, setFormDetails] = useState<InventoryItem>({
+        itemCode: "",
+        itemName: "",
+        brand: "",
+        category: "",
+        unit: "",
+        minQty: 1,
+        expdate: new Date,
+        barcode: "",
+        description: "",
+        price: 0,
+        tax: "",
+        purchaseprice: 0,
+        taxtype: "",
+        profitmargin: 0,
+        saleprice: 0,
+        discountType: "",
+        discount: 0,
+        currentstock: 0,
+    })
     const brandRoute = async () => {
         const res = await fetch('/api/brand', {
             method: 'PUT'
@@ -111,7 +125,7 @@ export default function page() {
             category: category,
             unit: unit,
             discountType: discountType,
-            tax: Number(tax),
+            tax: tax,
             taxtype: taxType
         })
         console.log(formDetails)
@@ -120,17 +134,10 @@ export default function page() {
         '/api/tax', taxFetch
     )
     useEffect(() => {
-        const handler = async () => {
-            const purchasePrice = await Number(formDetails?.price) + ((Number(formDetails?.price) / 100) * Number(tax))
-            await setFormDetails({
+        const handler = () => {
+            setFormDetails({
                 ...formDetails,
-                tax: Number(tax),
-            })
-            console.log(tax);
-            console.log(purchasePrice);
-            await setFormDetails({
-                ...formDetails,
-                purchaseprice: purchasePrice
+                tax: tax,
             })
         }
         handler()
@@ -141,16 +148,24 @@ export default function page() {
             taxtype: taxType
         })
     }, [taxType])
-    const onChangeEvent = async (e: any, event: string) => {
-        let crtdata = await Number(e.target.value);
-        console.log("v", crtdata, typeof (crtdata));
-        switch (event) {
-            case "price":
-                break;
-            case "profitmarigin":
-                break;
+    useEffect(() => {
+        const onChangeEvent = () => {
+
+            const taxes = tax ? tax.match(/\d+/g)!.map(Number)[0] : 0
+            const taxValue = (taxType === "exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
+            const profit = (formDetails?.profitmargin * formDetails?.price) / 100
+            const discount = discountType === "percentage" ? (formDetails?.price * formDetails.discount) / 100 : formDetails.discount
+            const price = (formDetails?.price + taxValue) * formDetails?.minQty
+            setFormDetails({
+                ...formDetails,
+                purchaseprice: price,
+                saleprice: profit + price ,
+                discount: discount
+            })
+
         }
-    }
+        onChangeEvent();
+    }, [tax, taxType, formDetails.price, formDetails.minQty, formDetails.profitmargin, discountType, formDetails.discount])
     return (
         <div className='w-full py-2 px-4'>
             <div className="py-2 w-full relative">
@@ -233,7 +248,12 @@ export default function page() {
                         <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-3 border-b gap-6 py-4 ">
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="price">Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Price' onChange={e => onChangeEvent(e, 'price')} value={formDetails?.price} id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Price' onChange={e => {
+                                    setFormDetails({
+                                        ...formDetails,
+                                        price: Number(e.target.value)
+                                    })
+                                }} /* value={formDetails?.price}  */ id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="tax">Tax<span className='text-red-400'>*</span></label>
@@ -246,7 +266,8 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="purchasePrice">Purchase Price<span className='text-red-400'>*</span></label>
-                                <input value={formDetails?.purchaseprice || ""} type="text" placeholder='Purchase Price' disabled onChange={e => onChangeEvent(e, "pruchaseprice")} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input value={formDetails?.purchaseprice || ""} type="text" placeholder='Purchase Price' disabled
+                                    id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="taxType">Tax Type (%)<span className='text-red-400'>*</span></label>
@@ -258,7 +279,7 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="salesPrice">Sales Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Sales Price' onChange={(e: any) => setFormDetails({ ...formDetails, saleprice: e.target.value })} id='salesPrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Sales Price' value={formDetails.saleprice || ""} onChange={(e: any) => setFormDetails({ ...formDetails, saleprice: e.target.value })} id='salesPrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
 
                         </div>
@@ -269,7 +290,7 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="discount">Discount<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Discount' onChange={(e: any) => setFormDetails({ ...formDetails, discount: e.target.value })} id='discount' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Discount' value={formDetails.discount || ""} onChange={(e: any) => setFormDetails({ ...formDetails, discount: e.target.value })} id='discount' className={` border  rounded-lg py-2 px-2 outline-none text-gray-800 ${discountType ? "" : "pointer-events-none"} `} />
                             </div>
                             <div className=" grid-cols-1  lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="openingStock">Current Opening Stock<span className='text-red-400'>*</span></label>
@@ -425,8 +446,8 @@ const TaxAddPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) =>
     const addTax = async (e: React.FormEvent) => {
         e.preventDefault()
         const formDetails = new FormData(e.target as HTMLFormElement)
-        const exist = taxData.find((item: string) => 
-           item === formDetails.get("value")
+        const exist = taxData.find((item: string) =>
+            item === formDetails.get("value")
         )
         try {
             if (!exist) {
