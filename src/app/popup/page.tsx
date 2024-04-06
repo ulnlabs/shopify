@@ -7,7 +7,8 @@ const [taxState, setTaxState] = useState<boolean | null>(false)
 function page() {
   return (
     <div>
-        <AddTax close={setTaxState}  />
+        {/* <AddTax close={setTaxState}  /> */}
+       <h1>page</h1>
     </div>
   )
 }
