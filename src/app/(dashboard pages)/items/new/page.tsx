@@ -5,6 +5,22 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import useSWR from 'swr'
 import { AnimatePresence, motion } from 'framer-motion'
+import axios from 'axios'
+
+
+const taxFetch = async () => {
+    const res = await fetch('/api/tax', {
+        method: 'PUT'
+    })
+    const data = await res.json()
+    const tax = data.map((item: any) => {
+        return `${item.value}`
+    })
+    console.log("arr", tax);
+    return tax
+}
+
+
 export default function page() {
     const [brand, setBrand] = useState<string>("")
     const [category, setCategory] = useState<string>("")
@@ -15,6 +31,12 @@ export default function page() {
     const [UnitPopupState, setUnitPopupState] = useState<boolean>(false)
     const [TaxPopupState, setTaxPopupState] = useState<boolean>(false)
     const [taxType, setTaxType] = useState<string>("")
+    const [taxValue,setTaxValue] = useState<number>(0)
+
+    useEffect(()=>{
+        const taxes = tax.match(/\d/g)
+    })
+
     type InventoryItem = {
         itemCode?: string
         itemName?: string
@@ -26,7 +48,7 @@ export default function page() {
         barcode?: string
         description?: string
         price?: number
-        tax?: number
+        tax?: Number
         purchaseprice?: number
         taxtype?: string
         profitmargin?: number
@@ -50,20 +72,7 @@ export default function page() {
     const { data: brandData, error: brandError } = useSWR(
         '/api/brand', brandRoute
     )
-    const taxFetch = async () => {
-        const res = await fetch('/api/tax', {
-            method: 'PUT'
-        })
-        const data = await res.json()
-        const tax = data.map((item: any) => {
-            return `${item.value}`
-        })
-        console.log("arr", tax);
-        return tax
-    }
-    const { data: taxData, error: taxError } = useSWR(
-        '/api/tax', taxFetch
-    )
+
     const categoryFetch = async () => {
         const res = await fetch('/api/category', {
             method: 'PUT'
@@ -102,28 +111,45 @@ export default function page() {
             category: category,
             unit: unit,
             discountType: discountType,
-            tax: parseInt(tax),
+            tax: Number(tax),
             taxtype: taxType
         })
         console.log(formDetails)
     }
+    const { data: taxData, error: taxError } = useSWR(
+        '/api/tax', taxFetch
+    )
     useEffect(() => {
-        console.log(brand, category, unit, tax, discountType)
+        const handler = async () => {
+            const purchasePrice = await Number(formDetails?.price) + ((Number(formDetails?.price) / 100) * Number(tax))
+            await setFormDetails({
+                ...formDetails,
+                tax: Number(tax),
+            })
+            console.log(tax);
+            console.log(purchasePrice);
+            await setFormDetails({
+                ...formDetails,
+                purchaseprice: purchasePrice
+            })
+        }
+        handler()
+    }, [tax])
+    useEffect(() => {
         setFormDetails({
             ...formDetails,
-            tax: parseFloat(tax),
-            purchaseprice: parseFloat(formDetails?.price as unknown as string),
-            taxtype: tax,
-            discountType: discountType
+            taxtype: taxType
         })
-    }, [brand, category, unit, tax, discountType])
-    const purchasepriceEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormDetails({
-            ...formDetails,
-            [e.target.name]: e.target.value
-        })
-        const profitMargin = parseInt(formDetails?.profitmargin as unknown as string) / 100
-        const saleprice = parseFloat(formDetails?.price as unknown as string) + (parseFloat(formDetails?.price as unknown as string) * profitMargin)
+    }, [taxType])
+    const onChangeEvent = async (e: any, event: string) => {
+        let crtdata = await Number(e.target.value);
+        console.log("v", crtdata, typeof (crtdata));
+        switch (event) {
+            case "price":
+                break;
+            case "profitmarigin":
+                break;
+        }
     }
     return (
         <div className='w-full py-2 px-4'>
@@ -207,16 +233,7 @@ export default function page() {
                         <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-3 border-b gap-6 py-4 ">
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="price">Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Price' onChange={(e: any) => {
-
-                                    const price = e.target.value;
-                                    const tax = formDetails!.tax
-                                    const purchasePrice = price * (price / 100 * tax)
-
-                                    setFormDetails({ ...formDetails, price: price, purchaseprice:  purchasePrice})
-                                }}
-
-                                    id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Price' onChange={e => onChangeEvent(e, 'price')} value={formDetails?.price} id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="tax">Tax<span className='text-red-400'>*</span></label>
@@ -229,7 +246,7 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="purchasePrice">Purchase Price<span className='text-red-400'>*</span></label>
-                                <input value={formDetails?.purchaseprice/* .price *(formDetails?.price/100 * formDetails?.tax) */ || ""} type="text" placeholder='Purchase Price' disabled onChange={purchasepriceEvent} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input value={formDetails?.purchaseprice || ""} type="text" placeholder='Purchase Price' disabled onChange={e => onChangeEvent(e, "pruchaseprice")} id='purchasePrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="taxType">Tax Type (%)<span className='text-red-400'>*</span></label>
@@ -402,20 +419,30 @@ const UnitPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
 }
 
 const TaxAddPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
+    const { data: taxData, error: taxError } = useSWR(
+        '/api/tax', taxFetch
+    )
     const addTax = async (e: React.FormEvent) => {
         e.preventDefault()
         const formDetails = new FormData(e.target as HTMLFormElement)
-        await fetch('/api/tax', {
-            method: 'POST',
-            body: formDetails
-        }).then((res) => {
-            if (res.status === 200) {
+        const exist = taxData.find((item: string) => 
+           item === formDetails.get("value")
+        )
+        try {
+            if (!exist) {
+                const data = await axios.post('/api/tax', formDetails);
+                console.log(data);
+                alert("saved")
                 close(false)
-                alert('Saved')
             }
-        }).catch((err) => {
+            else {
+                alert("The tax is already exist")
+            }
+        }
+        catch (err: any) {
             console.log(err)
-        })
+            close(false)
+        }
     }
     return (
         <div className='flex h-screen absolute z-50 w-full top-0 left-0 backdrop-blur-[1px]  items-center justify-center' >
@@ -426,9 +453,12 @@ const TaxAddPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) =>
                     className='bg-white p-4 rounded-lg shadow-lg'>
                     <form method="post" onSubmit={addTax} className='w-fit flex flex-col gap-4'>
                         <h1 className='text-xl font-semibold'>Add New Tax</h1>
-                        <input type="text" name='name' id='name' placeholder='Tax Name' className='border p-2 outline-none text-gray-800' />
-                        <input type="text" name='value' id='value' placeholder='value' className='border p-2 outline-none text-gray-800' />
-                        <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
+                        <input type="text" name='value' /* onChange={(e:React.ChangeEvent<HTMLInputElement>)=> {
+                            console.log(e.target.value);
+                            
+                        }} */ id='name' placeholder='Tax Name' className='border p-2 outline-none text-gray-800' />
+                        {/*                         <input type="text" name='name' id='value' placeholder='value' className='border p-2 outline-none text-gray-800' />
+ */}                        <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
                         <button type='reset' onClick={() => close(false)} className='bg-red-400 w-full px-4 py-2 rounded-lg text-white'>Close</button>
                     </form>
                 </motion.div>

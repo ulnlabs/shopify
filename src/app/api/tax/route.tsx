@@ -11,9 +11,12 @@ export const PUT = async (req: Request) => {
 export const POST = async (req: Request) => {
     await connectDB()
     const formdata = await req.formData()
-    const name = formdata.get("name")
     const value = formdata.get("value")
-    const Tax = await taxModel.create({ name, value })
+    console.log(value);
+
+    const Tax = await taxModel.create({ value })
+    console.log("enter", Tax);
+
     return NextResponse.json(Tax, { status: 200 })
 }
 
