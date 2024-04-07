@@ -153,10 +153,11 @@ export default function page() {
 
             const taxes = tax ? tax.match(/\d+/g)!.map(Number)[0] : 0
             const taxValue = (taxType === "exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
-            const profit = (formDetails?.profitmargin * formDetails?.price) / 100
+            const profit = ((formDetails?.profitmargin * formDetails?.price) / 100) * formDetails.minQty;
 
             const discount = discountType === "percentage" ? (formDetails?.price * formDetails.discount) / 100 : formDetails.discount
-            const price = (formDetails?.price + taxValue) * formDetails?.minQty
+            const price = (formDetails?.price + taxValue) * formDetails?.minQty;
+
             console.log(profit ? profit + price : price);
             setFormDetails({
                 ...formDetails,
@@ -170,18 +171,7 @@ export default function page() {
         onChangeEvent();
     }, [tax, taxType, formDetails.price, formDetails.minQty, formDetails.profitmargin, discountType, formDetails.discount])
 
-    useEffect(() => {
-        const updateSale = () => {
-            const profit = ((formDetails.saleprice - formDetails.purchaseprice) * 100) / formDetails.purchaseprice;
-            console.log(profit);
-
-            setFormDetails({
-                ...formDetails,
-                profitmargin: profit
-            })
-        }
-        updateSale();
-    }, [formDetails.saleprice])
+  
     return (
         <div className='w-full py-2 px-4'>
             <div className="py-2 w-full relative">
@@ -295,7 +285,21 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="salesPrice">Sales Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Sales Price' value={formDetails.saleprice || ""} onChange={(e: any) => setFormDetails({ ...formDetails, saleprice: e.target.value })} id='salesPrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Sales Price' value={formDetails.saleprice || ""}
+                                    onChange={(e: any) => {
+
+                                        const profit = (((e.target.value - formDetails.purchaseprice) * 100) / formDetails.purchaseprice) / formDetails.minQty;
+                                        console.log(profit);
+
+
+
+
+                                        setFormDetails({
+                                            ...formDetails,
+                                            saleprice: e.target.value,
+                                            profitmargin: profit
+                                        })
+                                    }} id='salesPrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
 
                         </div>
