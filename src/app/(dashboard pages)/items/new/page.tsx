@@ -63,15 +63,22 @@ export default function page() {
         barcode: "",
         description: "",
         price: 0,
-        tax: "",
+        tax: tax,
         purchaseprice: 0,
-        taxtype: "",
+        taxtype: taxType,
         profitmargin: 0,
         saleprice: 0,
         discountType: "",
         discount: 0,
         currentstock: 0,
     })
+
+   /*  const handleClick = async (e: any) => {
+        e.preventDefault();
+        alert(formDetails)
+
+    } */
+
     const brandRoute = async () => {
         const res = await fetch('/api/brand', {
             method: 'PUT'
@@ -125,53 +132,53 @@ export default function page() {
             category: category,
             unit: unit,
             discountType: discountType,
-            tax: tax,
-            taxtype: taxType
+            /*  tax: tax,
+             taxtype: taxType */
         })
-        console.log(formDetails)
+        console.log(formDetails.tax)
     }
     const { data: taxData, error: taxError } = useSWR(
         '/api/tax', taxFetch
     )
-    useEffect(() => {
-        const handler = () => {
-            setFormDetails({
-                ...formDetails,
-                tax: tax,
-            })
-        }
-        handler()
-    }, [tax])
+   /*  useEffect(() => {
+        setFormDetails({
+            ...formDetails,
+            tax: tax,
+        })
+    }, [tax]) */
+
+    /* useEffect(()=>{
+        setFormDetails({
+            ...formDetails,
+            tax:tax
+        })
+    },[tax])
+
     useEffect(() => {
         setFormDetails({
             ...formDetails,
             taxtype: taxType
-        })
-    }, [taxType])
+        })  
+    }, [taxType]) */
+
     useEffect(() => {
         const onChangeEvent = () => {
 
             const taxes = tax ? tax.match(/\d+/g)!.map(Number)[0] : 0
             const taxValue = (taxType === "exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
-            const profit = ((formDetails?.profitmargin * formDetails?.price) / 100) * formDetails.minQty;
-
-            const discount = discountType === "percentage" ? (formDetails?.price * formDetails.discount) / 100 : formDetails.discount
             const price = (formDetails?.price + taxValue) * formDetails?.minQty;
+            const profit = Math.round(((formDetails?.profitmargin * price) / 100) * formDetails.minQty);
+            const salePrice = profit ? profit + price : price;
 
-            console.log(profit ? profit + price : price);
+            const discount = (discountType.toLocaleLowerCase() === "percentage" ? (salePrice * formDetails.discount) / 100 : formDetails.discount) * formDetails.minQty;
             setFormDetails({
                 ...formDetails,
                 purchaseprice: price,
-                saleprice: profit ? profit + price : price,
-                discount: discount,
-
+                saleprice: salePrice - discount
             })
-
         }
         onChangeEvent();
     }, [tax, taxType, formDetails.price, formDetails.minQty, formDetails.profitmargin, discountType, formDetails.discount])
-
-  
     return (
         <div className='w-full py-2 px-4'>
             <div className="py-2 w-full relative">
@@ -259,7 +266,7 @@ export default function page() {
                                         ...formDetails,
                                         price: Number(e.target.value)
                                     })
-                                }} /* value={formDetails?.price}  */ id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                }} id='price' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="tax">Tax<span className='text-red-400'>*</span></label>
@@ -285,18 +292,18 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="salesPrice">Sales Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Sales Price' value={formDetails.saleprice || ""}
-                                    onChange={(e: any) => {
+                                <input type="text" placeholder='Sales Price' value={formDetails.saleprice}
+                                    onChange={e => setFormDetails({
+                                        ...formDetails,
+                                        saleprice: Number(e.target.value)
 
+                                    })}
+                                    onBlur={(e: any) => {
+                                        console.log(formDetails.minQty);
                                         const profit = (((e.target.value - formDetails.purchaseprice) * 100) / formDetails.purchaseprice) / formDetails.minQty;
                                         console.log(profit);
-
-
-
-
                                         setFormDetails({
                                             ...formDetails,
-                                            saleprice: e.target.value,
                                             profitmargin: profit
                                         })
                                     }} id='salesPrice' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
@@ -319,7 +326,7 @@ export default function page() {
                         </div>
                         <div className="w-full py-4">
                             <div className='w-full'>
-                                <button onClick={() => alert('Saved')} className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
+                                <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
                             </div>
                         </div>
                     </div>
