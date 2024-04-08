@@ -25,7 +25,7 @@ export default function page() {
     const [brand, setBrand] = useState<string>("")
     const [category, setCategory] = useState<string>("")
     const [unit, setUnit] = useState<string>("")
-    const [tax, setTax] = useState<string>("")
+    const [taxValue, setTaxValue] = useState<string>("")
     const [discountType, setDiscountType] = useState<string>("")
     const [CategoryPopupState, setCategoryPopupState] = useState<boolean>(false)
     const [UnitPopupState, setUnitPopupState] = useState<boolean>(false)
@@ -63,9 +63,9 @@ export default function page() {
         barcode: "",
         description: "",
         price: 0,
-        tax: tax,
+        tax: "",
         purchaseprice: 0,
-        taxtype: taxType,
+        taxtype: "",
         profitmargin: 0,
         saleprice: 0,
         discountType: "",
@@ -73,11 +73,11 @@ export default function page() {
         currentstock: 0,
     })
 
-   /*  const handleClick = async (e: any) => {
-        e.preventDefault();
-        alert(formDetails)
-
-    } */
+    /*  const handleClick = async (e: any) => {
+         e.preventDefault();
+         alert(formDetails)
+ 
+     } */
 
     const brandRoute = async () => {
         const res = await fetch('/api/brand', {
@@ -140,33 +140,27 @@ export default function page() {
     const { data: taxData, error: taxError } = useSWR(
         '/api/tax', taxFetch
     )
-   /*  useEffect(() => {
-        setFormDetails({
-            ...formDetails,
-            tax: tax,
-        })
-    }, [tax]) */
+    /*  useEffect(() => {
+         setFormDetails({
+             ...formDetails,
+             tax: tax,
+         })
+     }, [tax]) */
 
-    /* useEffect(()=>{
-        setFormDetails({
-            ...formDetails,
-            tax:tax
-        })
-    },[tax])
-
-    useEffect(() => {
-        setFormDetails({
-            ...formDetails,
-            taxtype: taxType
-        })  
-    }, [taxType]) */
+    /*
+       useEffect(() => {
+           setFormDetails({
+               ...formDetails,
+               taxtype: taxType
+           })  
+       }, [taxType]) */
 
     useEffect(() => {
         const onChangeEvent = () => {
 
-            const taxes = tax ? tax.match(/\d+/g)!.map(Number)[0] : 0
-            const taxValue = (taxType === "exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
-            const price = (formDetails?.price + taxValue) * formDetails?.minQty;
+            const taxes = taxValue ? taxValue.match(/\d+/g)!.map(Number)[0] : 0
+            const taxValues = (taxType === "exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
+            const price = (formDetails?.price + taxValues) * formDetails?.minQty;
             const profit = Math.round(((formDetails?.profitmargin * price) / 100) * formDetails.minQty);
             const salePrice = profit ? profit + price : price;
 
@@ -174,11 +168,13 @@ export default function page() {
             setFormDetails({
                 ...formDetails,
                 purchaseprice: price,
-                saleprice: salePrice - discount
+                saleprice: salePrice - discount,
+                tax:`${taxes}`
             })
         }
+        console.log(formDetails.tax , )
         onChangeEvent();
-    }, [tax, taxType, formDetails.price, formDetails.minQty, formDetails.profitmargin, discountType, formDetails.discount])
+    }, [taxValue, taxType, formDetails.price, formDetails.minQty, formDetails.profitmargin, discountType, formDetails.discount])
     return (
         <div className='w-full py-2 px-4'>
             <div className="py-2 w-full relative">
@@ -271,7 +267,7 @@ export default function page() {
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="tax">Tax<span className='text-red-400'>*</span></label>
                                 <div className="w-full flex items-center justify-center">
-                                    <Selector commonTitle='Select Tax' changeState={setTax} currentstate={tax} data={taxData ? taxData : []} />
+                                    <Selector commonTitle='Select Tax' changeState={setTaxValue} currentstate={taxValue} data={taxData ? taxData : []} />
                                     <div className=" flex-1 p-3 border rounded cursor-pointer" onClick={() => setTaxPopupState(true)}>
                                         <AiOutlinePlus className='' />
                                     </div>
