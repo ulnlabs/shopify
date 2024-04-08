@@ -30,7 +30,9 @@ export default function page() {
     const [CategoryPopupState, setCategoryPopupState] = useState<boolean>(false)
     const [UnitPopupState, setUnitPopupState] = useState<boolean>(false)
     const [TaxPopupState, setTaxPopupState] = useState<boolean>(false)
-    const [taxType, setTaxType] = useState<string>("")
+    const [taxType, setTaxType] = useState<string>("");
+
+
 
     type InventoryItem = {
         itemCode?: string
@@ -73,11 +75,34 @@ export default function page() {
         currentstock: 0,
     })
 
-    /*  const handleClick = async (e: any) => {
-         e.preventDefault();
-         alert(formDetails)
- 
-     } */
+    useEffect(() => {
+        setFormDetails({
+            ...formDetails,
+            unit: unit
+
+        })
+    }, [unit])
+
+    useEffect(() => {
+        setFormDetails({
+            ...formDetails,
+            category: category
+        })
+    }, [category]);
+
+    useEffect(() => {
+        setFormDetails({
+            ...formDetails,
+            brand: brand
+        })
+    }, [brand])
+
+    useEffect(() => {
+        setFormDetails({
+            ...formDetails,
+            discountType: discountType
+        })
+    }, [brand])
 
     const brandRoute = async () => {
         const res = await fetch('/api/brand', {
@@ -87,7 +112,6 @@ export default function page() {
         const brand = data.map((item: any) => {
             return item.name
         })
-        console.log("arr", brand);
         return brand
     }
     const { data: brandData, error: brandError } = useSWR(
@@ -102,7 +126,6 @@ export default function page() {
         const category = data.map((item: any) => {
             return item.name
         })
-        console.log("arr", category);
         return category
     }
     const { data: categoryData, error: categoryError } = useSWR(
@@ -116,45 +139,23 @@ export default function page() {
         const unit = data.map((item: any) => {
             return item.name
         })
-        console.log("arr", unit);
         return unit
     }
     const { data: unitData, error: unitError } = useSWR(
         '/api/unit', unitFetch
     )
     const [BrandPopupState, setBrandPopupState] = useState<boolean>(false)
+
+
+
     const addItemEvent = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log(category, brand, unit, discountType)
-        await setFormDetails({
-            ...formDetails,
-            brand: brand,
-            category: category,
-            unit: unit,
-            discountType: discountType,
-            /*  tax: tax,
-             taxtype: taxType */
-        })
-        console.log(formDetails.tax)
+
+        console.log(formDetails);
     }
     const { data: taxData, error: taxError } = useSWR(
         '/api/tax', taxFetch
     )
-    /*  useEffect(() => {
-         setFormDetails({
-             ...formDetails,
-             tax: tax,
-         })
-     }, [tax]) */
-
-    /*
-       useEffect(() => {
-           setFormDetails({
-               ...formDetails,
-               taxtype: taxType
-           })  
-       }, [taxType]) */
-
     useEffect(() => {
         const onChangeEvent = () => {
 
@@ -169,10 +170,10 @@ export default function page() {
                 ...formDetails,
                 purchaseprice: price,
                 saleprice: salePrice - discount,
-                tax:`${taxes}`
+                tax: `${taxValue}`,
+                taxtype: taxType
             })
         }
-        console.log(formDetails.tax , )
         onChangeEvent();
     }, [taxValue, taxType, formDetails.price, formDetails.minQty, formDetails.profitmargin, discountType, formDetails.discount])
     return (
@@ -239,7 +240,7 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="minimumQty">Minimum Qty.<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Qty.' onChange={(e: any) => setFormDetails({ ...formDetails, minQty: e.target.value })} id='minimumQty' className='border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Qty.' onChange={(e: any) => setFormDetails({ ...formDetails, minQty: Number(e.target.value) })} id='minimumQty' className='border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="expireDate">Expire Date</label>
