@@ -64,10 +64,10 @@ export default function page() {
         price: 0,
         tax: "",
         purchaseprice: 0,
-        taxtype: "",
+        taxtype: "Exclusive",
         profitmargin: 0,
         saleprice: 0,
-        discountType: "",
+        discountType: "Percentage",
         discount: 0,
         currentstock: 0,
     })
@@ -110,7 +110,7 @@ export default function page() {
             return item.name
         })
         console.log(brand);
-        
+
         return brand
     }
     const { data: brandData, error: brandError } = useSWR(
@@ -126,7 +126,7 @@ export default function page() {
             return item.name
         })
         console.log(category);
-        
+
         return category
     }
     const { data: categoryData, error: categoryError } = useSWR(
@@ -141,7 +141,7 @@ export default function page() {
             return item.name
         })
         console.log(unit);
-        
+
         return unit
     }
     const { data: unitData, error: unitError } = useSWR(
@@ -151,8 +151,13 @@ export default function page() {
 
     const addItemEvent = async (event: React.FormEvent) => {
         event.preventDefault();
-        const data = await axios.post("/api/items",formDetails)
-        console.log(data);
+        if (formDetails.itemCode === "" || formDetails.itemName === "" || formDetails.category === "" || formDetails.unit === "" || formDetails.price === 0 || formDetails.tax === "") {
+            alert("Please Fill All The Filed");
+            return
+        }
+        const data = await axios.post("/api/items", { formDetails })
+        alert("Item Added")
+        return
     }
     const { data: taxData, error: taxError } = useSWR(
         '/api/tax', taxFetch
@@ -161,10 +166,10 @@ export default function page() {
         const onChangeEvent = () => {
 
             const taxes = taxValue ? taxValue.match(/\d+/g)!.map(Number)[0] : 0
-            const taxValues = (taxType === "exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
-            const price = (formDetails?.price + taxValues) * formDetails?.minQty;
-            const profit = Math.round(((formDetails?.profitmargin * price) / 100) * formDetails.minQty);
-            const salePrice = profit ? profit + price : price;
+            const taxValues = (taxType.toLowerCase() === "exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
+            const price = (formDetails?.price + taxValues);
+            const profit = Math.round(((formDetails?.profitmargin * formDetails.price ) / 100));
+            const salePrice = profit ? profit + formDetails.price : formDetails.price ;
 
             setFormDetails({
                 ...formDetails,
@@ -175,7 +180,7 @@ export default function page() {
             })
         }
         onChangeEvent();
-    }, [taxValue, taxType, formDetails.price, formDetails.minQty, formDetails.profitmargin])
+    }, [taxValue, taxType, formDetails.price, formDetails.profitmargin])
     return (
         <div className='w-full py-2 px-4'>
             <div className="py-2 w-full relative">
@@ -258,7 +263,7 @@ export default function page() {
                         <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-3 border-b gap-6 py-4 ">
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="price">Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Price' onChange={e => {
+                                <input type="text" /* value={formDetails.price || ""}  */ placeholder='Price' onChange={e => {
                                     setFormDetails({
                                         ...formDetails,
                                         price: Number(e.target.value)
@@ -296,8 +301,7 @@ export default function page() {
 
                                     })}
                                     onBlur={(e: any) => {
-                                        console.log(formDetails.minQty);
-                                        const profit = (((e.target.value - formDetails.purchaseprice) * 100) / formDetails.purchaseprice) / formDetails.minQty;
+                                        const profit = (((e.target.value - formDetails.purchaseprice) * 100) / formDetails.purchaseprice);
                                         console.log(profit);
                                         setFormDetails({
                                             ...formDetails,
