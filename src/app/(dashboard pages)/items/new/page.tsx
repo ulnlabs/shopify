@@ -31,9 +31,6 @@ export default function page() {
     const [UnitPopupState, setUnitPopupState] = useState<boolean>(false)
     const [TaxPopupState, setTaxPopupState] = useState<boolean>(false)
     const [taxType, setTaxType] = useState<string>("");
-
-
-
     type InventoryItem = {
         itemCode?: string
         itemName?: string
@@ -50,7 +47,7 @@ export default function page() {
         taxtype?: string
         profitmargin: number
         saleprice: number
-        discountType?: string
+        discountType: string
         discount: number
         currentstock?: number
     }
@@ -93,7 +90,7 @@ export default function page() {
     useEffect(() => {
         setFormDetails({
             ...formDetails,
-            brand: brand
+            brand: brand,
         })
     }, [brand])
 
@@ -102,7 +99,7 @@ export default function page() {
             ...formDetails,
             discountType: discountType
         })
-    }, [brand])
+    }, [discountType])
 
     const brandRoute = async () => {
         const res = await fetch('/api/brand', {
@@ -112,6 +109,8 @@ export default function page() {
         const brand = data.map((item: any) => {
             return item.name
         })
+        console.log(brand);
+        
         return brand
     }
     const { data: brandData, error: brandError } = useSWR(
@@ -126,6 +125,8 @@ export default function page() {
         const category = data.map((item: any) => {
             return item.name
         })
+        console.log(category);
+        
         return category
     }
     const { data: categoryData, error: categoryError } = useSWR(
@@ -139,6 +140,8 @@ export default function page() {
         const unit = data.map((item: any) => {
             return item.name
         })
+        console.log(unit);
+        
         return unit
     }
     const { data: unitData, error: unitError } = useSWR(
@@ -146,12 +149,10 @@ export default function page() {
     )
     const [BrandPopupState, setBrandPopupState] = useState<boolean>(false)
 
-
-
     const addItemEvent = async (event: React.FormEvent) => {
         event.preventDefault();
-
-        console.log(formDetails);
+        const data = await axios.post("/api/items",formDetails)
+        console.log(data);
     }
     const { data: taxData, error: taxError } = useSWR(
         '/api/tax', taxFetch
@@ -165,17 +166,16 @@ export default function page() {
             const profit = Math.round(((formDetails?.profitmargin * price) / 100) * formDetails.minQty);
             const salePrice = profit ? profit + price : price;
 
-            const discount = (discountType.toLocaleLowerCase() === "percentage" ? (salePrice * formDetails.discount) / 100 : formDetails.discount) * formDetails.minQty;
             setFormDetails({
                 ...formDetails,
                 purchaseprice: price,
-                saleprice: salePrice - discount,
-                tax: `${taxValue}`,
+                saleprice: salePrice,
+                tax: taxValue,
                 taxtype: taxType
             })
         }
         onChangeEvent();
-    }, [taxValue, taxType, formDetails.price, formDetails.minQty, formDetails.profitmargin, discountType, formDetails.discount])
+    }, [taxValue, taxType, formDetails.price, formDetails.minQty, formDetails.profitmargin])
     return (
         <div className='w-full py-2 px-4'>
             <div className="py-2 w-full relative">
