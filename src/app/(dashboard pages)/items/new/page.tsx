@@ -156,7 +156,7 @@ export default function page() {
             alert("Please Fill All The Filed");
             return
         }
-        const data = await axios.post("/api/items", [formDetails]);
+        const data = await axios.post("/api/items", {data:formDetails});
         console.log(formDetails);
 
         alert("Item Added")
