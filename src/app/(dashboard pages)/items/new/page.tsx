@@ -31,13 +31,14 @@ export default function page() {
     const [UnitPopupState, setUnitPopupState] = useState<boolean>(false)
     const [TaxPopupState, setTaxPopupState] = useState<boolean>(false)
     const [taxType, setTaxType] = useState<string>("");
+
     type InventoryItem = {
         itemCode?: string
         itemName?: string
         brand?: string
         category?: string
         unit?: string
-        minQty: number
+        /* minQty: number */
         expdate?: Date
         barcode?: string
         description?: string
@@ -57,7 +58,7 @@ export default function page() {
         brand: "",
         category: "",
         unit: "",
-        minQty: 1,
+        /* minQty: 1, */
         expdate: new Date,
         barcode: "",
         description: "",
@@ -155,7 +156,9 @@ export default function page() {
             alert("Please Fill All The Filed");
             return
         }
-        const data = await axios.post("/api/items", { formDetails })
+        const data = await axios.post("/api/items", [formDetails]);
+        console.log(formDetails);
+
         alert("Item Added")
         return
     }
@@ -167,8 +170,8 @@ export default function page() {
             const taxes = taxValue ? taxValue.match(/\d+/g)!.map(Number)[0] : 0
             const taxValues = (taxType.toLowerCase() === "exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
             const price = (formDetails?.price + taxValues);
-            const profit = Math.round(((formDetails?.profitmargin * formDetails.price ) / 100));
-            const salePrice = profit ? profit + formDetails.price : formDetails.price ;
+            const profit = Math.round(((formDetails?.profitmargin * formDetails.price) / 100));
+            const salePrice = profit ? profit + formDetails.price : formDetails.price;
             setFormDetails({
                 ...formDetails,
                 purchaseprice: price,
@@ -178,7 +181,10 @@ export default function page() {
             })
         }
         onChangeEvent();
-    }, [taxValue, taxType, formDetails.price, formDetails.profitmargin])
+    }, [taxValue, taxType, formDetails.price, formDetails.profitmargin]);
+
+
+
     return (
         <div className='w-full py-2 px-4'>
             <div className="py-2 w-full relative">
@@ -241,24 +247,24 @@ export default function page() {
                                     </div>
                                 </div>
                             </div>
-                            <div className=" grid-cols-1 lg:col-start-5 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
+                            {/* <div className=" grid-cols-1 lg:col-start-5 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="minimumQty">Minimum Qty.<span className='text-red-400'>*</span></label>
                                 <input type="text" placeholder='Qty.' onChange={(e: any) => setFormDetails({ ...formDetails, minQty: Number(e.target.value) })} id='minimumQty' className='border  rounded-lg py-2 px-2 outline-none text-gray-800' />
-                            </div>
-                            <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
+                            </div> */}
+                            <div className=" grid-cols-1 lg:col-start-5 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="expireDate">Expire Date</label>
                                 <input type="date" id='expireDate' onChange={(e: any) => setFormDetails({ ...formDetails, expdate: e.target.value })} className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
-                            <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
+                            <div className=" grid-cols-1   lg:col-start-9 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="barcode">Barcode</label>
                                 <input type="text" onChange={(e: any) => setFormDetails({ ...formDetails, barcode: e.target.value })} placeholder='Barcode' id='barcode' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
-                            <div className=" grid-cols-1 lg:col-start-5 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
+                            <div className=" grid-cols-1 lg:col-start-1 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="description">Description</label>
                                 <textarea id='description' onChange={(e: any) => setFormDetails({ ...formDetails, description: e.target.value })} placeholder='Description' className='border resize-none rounded-lg py-2 px-2 outline-none text-gray-800' ></textarea>
                             </div>
                         </div>
-                        <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-3 border-b gap-6 py-4 ">
+                        <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-2 border-b gap-6 py-4 ">
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="price">Price<span className='text-red-400'>*</span></label>
                                 <input type="text" /* value={formDetails.price || ""}  */ placeholder='Price' onChange={e => {
@@ -316,12 +322,12 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="discount">Discount<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Discount' value={formDetails.discount || ""} onChange={(e: any) => setFormDetails({ ...formDetails, discount: e.target.value })} id='discount' className={` border  rounded-lg py-2 px-2 outline-none text-gray-800 ${discountType ? "" : "pointer-events-none"} `} />
+                                <input type="text" placeholder='Discount' value={formDetails.discount || ""} onChange={(e: any) => setFormDetails({ ...formDetails, discount: Number(e.target.value) })} id='discount' className={` border  rounded-lg py-2 px-2 outline-none text-gray-800 ${discountType ? "" : "pointer-events-none"} `} />
                             </div>
-                            <div className=" grid-cols-1  lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
+                            {/* <div className=" grid-cols-1  lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="openingStock">Current Opening Stock<span className='text-red-400'>*</span></label>
                                 <input type="text" placeholder='Opening Stock' value={""} disabled id='openingStock' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
-                            </div>
+                            </div> */}
                         </div>
                         <div className="w-full py-4">
                             <div className='w-full'>
