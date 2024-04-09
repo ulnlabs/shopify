@@ -21,18 +21,18 @@ export default function page() {
         brand?: string
         category?: string
         unit?: string
-        minQty?: number
+        /* minQty: number */
         expdate?: Date
         barcode?: string
         description?: string
-        price?: number
-        tax?: number
-        purchaseprice?: number
+        price: number
+        tax?: string
+        purchaseprice: number
         taxtype?: string
-        profitmargin?: number
-        saleprice?: number
-        discountType?: string
-        discount?: number
+        profitmargin: number
+        saleprice: number
+        discountType: string
+        discount: number
         currentstock?: number
     }
     const [formDetails, setFormDetails] = useState<InventoryItem>({
@@ -55,6 +55,7 @@ export default function page() {
         discount: 0,
         currentstock: 0,
     })
+
     const brandRoute = async () => {
         const res = await fetch('/api/brand', {
             method: 'PUT'
