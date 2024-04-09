@@ -40,13 +40,13 @@ const ShopifyItemSchema: Schema = new Schema({
     required: true
   },
   tax: {
-    type: Number,
+    type: String,
     required: true
   },
-  purchasePrice: {
+ /*  purchasePrice: {
     type: Number,
     required: true
-  },
+  }, */
   taxType: {
     type: String
   },
@@ -54,14 +54,14 @@ const ShopifyItemSchema: Schema = new Schema({
     type: Number,
     required: true
   },
-  salesPrice: {
+/*   salesPrice: {
     type: Number,
     required: true
   },
   finalPrice: {
     type: Number,
     required: true
-  },
+  }, */
   discountType: {
     type: String,
     required: true

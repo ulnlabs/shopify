@@ -157,7 +157,7 @@ export default function page() {
             return
         }
         const data = await axios.post("/api/items", {data:formDetails});
-        console.log(formDetails);
+        console.log(data);
 
         alert("Item Added")
         return

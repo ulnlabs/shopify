@@ -6,14 +6,26 @@ import { NextResponse } from "next/server";
 export const POST = async (req: Request) => {
     let data = await req.json();
     console.log(data.data);
-    const { itemCode, itemName, brand, category, unit, expdate, barcode, description, price, } = data.data;
+    const { itemCode, itemName, brand, category, unit, expdate, barcode, description, price, tax, taxType, profitmargin: profitMargin, discount, discountType } = data.data;
 
     await connectDB();
+    console.log("entered");
+    try {
 
-    const addItem = Item.create()
+        const addItem = await Item.create({
+            itemCode, itemName, brand, category, unit, expdate, barcode, description, price, tax, taxType, profitMargin, discount, discountType
+        })
+        console.log("add", addItem);
+        console.log("entered");
 
 
+        return NextResponse.json(addItem)
+    }
+    catch (err) {
+        console.log(err);
 
-    console.log(data.data);
-    return NextResponse.json("done")
+        return new Response("Internal Server Error", { status: 500 })
+
+    }
+
 }   
