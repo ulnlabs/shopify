@@ -1,98 +1,136 @@
 "use client"
+import { AiOutlineMore } from "react-icons/ai";
 import { RxReload } from "react-icons/rx";
 import { BsFillHandbagFill } from "react-icons/bs";
 import React, { useState } from 'react'
 import Link from "next/link";
 import CalenSelect from "./calselect";
 import DataTable from "../datatable/DataTable";
-import {format} from "date-fns"
+import { format, setISODay } from "date-fns"
 
 import { ColumnDef } from "@tanstack/react-table";
 import { columnHeader_dataTable } from "../../../../global";
+
+import { Command, CommandList,CommandItem } from "@/components/ui/command";
 interface propType {
     Customer: string[],
     page: string,
     isSales?: boolean,
-    path : string,
-    list:any[],
+    path: string,
+    list: any[],
 }
-const List = ({ Customer, page,isSales,path,list }: propType) => {
+const List = ({ Customer, page, isSales, path, list }: propType) => {
     const [from, setFrom] = useState<Date | undefined>(new Date);
     const [end, setEnd] = useState<Date | undefined>(new Date);
 
 
- const DATE: columnHeader_dataTable = {
-    accessorKey: "date",
-    header: "DATE",
-};
-const SALES_CODE : columnHeader_dataTable = {
-    accessorKey:"salesCode",
-    header:"Sales Code"
-}
-const c_NAME: columnHeader_dataTable = {
-    accessorKey: "c_name",
-    header: "CUSTOMER NAME",
-};
+    const DATE: columnHeader_dataTable = {
+        accessorKey: "date",
+        header: "DATE",
+    };
+    const SALES_CODE: columnHeader_dataTable = {
+        accessorKey: "salesCode",
+        header: "Sales Code"
+    }
+    const c_NAME: columnHeader_dataTable = {
+        accessorKey: "c_name",
+        header: "CUSTOMER NAME",
+    };
 
-const TOTAL: columnHeader_dataTable = {
-    accessorKey: "total",
-    header: "TOTAL",
-};
-
-
-const USER: columnHeader_dataTable = {
-    accessorKey: "user",
-    header: "CREATED BY",
-};
-
-const ACTION: any = {
-    accessorKey: "action",
-    header: "ACTION",
-    
-};
-
-const s_NAME: columnHeader_dataTable = {
-
-    accessorKey: "name",
-    header: "SUPPLIER NAME",
-}
+    const TOTAL: columnHeader_dataTable = {
+        accessorKey: "total",
+        header: "TOTAL",
+    };
 
 
-const s_LIST_Column: ColumnDef<any> []=  [
+    const USER: columnHeader_dataTable = {
+        accessorKey: "user",
+        header: "CREATED BY",
+    };
 
-    DATE,
-    c_NAME,
-    SALES_CODE,
-    TOTAL,
-    USER,
-    ACTION,
+    const SALE_ACTION: any = {
+        accessorKey: "action",
+        header: "ACTION",
+        cell: (({ row }: any) => {
+            const [isOpen, setIsOpen] = useState<boolean>(false);
+            return (
+                <div>
+                    <AiOutlineMore onClick={() => setIsOpen(!isOpen)} />
+                    {isOpen && <div className="gap-2 absolute mt-4  bg-white  ">
+                        <Command>
+                            <CommandList>
+                                <CommandItem>View Sales</CommandItem>
+                                <CommandItem>Edit</CommandItem>
+                                <CommandItem>Print</CommandItem>
+                                <CommandItem>PDF</CommandItem>
+                                <CommandItem>Sales Return</CommandItem>
+                                <CommandItem>Delete</CommandItem>
+                            </CommandList>
+                        </Command>
+                    </div>}
+                </div>)
+        })
 
-];
+    };
 
-const p_LIST_Column: ColumnDef<any> []=  [
+    const PUR_ACTION: any = {
+        accessorKey: "action",
+        header: "ACTION",
+        cell: (({ row }: any) => (
+            <div>
+                <button>View Sales</button>
+                <button>Edit</button>
+                <button>Print</button>
+                <button>PDF</button>
+                <button>Sales Return</button>
+                <button>Delete</button>
+            </div>
+        ))
+
+    };
+
+    const s_NAME: columnHeader_dataTable = {
+
+        accessorKey: "name",
+        header: "SUPPLIER NAME",
+    }
 
 
-    DATE,
-    s_NAME,
-    TOTAL,
-    USER,
-    ACTION,
+    const s_LIST_Column: ColumnDef<any>[] = [
 
-];
+        DATE,
+        c_NAME,
+        SALES_CODE,
+        TOTAL,
+        USER,
+        SALE_ACTION,
+
+    ];
+
+    const p_LIST_Column: ColumnDef<any>[] = [
+
+
+        DATE,
+        s_NAME,
+        TOTAL,
+        USER,
+        PUR_ACTION,
+
+    ];
 
 
 
-  /*   const list = [
-        {
-            date : format(new Date, "dd-MM-yy"),
-            name: "Deepath",
-            total:1000,
-            user:"Fire10",
-            action:"delete"
-        }
-    ] */
+    /*   const list = [
+          {
+              date : format(new Date, "dd-MM-yy"),
+              name: "Deepath",
+              total:1000,
+              user:"Fire10",
+              action:"delete"
+          }
+      ] */
 
-    
+
     return (
         <div className="mb-10">
             <section className="grid gap-5 ">
@@ -106,7 +144,7 @@ const p_LIST_Column: ColumnDef<any> []=  [
                         <Link href={"dashboard"} className="row-start-3 mx-auto col-start-1 col-span-5 ">
                             <span>More Detials  </span>
                         </Link>
-                    </div>                 
+                    </div>
                     <div className="bg-primary-gray px-2 py-1 grid gap-3 row-span-4 md:col-end-13 col-span-full md:col-span-5 rounded-sm  outline outline-offset-4 outline-1 outline-primary-gray  ">
                         <h2 className="col-start-1 col-span-2 row-start-1">Total Amount Recieved</h2>
                         <p className="col-start-1 col-span-3 text-2xl">10000000</p>
@@ -139,21 +177,21 @@ const p_LIST_Column: ColumnDef<any> []=  [
                 </div>
             </section>
             <section>
-                {  isSales ?
-                <DataTable
-                    columns={s_LIST_Column}
-                    data={list}
-                    rows={true}
-                    paginater={true}
-                    filter={true}
-                /> : 
-                <DataTable
-                columns={p_LIST_Column}
-                data={list}
-                rows={true}
-                paginater={true}
-                filter={true}
-            />
+                {isSales ?
+                    <DataTable
+                        columns={s_LIST_Column}
+                        data={list}
+                        rows={true}
+                        paginater={true}
+                        filter={true}
+                    /> :
+                    <DataTable
+                        columns={p_LIST_Column}
+                        data={list}
+                        rows={true}
+                        paginater={true}
+                        filter={true}
+                    />
                 }
             </section>
         </div>

@@ -469,14 +469,14 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                         onClick={() => {
                           handleItemClick(item)
                         }}>
-                        {item.name} - {item.quantity}
+                        {item.itemName} - {isSales && item.quantity}
                       </p>
                     </div>
                   )
                 })
               }
               {Items?.filter((item: any) => {
-                return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
+                return inputItem === "" ? true : item.itemName.toLowerCase().includes(inputItem.toLowerCase())
               }).length === 0 && (
                   <div className="">
                     <p className="px-3 py-1 text-center">

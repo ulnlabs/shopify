@@ -15,7 +15,7 @@ const page = () => {
 
   const [item, setItem] = useState<any>([]);
 
-  const [inputItem, setInputItem] = useState<any>("");
+  const [inputItem, setInputItem] = useState<String>("");
   const [product, setProduct] = useState<any>([])
   useEffect(() => {
     const fetchItem = async () => {
@@ -27,6 +27,8 @@ const page = () => {
           }
         },);
       setItem(response.data)
+      console.log(response.data);
+      
 
     }
     fetchItem();
@@ -35,7 +37,9 @@ const page = () => {
 
   useEffect(() => {
     setProduct(item?.filter((item: any) => {
-      return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
+      console.log("open");
+      
+      return inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase())
     }
     ))
   }, [inputItem])

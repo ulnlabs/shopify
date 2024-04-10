@@ -4,8 +4,14 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 import { FormState } from "@/app/components/sales-pur/global";
+import axios from "axios";
 
 const page = () => {
+  const [product, setProduct] = useState<any>("")
+
+  const getProduct = () => {
+    const response = axios
+  }
 
 
   const [purchaseData, setPurchaseData] = useState<FormState>({
@@ -25,6 +31,8 @@ const page = () => {
     billPaymentType: "",
     billAmount: 0,
   })
+
+
 
   const customerName = [
     {
@@ -103,7 +111,7 @@ const page = () => {
   ]
 
 
-  const [product, setProduct] = useState<any>("")
+
   const [itemList, setItemList] = useState<any>([]);
   useEffect(() => {
     setProduct(Items.filter((item: any) => {

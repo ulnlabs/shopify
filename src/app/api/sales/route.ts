@@ -5,6 +5,7 @@ import { items } from "@/app/mongoose/models/item";
 import { connectDB } from "@/app/mongoose/db";
 import Sales from "@/app/mongoose/models/Sales";
 import { format } from "date-fns";
+import Item from "@/app/mongoose/models/Items";
 
 
 /* export const PUT = async (req: Request) => {
@@ -42,7 +43,6 @@ export const GET = async (req: Request) => {
 
     }
     try {
-
         await connectDB();
     }
     catch (err) {
@@ -54,7 +54,7 @@ export const GET = async (req: Request) => {
 
     try {
         if (header === "getItems") {
-            const data = await items.find({});
+            const data = await Item.find({});
             return NextResponse.json(data);
         }
         else if (header === "getSales") {
