@@ -12,6 +12,12 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import {
+  Command,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,12 +35,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  
+
 } from "@/components/ui/table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  data: TData[] | any;
   column?: boolean;
   filter?: boolean;
   rows?: boolean;
@@ -81,19 +87,38 @@ export function DataTable<TData, TValue>({
     },
   });
   /* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
+
+  const [isBrandOpen, setIsBrandOpen] = useState<boolean>(false);
+  const [selectedBrand, setSelectedBrand] = useState<string>("brand");
   return (
     <>
       <div className="flex items-center py-4">
         {veiw.filter && (
           <Input
             placeholder="Filter ItemName..."
-            value={(table.getColumn("itemName" )?.getFilterValue() as string) ?? ""}
+            value={(table.getColumn("itemName")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("itemName")?.setFilterValue(event.target.value)
+
             }
             className="max-w-sm"
           />
         )}
+        <div>
+          <Command>
+            <input placeholder="Type a command or search..." value={selectedBrand} onClick={() => setIsBrandOpen(!isBrandOpen)} />
+            {isBrandOpen &&
+              <CommandList>
+                {data!.map((item: any, index: any) => (
+                  <CommandItem key={index} value={item.brand} onSelect={() => {
+                    setSelectedBrand(item.brand);
+                    setIsBrandOpen(!isBrandOpen);
+                    table.setColumnFilters([{ id: "brand", value: item.brand }])
+                  }}>{item.brand}</CommandItem>
+                ))}
+              </CommandList>}
+          </Command>
+        </div>
         {veiw.column && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -135,9 +160,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
