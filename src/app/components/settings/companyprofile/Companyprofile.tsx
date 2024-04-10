@@ -1,13 +1,40 @@
 "use client";
-import React, { FormEvent, useContext,useState,useEffect } from "react";
+import React, { FormEvent, useContext, useState, useEffect } from "react";
 import Data from "@/app/components/settings/settingsData"
-
-
-
-
-
+interface companydata {
+  companyName: String,
+  mobile?: Number,
+  address: String,
+  state: String,
+  postalcode: String,
+  city: String,
+  country: String,
+  panNo: String,
+  bankdetails: String,
+  vatNo: String,
+  gstNo: String,
+  email: String,
+  logo:String
+}
 function Companyprofile() {
-  
+
+
+  const [formdata, setformdata] = useState<companydata>({
+    companyName: '',
+    address: '',
+    state: '',
+    postalcode: '',
+    city: '',
+    country: '',
+    panNo: '',
+    bankdetails: '',
+    vatNo: '',
+    gstNo: '',
+    email: '',
+    logo:''
+  })
+  const [edit, setEdit] = useState(false)
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -21,108 +48,138 @@ function Companyprofile() {
       reader.readAsDataURL(file);
     }
   }
-  
+
+  useEffect(() => {
+    console.log(formdata);
+  }, [formdata])
+
+  useEffect(() => {
+    let handler = async () => {
+      await fetch("/api/companyDetail", {
+        method: "PUT"
+      })
+        .then(data => {
+          if (data.ok) data.json();
+          return {}
+        }).then(data => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+    handler();
+  }, [])
+
   return (
-    <>
-      <div className="">
-        <form action="" className='  grid  grid-col-1 lg:grid-cols-2 gap-y-3  p-10'>
+    <div className=" flex justify-center relative py-4 ">
+      <div className=" border w-[97%] rounded-md">
+        <div className="flex justify-between p-4 ">
+          <div className=""></div>
+          <div className="">
+
+            <button type="button" onClick={() => {
+              setEdit(!edit)
+            }} className="py-1 border rounded-md px-5 text-lg font-medium text-white bg-blue-500 ">Edit</button>
+          </div>
+        </div>
+        <form action="" className='  grid  grid-col-1 lg:grid-cols-2 gap-y-3  pr-10' >
           <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-5  ">
             <label htmlFor="companyName" className='mr-2 md:col-span-5 col-span-12 '>
               Company Name <span className=' text-red-600'> *</span>
             </label>
-            <input type="text" id="companyName" name="companyName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, companyName: e.target.value })} type="text" autoFocus id="companyName" name="companyName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="mobile" className='mr-2 md:col-span-5 col-span-12 '>
               Mobile  <span className=' text-red-600'> *</span>
             </label>
-            <input type="text" name="mobile" id="mobile" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, mobile: e.target.value })} type="text" name="mobile" id="mobile" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="email" className='mr-2 md:col-span-5 col-span-12 '>
               Email  <span className=' text-red-600'> *</span>
             </label>
-            <input type="text" name="email" id="email" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, email: e.target.value })} type="text" name="email" id="email" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="gstNo" className='mr-2 md:col-span-5 col-span-12 '>
               GST Number  <span className=' text-red-600'> *</span>
             </label>
-            <input type="text" name="gstNo" id="gstNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, gstNo: e.target.value })} type="text" name="gstNo" id="gstNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="vatNo" className='mr-2 md:col-span-5 col-span-12 '>
               VAT Number  <span className=' text-red-600'> *</span>
             </label>
-            <input type="text" name="vatNo" id="vatNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, vatNo: e.target.value })} type="text" name="vatNo" id="vatNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="bankdetails" className='mr-2 md:col-span-5 col-span-12 '>
               Bank Details  <span className=' text-red-600'> *</span>
             </label>
-            <input type="text" name="bankdetails" id="bankdetails" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, bankdetails: e.target.value })} type="text" name="bankdetails" id="bankdetails" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="panNo" className='mr-2 md:col-span-5 col-span-12 '>PAN Number
               <span className=' text-red-600'> *</span>
             </label>
-            <input type="text" name="panNo" id="panNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, panNo: e.target.value })} type="text" name="panNo" id="panNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="country" className='mr-2 md:col-span-5 col-span-12 '>
               Country <span className=' text-red-600'> *</span>
             </label>
-            <select name="country" id="state" className=' border rounded-md h-8 md:col-span-6 col-span-12'>
-           
+            <select style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, country: e.target.value })} name="country" id="state" className=' border rounded-md h-8 md:col-span-6 col-span-12' disabled={!edit} >
+            <option value={""} >
+              </option>
               <option value={"India"} >
                 India
-
               </option>
-            
-            
-           </select>
+            </select>
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
+          <div style={edit?{}:{cursor:"not-allowed"}} className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="city" className='mr-2 md:col-span-5 col-span-12 '>
               City <span className=' text-red-600'> *</span>
             </label>
-            <select name="city" id="state" className=' border rounded-md h-8 md:col-span-6 col-span-12'>
-            {Data.map((City,index)=>(
-              <option  key={index} value={City.city}>{City.city}</option>
-            ))}
-            
-           </select>
+            <select style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, city: e.target.value })} name="city" disabled={!edit} id="state" className=' border rounded-md h-8 md:col-span-6 col-span-12'>
+              {Data.map((City, index) => (
+             
+                <option key={index} value={City.city}>{City.city}</option>
+              ))}
+
+            </select>
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="postalcode" className='mr-2 md:col-span-5 col-span-12 '>
               Postal Code <span className=' text-red-600'> *</span>
             </label>
-            <input type="text" name="postalcode" id="postalcode" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, postalcode: e.target.value })} type="text" name="postalcode" id="postalcode" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="state" className='mr-2 md:col-span-5 col-span-12 '>
               State <span className=' text-red-600'> *</span>
             </label>
-           <select name="state" id="state" className=' border rounded-md h-8 md:col-span-6 col-span-12'>
-            {Data.map((State,index)=>(
-              <option key={index} value={State.state}>{State.state}</option>
-            ))}
-            
-           </select>
+            <select style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, state: e.target.value })} name="state" disabled={!edit} id="state" className=' border rounded-md h-8 md:col-span-6 col-span-12' >
+              {Data.map((State, index) => (
+                <option key={index} value={State.state}>{State.state}</option>
+              ))}
+
+            </select>
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="address" className='mr-2 md:col-span-5 col-span-12 '>
               Address <span className=' text-red-600'> *</span>
             </label>
-            <textarea cols={10} rows={10} name="address" id="address" className=' border rounded-md  md:col-span-6 h-[60px] col-span-12 ' />
+            <textarea style={edit?{}:{cursor:"not-allowed"}} onChange={(e: any) => setformdata({ ...formdata, address: e.target.value })} disabled={!edit} cols={10} rows={10} name="address" id="address" className=' border rounded-md  md:col-span-6 h-[60px] col-span-12  ' />
 
           </div>
           <div className="">
@@ -131,37 +188,37 @@ function Companyprofile() {
               <label htmlFor="logo" className='mr-2 md:col-span-5 col-span-12 '>
                 Site logo <span className=' text-red-600'> *</span>
               </label>
-              <input type="file" id="logo" onChange={handleFileChange} accept=".png,.jpeg" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+              <input style={edit?{}:{cursor:"not-allowed"}} onChange={handleFileChange} disabled={!edit} type="file" id="logo"  accept=".png,.jpeg" className=' border rounded-md h-8 md:col-span-6 col-span-12 border-none  ' />
 
             </div>
             <div className="md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5">
               <div className="md:col-span-5 col-span-12 "></div>
-            
-              <div className=" border rounded-md h-[100px] col-span-4  ">
-              {selectedImage&&
-              <img src={selectedImage} alt="company Logo" />
-              }
+
+              <div  style={edit?{}:{cursor:"not-allowed"}} className=" border rounded-md h-[100px] md:col-span-4  ">
+                {selectedImage &&
+                  <img style={edit?{}:{cursor:"not-allowed"}} className="h-[100%] w-[100%]" src={selectedImage} alt="company Logo" />
+                }
               </div>
             </div>
           </div>
+          {
+            edit && <div className=" mt-10 flex justify-center gap-4 lg:absolute lg:-bottom-10 lg:right-[50%] lg:translate-x-[50%] ">
+              <input
+                type="submit"
+                className=" w-[140px] h-[40px]  bg-green-400 font-bold text-white  rounded-md cursor-pointer  "
+                value="Update"
+              />
+              <input
+                type="reset"
+                className="  bg-red-400   w-[140px] h-[40px]  rounded-md   font-bold text-white cursor-pointer"
+                value="Cancel"
+              />
+            </div>
+          }
+
         </form>
-        <div className=" flex justify-center gap-7 h-[100px] ">
-
-          <input
-            type="submit"
-            className="mt-10 w-[140px] h-[40px]  bg-green-400 font-bold text-white  rounded-md cursor-pointer  "
-            value="Update"
-          />
-
-          <input
-
-            type="reset"
-            className="mt-10  bg-red-400   w-[140px] h-[40px]  rounded-md   font-bold text-white cursor-pointer"
-            value="Cancel"
-          />
-        </div>
       </div>
-    </>
+    </div>
   );
 }
 
