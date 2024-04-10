@@ -18,6 +18,10 @@ export const POST = async (req: Request) => {
         console.log("add", addItem);
         console.log("entered");
 
+        const getData = await Item.find({});
+
+        console.log(getData);
+        
 
         return NextResponse.json(addItem)
     }

@@ -156,10 +156,39 @@ export default function page() {
             alert("Please Fill All The Filed");
             return
         }
-        const data = await axios.post("/api/items", {data:formDetails});
+        const data = await axios.post("/api/items", { data: formDetails });
         console.log(data);
 
         alert("Item Added")
+        const form =  event.target as any ;
+        form.reset();
+        setFormDetails({
+            itemCode: "",
+            itemName: "",
+            brand: "",
+            category: "",
+            unit: "",
+            expdate: new Date,
+            barcode: "",
+            description: "",
+            price: 0,
+            tax: "",
+            purchaseprice: 0,
+            taxtype: "",
+            profitmargin: 0,
+            saleprice: 0,
+            discountType: "",
+            discount: 0,
+            currentstock: 0,
+        })
+
+        setBrand("");
+        setCategory("");
+        setTaxValue("");
+        setTaxType("");
+        setDiscountType("");
+        setUnit("");
+
         return
     }
     const { data: taxData, error: taxError } = useSWR(
@@ -170,8 +199,9 @@ export default function page() {
             const taxes = taxValue ? taxValue.match(/\d+/g)!.map(Number)[0] : 0
             const taxValues = (taxType.toLowerCase() === "exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
             const price = (formDetails?.price + taxValues);
-            const profit = Math.round(((formDetails?.profitmargin * formDetails.price) / 100));
+            const profit = ((formDetails?.profitmargin * formDetails.price) / 100);
             const salePrice = profit ? profit + formDetails.price : formDetails.price;
+
             setFormDetails({
                 ...formDetails,
                 purchaseprice: price,
@@ -181,9 +211,13 @@ export default function page() {
             })
         }
         onChangeEvent();
-    }, [taxValue, taxType, formDetails.price, formDetails.profitmargin]);
+    }, [taxValue, taxType, formDetails.price]);
 
-
+    /*   useEffect(()=>{
+          
+      },[formDetails.saleprice,formDetails.profitmargin,formDetails.price])
+  
+   */
 
     return (
         <div className='w-full py-2 px-4'>
@@ -294,7 +328,17 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="profitMargin">Profit Margin(%)<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Profit Margin(%)' value={formDetails.profitmargin || ""} onChange={(e: any) => setFormDetails({ ...formDetails, profitmargin: e.target.value })} id='profitMargin' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Profit Margin(%)' value={formDetails.profitmargin || ""} onBlur={((e: any) => {
+
+                                    const profit = Math.round(((formDetails?.profitmargin * formDetails.price) / 100));
+                                    const salePrice = profit ? profit + formDetails.price : formDetails.price;
+
+                                    setFormDetails({
+                                        ...formDetails,
+                                        saleprice: salePrice
+                                    })
+
+                                })} onChange={(e: any) => setFormDetails({ ...formDetails, profitmargin: e.target.value })} id='profitMargin' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="salesPrice">Sales Price<span className='text-red-400'>*</span></label>
@@ -305,7 +349,7 @@ export default function page() {
 
                                     })}
                                     onBlur={(e: any) => {
-                                        const profit = (((e.target.value - formDetails.purchaseprice) * 100) / formDetails.purchaseprice);
+                                        const profit = Math.round((((e.target.value - formDetails.purchaseprice) * 100) / formDetails.purchaseprice) * 10) / 10;
                                         console.log(profit);
                                         setFormDetails({
                                             ...formDetails,
