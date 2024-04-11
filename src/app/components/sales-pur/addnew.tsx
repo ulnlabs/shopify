@@ -75,7 +75,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         <button onClick={() => {
           const check = itemList.find((item: any) => item.name === row.original.name)
           const update = Items.find((item: any) => item.name === row.original.name)
-          if (check.quantity < update.quantity) {
+          if (check.quantity < update.quantity || !isSales) {
             const updateTax = (row.original.taxAmount / row.original.quantity);
             console.log(row.original.taxAmount);
             console.log(row.original.quantity);
@@ -261,14 +261,14 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     let exist = itemList.find((item: any) => item.itemName === value.itemName)
     console.log(value);
     setItemList({ ...itemList, value })
-    if (value.quantity > 0) {
+    if (value.quantity > 0 || !value.quantity) {
       if (!exist) {
-        const newItem = { ...value/* , quantity: 1  */ }
+        const newItem = { ...value, quantity: 1 }
         setItemList([...itemList, newItem])
       }
       else {
         const updatedQuantity = exist.quantity + 1
-        if ((exist.quantity + 1) <= value.quantity) {
+        if ((exist.quantity + 1) <= value.quantity || !isSales) {
           console.log(value.discount);
           const updatedItem = {
             ...exist,
@@ -279,7 +279,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           };
           const updatedList = itemList.map((item: any) => item.itemName === value.itemName ? updatedItem : item);
           setItemList(updatedList);
-        } else {
+        } else if (!isSales) {
           console.log("nothing");
         }
       }
@@ -450,6 +450,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           <div className="flex items-center border py-1 bg-primary-gray px-2 rounded-lg">
             <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
             <Input placeholder="Item Name / Barcode / Item Number"
+            value={inputItem}
               onClick={() => {
 
               }}
