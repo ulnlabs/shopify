@@ -2,16 +2,11 @@
 import NewSales from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-
+import useSWR from 'swr'
 import { FormState } from "@/app/components/sales-pur/global";
 import axios from "axios";
 
 const page = () => {
-  const [product, setProduct] = useState<any>("")
-
-  const getProduct = () => {
-    const response = axios
-  }
 
 
   const [purchaseData, setPurchaseData] = useState<FormState>({
@@ -32,8 +27,24 @@ const page = () => {
     billAmount: 0,
   })
 
+  const getItems = async () => {
+    const res = await axios.get("/api/purchase");
+    const data = await res.data;
+    console.log(data);
 
+    return data;
+  }
+  const [inputItem, setInputItem] = useState<any>("");
 
+  const { data: Items, error: itemError } = useSWR("/api/purchase", getItems)
+  console.log(Items);
+  useEffect(() => {
+    setProduct(Items ? Items.filter((item: any) => {
+      return inputItem === "" ? true : item.itemName.toLowerCase().includes(inputItem.toLowerCase())
+    })
+      : [])
+  }, [inputItem])
+  const [product, setProduct] = useState<any>();
   const customerName = [
     {
       value: "Fire10",
@@ -63,62 +74,56 @@ const page = () => {
 
   }, [purchaseData.customerName])
 
-  const [inputItem, setInputItem] = useState<any>("");
 
-  const Items = [
-    {
-
-      name: "Deepath",
-      quantity: 10,
-      price: 200,
-      discount: 0,
-      tax_type: "VAT 5%",
-      tax: 10,
-      tax_category: "Exclusive",
-      dis_type: "Fixed",
-      taxPer: 5,
-      unitcost: 200,
-      subtotal: 210,
-    },
-    {
-
-      name: "fire10",
-      quantity: 5,
-      price: 200,
-      discount: 0,
-      tax_type: "VAT 5%",
-      tax: 10,
-      taxPer: 5,
-      tax_category: "Exclusive",
-      dis_type: "Fixed",
-      unitcost: 200,
-      subtotal: 210,
-    },
-    {
-
-      name: "dhilip",
-      quantity: 2,
-      price: 200,
-      discount: 0,
-      tax_type: "VAT 5%",
-      dis_type: "Fixed",
-      tax: 10,
-      taxPer: 5,
-      unitcost: 200,
-      subtotal: 210,
-      tax_category: "Exclusive",
-    }
-  ]
-
-
+  /*  const Items = [
+     {
+ 
+       name: "Deepath",
+       quantity: 10,
+       price: 200,
+       discount: 0,
+       tax_type: "VAT 5%",
+       tax: 10,
+       tax_category: "Exclusive",
+       dis_type: "Fixed",
+       taxPer: 5,
+       unitcost: 200,
+       subtotal: 210,
+     },
+     {
+ 
+       name: "fire10",
+       quantity: 5,
+       price: 200,
+       discount: 0,
+       tax_type: "VAT 5%",
+       tax: 10,
+       taxPer: 5,
+       tax_category: "Exclusive",
+       dis_type: "Fixed",
+       unitcost: 200,
+       subtotal: 210,
+     },
+     {
+ 
+       name: "dhilip",
+       quantity: 2,
+       price: 200,
+       discount: 0,
+       tax_type: "VAT 5%",
+       dis_type: "Fixed",
+       tax: 10,
+       taxPer: 5,
+       unitcost: 200,
+       subtotal: 210,
+       tax_category: "Exclusive",
+     }
+   ]
+ 
+  */
 
   const [itemList, setItemList] = useState<any>([]);
-  useEffect(() => {
-    setProduct(Items.filter((item: any) => {
-      return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
-    })
-    )
-  }, [inputItem])
+
 
 
   const handleClick = () => {

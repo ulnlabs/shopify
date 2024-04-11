@@ -30,14 +30,15 @@ const sample = [
 ]
 const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList }: any) => {
 
+  console.log(itemList);
 
   const [modify, setModify] = useState<string>("")
   const i_NAME: any = {
-    accessorKey: "name",
-    header: "Item Name",
+    accessorKey: "itemName",
+    header: "Item Name"/* ,
     cell: ({ row }: any) => (
       <p>{row.original.name}</p>
-    )
+    ) */
   };
   const i_QUANTITY: any = {
     accessorKey: "quantity",
@@ -119,7 +120,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     accessorKey: "taxAmount",
     header: "TAX Amount",
   };
-  console.log(itemList);
+
   const [isPopUp, setIsPopUp] = useState<boolean>(false);
   const i_TAX: any = {
     accessorKey: "tax",
@@ -257,11 +258,12 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
 
   const handleItemClick = (value: any) => {
-    let exist = itemList.find((item: any) => item.name === value.name)
+    let exist = itemList.find((item: any) => item.itemName === value.itemName)
     console.log(value);
+    setItemList({ ...itemList, value })
     if (value.quantity > 0) {
       if (!exist) {
-        const newItem = { ...value, quantity: 1 }
+        const newItem = { ...value/* , quantity: 1  */ }
         setItemList([...itemList, newItem])
       }
       else {
@@ -275,7 +277,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             taxAmount: value.taxAmount * updatedQuantity,
             subtotal: value.subtotal * updatedQuantity
           };
-          const updatedList = itemList.map((item: any) => item.name === value.name ? updatedItem : item);
+          const updatedList = itemList.map((item: any) => item.itemName === value.itemName ? updatedItem : item);
           setItemList(updatedList);
         } else {
           console.log("nothing");
@@ -288,7 +290,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
   }
 
-
+  console.log(itemList);
 
   const taxex = [
     {
@@ -469,7 +471,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                         onClick={() => {
                           handleItemClick(item)
                         }}>
-                        {item.itemName} - {isSales && item.quantity}
+                        {item.itemName}  {isSales && `- ${item.quantity}`}
                       </p>
                     </div>
                   )
