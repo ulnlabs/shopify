@@ -10,9 +10,9 @@ export const PUT = async (req: Request) => {
 
 export const POST = async (req: Request) => {
     await connectDB()
-    const formdata = await req.formData()
-    const name = formdata.get("name")
-    const description = formdata.get("description")
+    const { name, description } = await req.json();
     const category = await Category.create({ name, description })
+    console.log(category);
+    
     return NextResponse.json(category, { status: 200 })
 }

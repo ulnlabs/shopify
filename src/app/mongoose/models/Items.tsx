@@ -3,7 +3,8 @@ import mongoose, { Schema, Document } from 'mongoose';
 const ShopifyItemSchema: Schema = new Schema({
   itemCode: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   name: {
     type: String,
@@ -20,10 +21,10 @@ const ShopifyItemSchema: Schema = new Schema({
     type: String,
     required: true
   },
-  quantity: {
+  /* minQty: {
     type: Number,
     required: true
-  },
+  }, */
   expireDate: {
     type: Date
   },
@@ -31,20 +32,21 @@ const ShopifyItemSchema: Schema = new Schema({
     type: String
   },
   description: {
-    type: String
+    type: String,
+    unique: true
   },
   price: {
     type: Number,
     required: true
   },
   tax: {
-    type: Number,
+    type: String,
     required: true
   },
-  purchasePrice: {
+ /*  purchasePrice: {
     type: Number,
     required: true
-  },
+  }, */
   taxType: {
     type: String
   },
@@ -52,14 +54,14 @@ const ShopifyItemSchema: Schema = new Schema({
     type: Number,
     required: true
   },
-  salesPrice: {
+/*   salesPrice: {
     type: Number,
     required: true
   },
   finalPrice: {
     type: Number,
     required: true
-  },
+  }, */
   discountType: {
     type: String,
     required: true
@@ -68,10 +70,10 @@ const ShopifyItemSchema: Schema = new Schema({
     type: Number,
     required: true
   },
-  currentOpeningStock: {
-    type: Number,
-    required: true
-  },
+  /*  currentOpeningStock: {
+     type: Number,
+     required: true
+   }, */
 });
 const Item = mongoose.models.ShopifyItem || mongoose.model('ShopifyItem', ShopifyItemSchema)
 
