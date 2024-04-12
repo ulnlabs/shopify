@@ -109,3 +109,5 @@ const siteData= new mongoose.Schema({
     }
 
 })
+const siteDetails=mongoose.models.siteDatas || mongoose.model("siteDatas",siteData)
+export default siteDetails;
