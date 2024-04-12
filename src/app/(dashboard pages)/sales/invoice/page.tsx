@@ -13,9 +13,11 @@ function page() {
         vatNumber : "1234567890",
     }
     const invoiceId = "SL077687";
+    const discountAll = 25;
+    const otherCharges = 500;
   return (
     <div className='w-[100%] h-fit'>
-     <Invoice date={date} customer={customer} invoiceId={invoiceId} />
+     <Invoice date={date} customer={customer} invoiceId={invoiceId} discountAll={discountAll} otherCharges={otherCharges} />
     </div>
   )
 }

@@ -41,6 +41,11 @@ interface DataTableProps<TData, TValue> {
   rows?: boolean;
   paginater?: boolean;
   final?: boolean;
+  totalPrice?: number;
+  totalQuantity?: number;
+  totalTaxAmount?: number;
+  totalDisAmount?: number;
+  totalAmount?: number;
 }
 import { useContext } from "react";
 import { ContextData } from "../../../../contextapi";
@@ -59,6 +64,11 @@ export default function DataTable<TData, TValue>({
   rows,
   paginater,
   final,
+  totalPrice,
+  totalQuantity,
+  totalTaxAmount,
+  totalDisAmount,
+  totalAmount,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const { selectedRow, setSelectedRow } = useContext(ContextData);
@@ -130,7 +140,8 @@ export default function DataTable<TData, TValue>({
     csvDownload(dataToConvert);
   };
 
-const totalprice=data.reduce((total,Item)=>total+Item.unit_price,0)
+
+
 
 
   
@@ -260,14 +271,14 @@ const totalprice=data.reduce((total,Item)=>total+Item.unit_price,0)
                     <TableCell
                       colSpan={1}
                       rowSpan={1}
-                      className=" text-center border"
-                    >{totalprice}
+                      className=" text-center"
+                    >{totalPrice}
                     </TableCell>
                     <TableCell
                       colSpan={1}
                       rowSpan={1}
                       className=" text-center"
-                    >
+                    >{totalQuantity}
                     </TableCell>
                     <TableCell
                       colSpan={1}
@@ -283,7 +294,7 @@ const totalprice=data.reduce((total,Item)=>total+Item.unit_price,0)
                       colSpan={1}
                       rowSpan={1}
                       className=" text-center"
-                    >
+                    >{totalTaxAmount}
                     </TableCell>
                     <TableCell
                       colSpan={1}
@@ -292,6 +303,12 @@ const totalprice=data.reduce((total,Item)=>total+Item.unit_price,0)
                     >
                     </TableCell>
                     <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=" text-center"
+                    >{totalDisAmount}
+                    </TableCell>
+                     <TableCell
                       colSpan={1}
                       rowSpan={1}
                       className=" text-center"
@@ -301,7 +318,7 @@ const totalprice=data.reduce((total,Item)=>total+Item.unit_price,0)
                       colSpan={1}
                       rowSpan={1}
                       className=" text-center"
-                    >
+                    >{totalAmount}
                     </TableCell>
                   </TableRow>
               )
@@ -338,4 +355,5 @@ const totalprice=data.reduce((total,Item)=>total+Item.unit_price,0)
     </>
   );
 }
+
 /* at all you have your own data table to use your data table call this component like this on your code exam : page.tsx    <DataTable columns={c_columns} data={customerData} /> the c_colums is your column replace it with your and data also  for reference how i share my data see dashboard/customers/list/page.tsx ,i hope u got it  */
