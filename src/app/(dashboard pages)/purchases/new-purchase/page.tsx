@@ -28,7 +28,7 @@ const page = () => {
   })
 
   const getItems = async () => {
-    const res = await axios.get("/api/purchase");
+    const res = await axios.put("/api/purchase");
     const data = await res.data;
     console.log(data);
 
@@ -36,7 +36,21 @@ const page = () => {
   }
   const [inputItem, setInputItem] = useState<any>("");
 
-  const { data: Items, error: itemError } = useSWR("/api/purchase", getItems)
+  const { data: ItemData, error: itemError } = useSWR("/api/purchase", getItems)
+  const Items = ItemData ? ItemData.map((item: any) => {
+    const tax = item.tax.match(/\d+/g).map(Number)
+    const price = item.price + (item.profitMargin * item.price) / 100
+
+    const taxAmount = Math.floor(((tax / 100) * price) * 10) / 10
+    const discount = Math.floor(((item.discount / 100) * price) * 10) / 10
+    console.log(price, taxAmount, discount);
+
+
+    const subTotal = Math.floor((taxAmount + price - discount) * 10) / 10
+
+
+    return { ...item, taxAmount: taxAmount, price: price, subtotal: subTotal , discount: discount}
+  }) : []
   console.log(Items);
   useEffect(() => {
     setProduct(Items ? Items.filter((item: any) => {
@@ -77,7 +91,7 @@ const page = () => {
 
   /*  const Items = [
      {
- 
+   
        name: "Deepath",
        quantity: 10,
        price: 200,
@@ -91,7 +105,7 @@ const page = () => {
        subtotal: 210,
      },
      {
- 
+   
        name: "fire10",
        quantity: 5,
        price: 200,
@@ -105,7 +119,7 @@ const page = () => {
        subtotal: 210,
      },
      {
- 
+   
        name: "dhilip",
        quantity: 2,
        price: 200,
@@ -119,7 +133,7 @@ const page = () => {
        tax_category: "Exclusive",
      }
    ]
- 
+   
   */
 
   const [itemList, setItemList] = useState<any>([]);

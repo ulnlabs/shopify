@@ -152,6 +152,8 @@ export default function page() {
 
     const addItemEvent = async (event: React.FormEvent) => {
         event.preventDefault();
+        console.log(formDetails.taxtype);
+        
         if (formDetails.itemCode === "" || formDetails.itemName === "" || formDetails.category === "" || formDetails.unit === "" || formDetails.price === 0 || formDetails.tax === "") {
             alert("Please Fill All The Filed");
             return

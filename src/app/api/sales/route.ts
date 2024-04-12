@@ -1,7 +1,6 @@
 
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
-import { items } from "@/app/mongoose/models/item";
 import { connectDB } from "@/app/mongoose/db";
 import Sales from "@/app/mongoose/models/Sales";
 import { format } from "date-fns";

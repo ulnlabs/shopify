@@ -47,8 +47,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       <span className="flex gap-1 items-center">
 
         <button onClick={() => {
-          const check = itemList.find((item: any) => item.name === row.original.name)
-          const update = Items.find((item: any) => item.name === row.original.name)
+          const check = itemList.find((item: any) => item.itemName === row.original.itemName)
+          const update = Items.find((item: any) => item.itemName === row.original.itemName)
           if (row.original.quantity > 1) {
             const updateTax = (row.original.taxAmount / row.original.quantity);
             console.log(row.original.quantity);
@@ -73,8 +73,10 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         </button>
         {row.original.quantity}
         <button onClick={() => {
-          const check = itemList.find((item: any) => item.name === row.original.name)
-          const update = Items.find((item: any) => item.name === row.original.name)
+          const check = itemList.find((item: any) => item.itemName === row.original.itemName)
+          console.log("check",check);
+          
+          const update = Items.find((item: any) => item.itemName === row.original.itemName)
           if (check.quantity < update.quantity || !isSales) {
             const updateTax = (row.original.taxAmount / row.original.quantity);
             console.log(row.original.taxAmount);

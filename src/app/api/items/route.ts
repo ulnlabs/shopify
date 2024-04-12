@@ -6,8 +6,9 @@ import { NextResponse } from "next/server";
 export const POST = async (req: Request) => {
     let data = await req.json();
     console.log(data.data);
-    const { itemCode, itemName, brand, category, unit, expdate, barcode, description, price, tax, taxType, profitmargin: profitMargin, discount, discountType } = data.data;
-
+    const { itemCode, itemName, brand, category, unit, expdate, barcode, description, price, tax,taxtype: taxType, profitmargin: profitMargin, discount, discountType } = data.data;
+    console.log(taxType);
+    
     await connectDB();
     console.log("entered");
     try {

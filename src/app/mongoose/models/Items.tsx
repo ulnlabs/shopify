@@ -6,7 +6,7 @@ const ShopifyItemSchema: Schema = new Schema({
     required: true,
     unique: true
   },
-  name: {
+  itemName: {
     type: String,
     required: true
   },
