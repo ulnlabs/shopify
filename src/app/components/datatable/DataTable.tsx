@@ -27,6 +27,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -39,12 +40,14 @@ interface DataTableProps<TData, TValue> {
   filter?: boolean;
   rows?: boolean;
   paginater?: boolean;
+  final?: boolean;
 }
 import { useContext } from "react";
 import { ContextData } from "../../../../contextapi";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import { UserContext } from "@/UserContext";
+import { Item } from "@radix-ui/react-accordion";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -55,6 +58,7 @@ export default function DataTable<TData, TValue>({
   filter,
   rows,
   paginater,
+  final,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const { selectedRow, setSelectedRow } = useContext(ContextData);
@@ -125,6 +129,11 @@ export default function DataTable<TData, TValue>({
     };
     csvDownload(dataToConvert);
   };
+
+const totalprice=data.reduce((total,Item)=>total+Item.unit_price,0)
+
+
+  
 
   /* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
   return (
@@ -232,9 +241,73 @@ export default function DataTable<TData, TValue>({
                   className="h-24 text-center"
                 ></TableCell>
               </TableRow>
-            )}
+            )
+            
+           
+            }
+
           </TableBody>
-        </Table>
+          <TableFooter>
+                        {
+              final && (
+                <TableRow>
+                    <TableCell
+                      colSpan={2}
+                      rowSpan={1}
+                      className=" text-center text-base "
+                    >Total :
+                    </TableCell>
+                    <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=" text-center border"
+                    >{totalprice}
+                    </TableCell>
+                    <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=" text-center"
+                    >
+                    </TableCell>
+                    <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=" text-center"
+                    >
+                    </TableCell> <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=" text-center"
+                    >
+                    </TableCell> <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=" text-center"
+                    >
+                    </TableCell>
+                    <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=" text-center"
+                    >
+                    </TableCell>
+                    <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=" text-center"
+                    >
+                    </TableCell>
+                     <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=" text-center"
+                    >
+                    </TableCell>
+                  </TableRow>
+              )
+            }
+            </TableFooter>        
+            </Table>
       </div>
       {veiw.rows && (
         <div className="flex-1 text-sm text-muted-foreground">
