@@ -3,18 +3,19 @@ import Sales from '@/app/components/settings/sitelist/Sales'
 import Prefixes from '@/app/components/settings/sitelist/Prefixes'
 import { useState } from 'react'
 function Sitesettings() {
+    const [edit,setEdit]=useState<Boolean>(false)
     const [page, setpage] = useState("Site");
     const navigateoption = ["Site", "Sales", "Prefixes"];
     const [activeIndex, setActiveIndex] = useState(0); // State to track active navigation item index
     var renderpage;
     if (page === "Sales") {
-        renderpage = <Sales />;
+        renderpage = <Sales edit={edit} />;
     }
     else if (page === "Prefixes") {
-        renderpage = <Prefixes />;
+        renderpage = <Prefixes edit={edit} />;
     }
     else {
-        renderpage = <Site />;
+        renderpage = <Site edit={edit} />;
     }
     return (
         <>
@@ -31,24 +32,17 @@ function Sitesettings() {
                                     ))}
                                 </ul>
                             </nav>
+                            <div className="flex justify-between p-5">
+                                <div className=""></div>
+                                <div className="">
+
+                                <button onClick={()=>{setEdit(!edit)}} className='px-5 border rounded-md  font-medium '>Edit </button>
+                                </div>
+                            </div>
                         </div>
                         {renderpage}
                     </div>
-                    <div className=" flex justify-center gap-7 h-[100px] ">
-
-                        <input
-                            type="submit"
-                            className="mt-10 w-[140px] h-[40px]  bg-green-400 font-bold text-white  rounded-md cursor-pointer  "
-                            value="Update"
-                        />
-
-                        <input
-
-                            type="reset"
-                            className="mt-10  bg-red-400   w-[140px] h-[40px]  rounded-md   font-bold text-white cursor-pointer"
-                            value="Cancel"
-                        />
-                    </div>
+                   
                 </div>
                 <style jsx>{
                 `

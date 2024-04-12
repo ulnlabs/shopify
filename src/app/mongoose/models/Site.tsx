@@ -7,17 +7,7 @@ const siteData= new mongoose.Schema({
             type:String,
             require:true
         },
-        timeZone:{
-            type:String,
-            require:true
-
-        },
         dateFormat :{
-            type:String,
-            require:true
-            
-        } ,
-        timeFormat :{
             type:String,
             require:true
             
