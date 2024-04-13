@@ -12,18 +12,28 @@ export const PUT = async (req: Request) => {
         return new Response("Internal Server Error", { status: 500 })
 
     }
-    const res = await Item.find();
-  /*   const data = res.map((item: any) => {
-        const taxAmount = item.taxType && item.taxType.toLowerCase() === "exclusive" ? item.tax : item.taxType === "" ? item.tax : 0
-        console.log(taxAmount);
-        console.log("a", item.taxType);
 
+    try {
+        console.log("test");
 
-        return { ...item, taxAmount: taxAmount }
-    })
-    console.log(data[0].taxAmount);
-    console.log(data); */
-    return NextResponse.json(res);
+        const res = await Item.find();
+        /*   const data = res.map((item: any) => {
+              const taxAmount = item.taxType && item.taxType.toLowerCase() === "exclusive" ? item.tax : item.taxType === "" ? item.tax : 0
+              console.log(taxAmount);
+              console.log("a", item.taxType);
+      
+      
+              return { ...item, taxAmount: taxAmount }
+          })
+          console.log(data[0].taxAmount);
+          console.log(data); */
+        console.log(res);
+        return NextResponse.json(res);
 
+    }
+    catch (err) {
+        console.log(err);
+
+    }
 
 }
