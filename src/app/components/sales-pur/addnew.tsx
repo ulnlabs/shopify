@@ -242,7 +242,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         billOverallDis: newDiscount,
         billTotal: data.billSubtotal + newOtherCharge - newDiscount,
       })
-
     }
     updateOnChange();
   }, [data.billCharges, data.billDiscount, data.billDiscountType, data.billTaxType])

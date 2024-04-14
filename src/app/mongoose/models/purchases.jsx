@@ -1,7 +1,6 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 
-
-const SalesSchema = new Schema({
+const purchaseSchema = new Schema({
     c_id: {
         type: String,
         required: true
@@ -14,15 +13,15 @@ const SalesSchema = new Schema({
         type: Date,
         required: true
     },
-    salesCode : {
-        type:String,
-        required:true
+    purchaseCode: {
+        type: String,
+        required: true
     },
     items: [{
         itemCode: {
             type: String,
             required: true
-          },
+        },
         itemName: {
             type: String,
             required: true
@@ -42,32 +41,32 @@ const SalesSchema = new Schema({
         discountType: {
             type: String,
             required: true
-          },
+        },
         tax: {
             type: String,
             required: true
         },
         taxType: {
             type: String,
-            required:true
-          },
+            required: true
+        },
     }],
     note: {
         type: String,
     },
-    otherCharges:{
-        type:Number,
+    otherCharges: {
+        type: Number,
 
     },
-    taxType:{
-      type:String,  
+    taxType: {
+        type: String,
     },
-    discount:{
-        type:Number,
-        
+    discount: {
+        type: Number,
+
     },
-    discountType:{
-      type:String  
+    discountType: {
+        type: String
     },
     paymentType: {
         type: String,
@@ -77,6 +76,5 @@ const SalesSchema = new Schema({
     timestamps: true
 });
 
-const Sales = mongoose.models.Sales || mongoose.model('Sales', SalesSchema)
 
-export default Sales;
+export const Purchase = mongoose.models.Purchase || mongoose.model("purchase", purchaseSchema)

@@ -5,6 +5,7 @@ import { connectDB } from "@/app/mongoose/db";
 import Sales from "@/app/mongoose/models/Sales";
 import { format } from "date-fns";
 import Item from "@/app/mongoose/models/Items";
+import { items } from "@/app/mongoose/models/item";
 
 
 /* export const PUT = async (req: Request) => {
@@ -103,8 +104,8 @@ export async function POST(req: any) {
 
 
         const { customerName: c_name, customerId: c_id, billDate: date, billPaymentType: paymentType } = data.sales;
-        const item = data.items.map(({ name, tax, taxType, quantity, price, discount, itemCode, discountType }: any) => ({
-            name,
+        const item = data.items.map(({ itemName, tax, taxType, quantity, price, discount, itemCode, discountType }: any) => ({
+            itemName,
             tax,
             quantity,
             price,

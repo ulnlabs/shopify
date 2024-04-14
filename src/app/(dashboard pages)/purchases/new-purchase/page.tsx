@@ -35,21 +35,19 @@ const page = () => {
     return data;
   }
   const [inputItem, setInputItem] = useState<any>("");
-
   const { data: ItemData, error: itemError } = useSWR("/api/purchase", getItems)
   const Items = ItemData ? ItemData.map((item: any) => {
     const tax = item.tax.match(/\d+/g).map(Number)
-    const price = item.price + (item.profitMargin * item.price) / 100
 
-    const taxAmount = Math.floor(((tax / 100) * price) * 10) / 10
-    const discount = Math.floor(((item.discount / 100) * price) * 10) / 10
-    console.log(price, taxAmount, discount);
-
-
-    const subTotal = Math.floor((taxAmount + price - discount) * 10) / 10
+    const taxAmount = Math.floor(((tax / 100) * item.price) * 10) / 10
+    const discount = Math.floor(((item.discount / 100) * item.price) * 10) / 10
+    console.log(item.price, taxAmount, discount);
 
 
-    return { ...item, taxAmount: taxAmount, price: price, subtotal: subTotal , discount: discount}
+    const subTotal = Math.floor((taxAmount + item.price - discount) * 10) / 10
+
+
+    return { ...item, taxAmount: taxAmount, subtotal: subTotal, discount: discount }
   }) : []
   console.log(Items);
   useEffect(() => {
@@ -67,14 +65,17 @@ const page = () => {
     {
       value: "deepath",
       label: "Deepath",
+      id: 1
     },
     {
       value: "deepak",
       label: "Deepak",
+      id: 2
     },
     {
       value: "999",
       label: "Dhilip",
+      id: 3
     },
   ]
 
@@ -140,11 +141,20 @@ const page = () => {
 
 
 
-  const handleClick = () => {
+  const handleClick = async () => {
     console.log(purchaseData);
     console.log(itemList);
 
-
+    try {
+      const { data } = await axios.post("/api/purchase", {
+        purchase: purchaseData,
+        items: itemList
+      });
+      console.log(data);
+    }
+    catch (err) {
+      console.log(err);
+    }
   }
 
 

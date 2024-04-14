@@ -38,7 +38,6 @@ export default function page() {
         brand?: string
         category?: string
         unit?: string
-        /* minQty: number */
         expdate?: Date
         barcode?: string
         description?: string
@@ -58,7 +57,6 @@ export default function page() {
         brand: "",
         category: "",
         unit: "",
-        /* minQty: 1, */
         expdate: new Date,
         barcode: "",
         description: "",
