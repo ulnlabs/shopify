@@ -1,7 +1,7 @@
 "use client"
 import React, { use } from 'react'
 import { useState } from 'react';
-import Taxdata from "@/app/components/settings/taxlist/DT_Tax/Taxdata"
+import DataTable from "@/app/components/datatable/DataTable"
 import { RiEdit2Fill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
 import { BiCaretDown } from "react-icons/bi";
@@ -17,10 +17,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { ColumnDef } from "@tanstack/react-table";
 import Edit from "@/app/components/settings/popup/Edit"
-import { log } from 'console';
  interface initial{
   id:number|null,
   taxname:string,
@@ -162,36 +160,28 @@ function Taxlist() {
     setTax(Tax.filter((item) => item.id !== row.id));
 
   }
-
   const [popup, setpopup] = useState<boolean | null>(false)
   const [edit, setEdit] = useState<boolean | null>(false)
-
   const [initial,setinitial]=useState<initial>({id:null,taxname:"",taxpercentage:""})
   
-
-
-
   return (
-    <div className="relative">
+    <div className="relative ">
       <div className=" h-screen ">
         <AnimatePresence mode='wait'>
           {
             popup && <AddTax close={setpopup} dataset={user}  />||edit&&<Edit close={setpopup} setinitial={setinitial} />
           }
         </AnimatePresence>
-        <div className="mx-auto w-[95%] p-5 mt-3">
-          <div className=" border-t-2 border-violet-500 border-b-2   rounded-md">
+        <div className="mx-auto w-[98%] bg-slate-100  mt-3">
+          <div className=" border rounded-md p-2 ">
 
-            <div className="flex justify-between p-3">
-              <h1 className='text-sm tracking-[.2rem] font-medium'>Tax List</h1>
-              <button onClick={() => setpopup(true)} type='submit' className='p-2  font-bold rounded-md text-black border  hover:bg-violet-200 text-sm' > <span className='text-lg'>+</span>Add Tax</button>
+            <div className="flex justify-between items-center p-3">
+              <h1 className='text-md tracking-[.2rem] font-extralight'>Tax List :-</h1>
+              <button onClick={() => setpopup(true)} type='submit' className='px-1 font-normal rounded-md  text-black border  hover:bg-white text-sm' > <span className='text-lg'>+</span>Add Tax</button>
             </div>
 
             <div className=" ">
-              <Taxdata columns={c_columns} data={Tax} />
-
-
-
+              <DataTable columns={c_columns} data={Tax} />
             </div>
           </div>
         </div>

@@ -10,9 +10,12 @@ interface Siteinformation {
   siteLogo: String
 
 }
+const dateFormat=["DD/MM/YYYY","YYYY/MM/DD"]
 
 
-function Companyprofile({edit}:any) {
+
+
+function Companyprofile({ edit }: any) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   function handleFileChange(e: any) {
@@ -55,28 +58,32 @@ function Companyprofile({edit}:any) {
   return (
     <>
       <div className="">
-        <form action="" onSubmit={hanndleSubmit} className='  flex flex-col   lg:grid lg:grid-cols-2 gap-y-3  p-5'>
+        <form action="" onSubmit={hanndleSubmit} className=' relative  flex flex-col   lg:grid lg:grid-cols-2 gap-y-3  p-5'>
           <div className=" md:grid md:grid-cols-12 grid   p-2 md:text-end  md:gap-x-5  ">
             <label htmlFor="siteName" className='mr-2 md:col-span-5 col-span-12 '>
               Site Name <span className=' text-red-600'> *</span>
             </label>
-            <input disabled={!edit} onChange={handleData} type="text" id="siteName"  name="siteName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input disabled={!edit} onChange={handleData} type="text" id="siteName" name="siteName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
-          
+
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="dateFormat" className='mr-2 md:col-span-5 col-span-12 '>
               Date Format  <span className=' text-red-600'> *</span>
             </label>
-            <input disabled={!edit} onChange={handleData} type="text" name="dateFormat" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <select name="dateFormat" id="dateFormat" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleData}>
+              <option value=""></option>
+              <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+              <option value="YYYY/MM/DD">YYYY/MM/DD</option>
+            </select>
 
           </div>
-          
+
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="currency" className='mr-2 md:col-span-5 col-span-12 '>
               Currency  <span className=' text-red-600'> *</span>
             </label>
-            <input disabled={!edit} onChange={handleData} type="text" value={formData.currency} name="currency" className=' border pl-3 rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input disabled={!edit} onChange={handleData} type="text" value={formData.currency as any} name="currency" className=' border pl-3 rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
           <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
@@ -97,47 +104,50 @@ function Companyprofile({edit}:any) {
             <label htmlFor="language" className='mr-2 md:col-span-5 col-span-12 '>
               Language <span className=' text-red-600'> *</span>
             </label>
-            <input disabled={!edit} onChange={handleData} type="text" name="language" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+          
+            <select name="language" id="language" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleData}>
+              <option value=""></option>
+              <option value="English">English</option>
+             
+            </select>
 
           </div>
-          <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
-            <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
-              Site logo <span className=' text-red-600'> *</span>
-            </label>
-            <input disabled={!edit} type="file" onChange={handleFileChange} className='  rounded-md h-8 md:col-span-6 col-span-12 ' />
+          <div className="">
 
-          </div>
-          <div className="md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5">
-            <div className="md:col-span-5 col-span-12 "></div>
-            <div className=" border rounded-md h-[100px] col-span-4  ">
-              {selectedImage &&
-                <img src={selectedImage} className="w-full h-full" ></img>}
+            <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
+              <label htmlFor="logo" className='mr-2 md:col-span-5 col-span-12 '>
+                Site logo <span className=' text-red-600'> *</span>
+              </label>
+              <input style={edit ? {} : { cursor: "not-allowed" }} onChange={handleFileChange} disabled={!edit} type="file" id="logo" accept=".png,.jpeg" className=' border rounded-md h-8 md:col-span-6 col-span-12 border-none  ' />
 
             </div>
+            <div className="md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5">
+              <div className="md:col-span-5 col-span-12 "></div>
 
+              <div style={edit ? {} : { cursor: "not-allowed" }} className=" border rounded-md h-[100px] md:col-span-4  ">
+                {selectedImage &&
+                  <img style={edit ? {} : { cursor: "not-allowed" }} className="h-[100%] w-[100%]" src={selectedImage} alt="company Logo" />
+                }
+              </div>
+            </div>
           </div>
           {
-            edit && 
-            <div className=" md:flex justify-center gap-7 h-[100px]  lg:-bottom-10 lg:right-[50%] lg:translate-x-[50%] ">
-
-            <input 
-              type="submit"
-              className="mt-10 w-[140px] h-[40px]  bg-green-400 font-bold text-white  rounded-md cursor-pointer  "
-              value="Update"
-            />
-
-            <input
-
-              type="reset"
-              className="mt-10  bg-red-400   w-[140px] h-[40px]  rounded-md   font-bold text-white cursor-pointer"
-              value="Cancel"
-            />
-          </div>
+            edit && <div className=" mt-10 flex justify-center gap-4 lg:absolute lg:-bottom-[20%] lg:right-[50%] lg:translate-x-[50%] ">
+              <input
+                type="submit"
+                className=" w-[140px] h-[40px]  bg-green-400 font-bold text-white  rounded-md cursor-pointer  "
+                value="Update"
+              />
+              <input
+                type="reset"
+                className="  bg-red-400   w-[140px] h-[40px]  rounded-md   font-bold text-white cursor-pointer"
+                value="Cancel"
+              />
+            </div>
           }
-         
-
         </form>
       </div>
+
 
     </>
   );

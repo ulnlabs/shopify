@@ -80,7 +80,7 @@ function Companyprofile() {
 
             <button type="button" onClick={() => {
               setEdit(!edit)
-            }} className="py-1 border rounded-md px-5 text-lg font-medium text-white bg-blue-500 ">Edit</button>
+            }} className=" border rounded-md px-5 hover:bg-blue-300 transition-all duration-500 hover:scale-110 ease-in-out font-medium  ">Edit</button>
           </div>
         </div>
         <form action="" className='  grid  grid-col-1 lg:grid-cols-2 gap-y-3  pr-10' >
