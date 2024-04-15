@@ -19,23 +19,24 @@ export const PUT = async (req: Request) => {
     try {
         console.log("test");
 
-        const res = await items.find();
-        /*   const data = res.map((item: any) => {
-              const taxAmount = item.taxType && item.taxType.toLowerCase() === "exclusive" ? item.tax : item.taxType === "" ? item.tax : 0
-              console.log(taxAmount);
-              console.log("a", item.taxType);
-      
-      
-              return { ...item, taxAmount: taxAmount }
-          })
-          console.log(data[0].taxAmount);
-          console.log(data); */
+        const res = await items.find().lean();
+        const data = res.map((item: any) => {
+            const taxAmount = item.taxType && item.taxType.toLowerCase() === "exclusive" ? item.tax : item.taxType === "" ? item.tax : 0
+            console.log(taxAmount);
+            console.log("a", item.taxType);
+
+
+            return { ...item, taxAmount: taxAmount }
+        })
+        console.log(data[0].taxAmount);
+        console.log(data);
         console.log(res);
         return NextResponse.json(res);
 
     }
     catch (err) {
         console.log(err);
+        return new Response("Internal server Error", { status: 500 });
 
     }
 
@@ -51,13 +52,20 @@ export const POST = async (res: Request) => {
     try {
         await session.startTransaction();
 
-        const counter = (await Purchase.find()).length;
+        const temp = (await Purchase.find().sort({ 'createdAt': -1 }).limit(1));
+
+        const counter = temp[0]?.purchaseCode.match(/\d+/g)!.map(Number)[0];
         console.log(counter);
 
-        const purchaseCode = "pu" + String(counter + 1).padStart(4, "0")
-        console.log(purchaseCode);
 
-        const { customerName: c_name, customerId: c_id, billDate: date, billPaymentType: paymentType } = data.purchase;
+
+        const codeValue = counter > 0 ? String(counter + 1) : "1"
+
+        console.log("d", codeValue);
+
+        const purchaseCode = "pu" + codeValue.padStart(4, '0');
+
+        const { customerName: c_name, customerId: c_id, billDate: date, billPaymentType: paymentType, billStatus: status } = data.purchase;
 
         const item = data.items.map(({ itemName, tax, taxType, quantity, price, discount, itemCode, discountType }: any) => ({
             itemName,
@@ -76,7 +84,8 @@ export const POST = async (res: Request) => {
             date,
             purchaseCode,
             items: item,
-            paymentType
+            paymentType,
+            status
         }], { session });
         console.log("stored", newPurchase);
 

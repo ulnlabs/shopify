@@ -5,14 +5,15 @@ import { useState, useEffect } from "react";
 import useSWR from 'swr'
 import { FormState } from "@/app/components/sales-pur/global";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const page = () => {
 
-
+const {data:session} =useSession();
   const [purchaseData, setPurchaseData] = useState<FormState>({
     customerName: "",
     billDate: new Date,
-    billStatus: "",
+    billStatus: "Purchased",
     billQuantity: 0,
     billCharges: 0,
     billTaxType: "",
@@ -25,6 +26,9 @@ const page = () => {
     billTotal: 0,
     billPaymentType: "",
     billAmount: 0,
+    billUserName:"",
+    billUserEmail:session?.user?.email,
+    
   })
 
   const getItems = async () => {
@@ -151,6 +155,7 @@ const page = () => {
         items: itemList
       });
       console.log(data);
+      alert("saved")
     }
     catch (err) {
       console.log(err);

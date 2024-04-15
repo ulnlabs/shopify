@@ -72,9 +72,13 @@ const purchaseSchema = new Schema({
         type: String,
         required: true
     },
+    status: {
+        type: String,
+        required: true
+    }
 }, {
     timestamps: true
 });
 
 
-export const Purchase = mongoose.models.Purchase || mongoose.model("purchase", purchaseSchema)
+export const Purchase = mongoose.models.purchase || mongoose.model("purchase", purchaseSchema)

@@ -24,8 +24,9 @@ export const POST = async (req: Request) => {
         console.log("entered");
 
 
+
         const addStocks = await items.create({
-            itemCode, itemName, barcode, price: saleprice, tax, taxType, discount, discountType
+            itemCode, itemName, barcode, price: saleprice, tax, taxType, discount, discountType, quantity: 0
         })
         console.log(addStocks);
 

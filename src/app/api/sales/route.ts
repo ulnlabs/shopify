@@ -6,6 +6,7 @@ import Sales from "@/app/mongoose/models/Sales";
 import { format } from "date-fns";
 import Item from "@/app/mongoose/models/Items";
 import { items } from "@/app/mongoose/models/item";
+import { Purchase } from "@/app/mongoose/models/purchases";
 
 
 /* export const PUT = async (req: Request) => {
@@ -30,16 +31,20 @@ export const GET = async (req: Request) => {
 
     const findOverall = (sale: any) => {
         const initial = 0;
-        const overall = sale.items.map((item: any) => findTotal(item.price, item.quantity, item.tax, item.discountType, item.discount))
+        const overall = sale.items.map((item: any) => {
+            const { total } = findTotal(item.price, item.quantity, item.tax, item.discountType, item.discount, item.taxType)
+            return total
+        })
         return overall.reduce((prev: number, current: number) => prev + current, initial)
 
     }
 
-    const findTotal = (price: number, quantity: number, tax: string, discountType: string, discount: number) => {
+    const findTotal = (price: number, quantity: number, tax: string, discountType: string, discount: number, taxType: string) => {
 
         const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
         const discountValue = discountType === "Fixed" ? discount * quantity : discountType === "Per %" ? (discount * price / 100) * quantity : 0;
-        return taxValue + price + discountValue
+        const total = taxType.toLocaleLowerCase() === "inclusive" ? price + discountValue : taxValue + price + discountValue
+        return { total, taxValue };
 
     }
     try {
@@ -54,8 +59,22 @@ export const GET = async (req: Request) => {
 
     try {
         if (header === "getItems") {
-            const data = await Item.find({});
-            return NextResponse.json(data);
+            const data = await items.find().lean();
+
+
+            const modified = data.map((item: any) => {
+
+                const { total, taxValue } = findTotal(item.price, 1, item.tax, item.discountType, item.discount, item.taxType)
+                return ({
+                    ...item,
+                    taxAmount: taxValue,
+                    subtotal: total
+                })
+            })
+            console.log(modified);
+
+
+            return NextResponse.json(modified);
         }
         else if (header === "getSales") {
             const data = await Sales.find({})
@@ -66,14 +85,9 @@ export const GET = async (req: Request) => {
                     date: format(sale.date, "dd-MM-yy"),
                     c_name: sale.c_name,
                     salesCode: sale.salesCode,
-                    total: /* sale.items.map((item: any) => findTotal(item.price,item.quantity,item.tax) ) */ findOverall(sale),
-
+                    total: findOverall(sale),
                 })
             })
-
-
-            console.log(data[0].items[0].discountType);
-
             return NextResponse.json(modified);
 
         }
@@ -81,7 +95,7 @@ export const GET = async (req: Request) => {
     }
     catch (err) {
         console.log(err);
-        return new Response('Internal Server Error', { status: 500 })
+        return new Response('Internal Servers Error', { status: 500 })
 
     }
 }
@@ -95,15 +109,22 @@ export async function POST(req: any) {
     try {
         await session.startTransaction();
 
-        const counter = (await Sales.find({})).length;
+        const temp = (await Sales.find().sort({ 'createdAt': -1 }).limit(1));
+
+        const counter = temp[0]?.salesCode.match(/\d+/g)!.map(Number)[0];
+        console.log(counter);
+
+       
+        
+        const codeValue = counter > 0 ? String(counter + 1) : "1"
+
+        console.log("d", codeValue);
+
+        const salesCode = "sl" + codeValue.padStart(4, '0');
+        console.log("s", salesCode);
 
 
-
-        const salesCode = "sl" + String(counter + 1).padStart(4, '0');
-        console.log(salesCode);
-
-
-        const { customerName: c_name, customerId: c_id, billDate: date, billPaymentType: paymentType } = data.sales;
+        const { customerName: c_name, customerId: c_id, billDate: date, billPaymentType: paymentType, billStatus: status } = data.sales;
         const item = data.items.map(({ itemName, tax, taxType, quantity, price, discount, itemCode, discountType }: any) => ({
             itemName,
             tax,
@@ -120,11 +141,12 @@ export async function POST(req: any) {
             date,
             salesCode,
             items: item,
-            paymentType
+            paymentType,
+            status
         }], { session });
         console.log('Sales created successfully:', newSales);
-        for (const { id, quantity } of item) {
-            const updated = await items.updateOne({ id: id }, { $inc: { quantity: -quantity } }, { session });
+        for (const { itemCode, quantity } of item) {
+            const updated = await items.updateOne({ itemCode: itemCode }, { $inc: { quantity: -quantity } }, { session });
             console.log(updated);
         }
         await session.commitTransaction();

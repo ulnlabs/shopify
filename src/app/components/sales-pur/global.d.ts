@@ -14,6 +14,8 @@ export interface FormState {
     billTotal: number,
     billPaymentType: string,
     billAmount: any,
+    billUserName: string,
+    billUserEmail: string | undefined | null,
   
   
   }

@@ -16,6 +16,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import PopUp from "./extraPopUp";
 import { AnimatePresence, motion } from "framer-motion";
 import { columnHeader_dataTable } from "../../../../global";
+import { useSession } from "next-auth/react";
 
 
 const sample = [
@@ -31,6 +32,11 @@ const sample = [
 const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList }: any) => {
 
   console.log(itemList);
+
+  const {data:session} = useSession();
+
+  console.log("ses",session);
+  
 
   const [modify, setModify] = useState<string>("")
   const i_NAME: any = {
@@ -80,7 +86,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
               discount: Math.floor(row.original.quantity * updateDis * 10) / 10,
               taxAmount: Math.floor(row.original.quantity * updateTax * 10) / 10,
-              subtotal: Math.floor(row.original.quantity * subTotal * 10) / 10
+              subtotal: Math.floor(row.original.quantity * subTotal * 10) / 10,
             }
             const upQuantity = itemList.map((item: any) => item.itemName === row.original.itemName ? uplist : item)
             setItemList(upQuantity)
@@ -324,18 +330,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
   }
 
-  const fetchItem = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputItem(e.target.value)
-    /*  if (e.target.value) {
-       const response = await axios.put("/api/sales", { data: e.target.value }
-       );
-       const original = response.data.map((item: any) => item)
-       setItem(original)
-       console.log(response.data);
-       console.log(Items);
-   
-     } */
-  }
+
 
 
 
@@ -420,19 +415,14 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           <div ref={dateRef} className="md:col-start-7 md:col-span-6 col-span-full">
             <div className="flex  py-1 text-w bg-primary-gray px-2 rounded-lg border items-center cursor-pointer "
             >
-              <AiOutlineCalendar className="mr-2  h-4 w-4 shrink-0  opacity-50" />
+              <AiOutlineCalendar className="mr-2 cursor-default  h-4 w-4 shrink-0  opacity-50" />
               <Input placeholder='Select Customer' value={billDate ? format(billDate, "PPP") : ''} readOnly onClick={() => {
 
               }} className="  cursor-default " />
             </div>
           </div>
         </div>
-        {
-          !isSales &&
-          <div className="mt-5 mb-10 col-span-full relative ">
-            <Selections inputData={["Active", "Final"]} label={statusValue} placeholder="Status" setLabel={setStatusValue} icon={true} />
-          </div>
-        }
+      
         <div ref={itemRef} className="mt-5 relative">
           <div className="flex items-center border py-1 bg-primary-gray px-2 rounded-lg">
             <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
@@ -441,7 +431,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               onClick={() => {
 
               }}
-              onChange={fetchItem}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setInputItem(e.target.value)
+              }}
 
             />
           </div>
