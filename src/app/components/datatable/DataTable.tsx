@@ -271,53 +271,53 @@ export default function DataTable<TData, TValue>({
                     <TableCell
                       colSpan={1}
                       rowSpan={1}
-                      className=" text-center"
+                      className=""
                     >{totalPrice}
                     </TableCell>
                     <TableCell
                       colSpan={1}
                       rowSpan={1}
-                      className=" text-center"
+                      className=""
                     >{totalQuantity}
                     </TableCell>
                     <TableCell
                       colSpan={1}
                       rowSpan={1}
-                      className=" text-center"
+                      className=""
                     >
                     </TableCell> <TableCell
                       colSpan={1}
                       rowSpan={1}
-                      className=" text-center"
+                      className=""
                     >
                     </TableCell> <TableCell
                       colSpan={1}
                       rowSpan={1}
-                      className=" text-center"
+                      className=""
                     >{totalTaxAmount}
                     </TableCell>
                     <TableCell
                       colSpan={1}
                       rowSpan={1}
-                      className=" text-center"
+                      className=""
                     >
                     </TableCell>
                     <TableCell
                       colSpan={1}
                       rowSpan={1}
-                      className=" text-center"
+                      className=""
                     >{totalDisAmount}
                     </TableCell>
                      <TableCell
                       colSpan={1}
                       rowSpan={1}
-                      className=" text-center"
+                      className=""
                     >
                     </TableCell>
                      <TableCell
                       colSpan={1}
                       rowSpan={1}
-                      className=" text-center"
+                      className=""
                     >{totalAmount}
                     </TableCell>
                   </TableRow>
