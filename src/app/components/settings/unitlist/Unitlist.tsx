@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { AnimatePresence } from 'framer-motion';
 
 function Unitlist() {
  
@@ -28,11 +29,11 @@ function handleDelete(row: customerList): void {}
 
 
 const Unit_description: columnHeader_dataTable = {
-  accessorKey: "description",
+  accessorKey: "Description",
   header: "Description",
 };
 const Unit_name: columnHeader_dataTable = {
-  accessorKey: "unitname",
+  accessorKey: "Unitname",
   header: "Unit Name",
 };
 
@@ -127,7 +128,10 @@ const user=(newUnit:any)=>{
     return (
         <div className="">
             <div className=" h-screen ">
+                <AnimatePresence mode="wait" >
+
                 {popup && <Addunit setPopup={setPopup}  user={user} />}
+                </AnimatePresence>
                
            
                 <div className="mx-auto w-[98%] bg-slate-100    mt-3">
