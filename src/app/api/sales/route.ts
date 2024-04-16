@@ -59,10 +59,10 @@ export const PUT = async (req: Request) => {
 
     console.log(data);
 
-    const { header,from,end } = data.data
+    const { header, from, end } = data.data
     console.log(header);
-    console.log(from,end);
-    
+    console.log(from, end);
+
 
 
     try {
@@ -85,23 +85,60 @@ export const PUT = async (req: Request) => {
             return NextResponse.json(modified);
         }
         else if (header === "getSales") {
-            const data = await Sales.find({date:{
-                $gte: "2024-04-15T10:13:53.094+00:00",
-                $lte: end
-            }})
-                
-               
-            const modified = data.map((sale: any) => {
-                return ({
-                    date: format(sale.date, "dd-MM-yy"),
-                    c_name: sale.c_name,
-                    salesCode: sale.salesCode,
-                    total: findOverall(sale),
+            const fromDate = new Date(from);
+            fromDate.setUTCHours(0, 0, 0, 0)
+
+            const endDate = new Date(end);
+            endDate.setUTCHours(0, 0, 0, 0)
+
+            console.log(fromDate.getDate(), "d", endDate.getDate());
+
+
+            if (fromDate.getDate() === endDate.getDate()) {
+
+                const data = await Sales.find({
+                    date: {
+                        $gt: fromDate,
+                        $lt: new Date(fromDate).setHours(23, 59, 59, 999)
+                    }
                 })
-            })
-            console.log(modified );
-            
-            return NextResponse.json(modified);
+                console.log(fromDate, "inner", fromDate.setHours(23, 59, 59, 999));
+
+
+                const modified = data.map((sale: any) => {
+                    return ({
+                        date: format(sale.date, "dd-MM-yy"),
+                        c_name: sale.c_name,
+                        salesCode: sale.salesCode,
+                        total: findOverall(sale),
+                    })
+                })
+                console.log(modified);
+
+                return NextResponse.json(modified);
+            }
+            else {
+                const data = await Sales.find({
+                    date: {
+                        $gte: fromDate,
+                        $lte: end
+                    }
+                })
+
+
+                const modified = data.map((sale: any) => {
+                    return ({
+                        date: format(sale.date, "dd-MM-yy"),
+                        c_name: sale.c_name,
+                        salesCode: sale.salesCode,
+                        total: findOverall(sale),
+                    })
+                })
+                console.log("outer");
+                console.log(modified);
+
+                return NextResponse.json(modified);
+            }
 
         }
 
