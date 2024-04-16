@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import { useState } from 'react';
-import DataTable from "@/app/components/datatable/DataTable"
+import DataTable from "../datatableforsettings/DataTable"
 import Addunit from "@/app/components/settings/popup/Addunit"
 import { RiEdit2Fill } from "react-icons/ri"; 
 import { MdDelete } from "react-icons/md"; 
@@ -134,7 +134,7 @@ const user=(newUnit:any)=>{
                 </AnimatePresence>
                
            
-                <div className="mx-auto w-[98%] bg-slate-100    mt-3">
+                <div className="mx-auto w-[95%]  mt-3">
                     <div className=" border p-3   rounded-md">
                         <div className="flex justify-between items-center p-3">
                             <h1 className='text-md tracking-[.2rem] font-extralight'>Unit List :-</h1>

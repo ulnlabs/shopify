@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import DataTable from "@/app/components/datatable/DataTable"
+import DataTable from "../datatableforsettings/DataTable"
 import { RiEdit2Fill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
 import { BiCaretDown } from "react-icons/bi";
@@ -89,11 +89,6 @@ function PaymentType() {
       );
     },
   };
-  const c_columns: ColumnDef<any>[] = [
-    Payment_type,
-    status,
-    C_ACTION,
-  ];
 
   const [payment, setPayment] = useState([{
     id: 1,
@@ -110,22 +105,22 @@ function PaymentType() {
     payment_type: "Paytm",
     status: "active"
   },
-  
+
   ]
   );
   function handleDelete(row: any): void {
-    setPayment(payment.filter((item) => item.id == row.id))
+    setPayment(payment.filter((item) => item.id !== row.id))
 
 
   }
 
   const [Popup, setPopup] = useState(false);
 
-  const newPayment = (newType:any) => {
-    newType.id =payment.length+1;
-    setPayment([...payment,newType])
+  const newPayment = (newType: any) => {
+    newType.id = payment.length + 1;
+    setPayment([...payment, newType])
 
-    }
+  }
 
   return (
     <div className="">
@@ -135,13 +130,15 @@ function PaymentType() {
         </AnimatePresence>
 
         <div className="mx-auto w-[98%] p-5 mt-3">
-          <div className=" border-t-2 border-violet-500 border-b-2   rounded-md">
-            <div className="flex justify-between p-3">
-              <h1 className='text-sm tracking-[.2rem] font-medium'>Payment Type List</h1>
-              <button type='button' onClick={()=>{setPopup(true)}} className='p-2  font-medium rounded-md text-black border  hover:bg-violet-200 text-sm' > <span className='text-lg'>+</span>New Payment</button>
+          <div className=" border p-2  rounded-md">
+            <div className="flex justify-between items-center p-3">
+              <h1 className='text-md tracking-[.2rem] font-extralight'>Payment Type List :-</h1>
+              <button type='button' onClick={() => { setPopup(true) }} className='px-1 font-normal rounded-md  text-black border  hover:bg-white text-sm' > <span className='text-lg'>+</span>New Payment</button>
             </div>
             <div className=" ">
-              <DataTable columns={c_columns} data={payment} />
+              <DataTable columns={[Payment_type,
+                status,
+                C_ACTION,]} data={payment} />
             </div>
           </div>
         </div>

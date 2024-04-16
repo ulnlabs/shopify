@@ -1,7 +1,7 @@
 "use client"
 import React, { use } from 'react'
 import { useState } from 'react';
-import DataTable from "@/app/components/datatable/DataTable"
+import DataTable from "../datatableforsettings/DataTable"
 import { RiEdit2Fill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
 import { BiCaretDown } from "react-icons/bi";
@@ -172,7 +172,7 @@ function Taxlist() {
             popup && <AddTax close={setpopup} dataset={user}  />||edit&&<Edit close={setpopup} setinitial={setinitial} />
           }
         </AnimatePresence>
-        <div className="mx-auto w-[98%] bg-slate-100  mt-3">
+        <div className="mx-auto w-[95%]   mt-3">
           <div className=" border rounded-md p-2 ">
 
             <div className="flex justify-between items-center p-3">
