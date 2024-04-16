@@ -2,11 +2,12 @@
 import { AiOutlineMore } from "react-icons/ai";
 import { RxReload } from "react-icons/rx";
 import { BsFillHandbagFill } from "react-icons/bs";
-import React, { useState } from 'react'
+import React, { SetStateAction, useState } from 'react'
 import Link from "next/link";
 import CalenSelect from "./calselect";
 import DataTable from "../datatable/DataTable";
 import { format, setISODay } from "date-fns"
+import { Dispatch } from "react";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { columnHeader_dataTable } from "../../../../global";
@@ -18,16 +19,25 @@ interface propType {
     isSales?: boolean,
     path: string,
     list: any[],
+    from:Date,
+    end:Date,
+    setFrom: Dispatch<SetStateAction<Date>>,
+    setEnd: Dispatch<SetStateAction<Date>>
 }
-const List = ({ Customer, page, isSales, path, list }: propType) => {
-    const [from, setFrom] = useState<Date | undefined>(new Date);
-    const [end, setEnd] = useState<Date | undefined>(new Date);
+const List = ({ Customer, page, isSales, path, list,from,end,setFrom,setEnd }: propType) => {
+   
 
+    console.log(Customer);
+    
 
     const DATE: columnHeader_dataTable = {
         accessorKey: "date",
         header: "DATE",
     };
+    const STATUS : columnHeader_dataTable = { 
+        accessorKey: "status",
+        header: "STATUS"
+    }
     const SALES_CODE: columnHeader_dataTable = {
         accessorKey: "salesCode",
         header: "Sales Code"
@@ -102,6 +112,7 @@ const List = ({ Customer, page, isSales, path, list }: propType) => {
         c_NAME,
         SALES_CODE,
         TOTAL,
+        STATUS,
         USER,
         SALE_ACTION,
 
@@ -113,6 +124,7 @@ const List = ({ Customer, page, isSales, path, list }: propType) => {
         DATE,
         s_NAME,
         TOTAL,
+        STATUS,
         USER,
         PUR_ACTION,
 

@@ -10,27 +10,37 @@ const page = () => {
     "Deepath",
     "Deepath",
     "Deepath",
-]
-  const [salesList,setSalesList] = useState<any[]>([])
-  useEffect(()=>{
+  ]
+  const [salesList, setSalesList] = useState<any[]>([])
+  useEffect(() => {
     const fetchSales = async () => {
-     const response = await axios.get('/api/sales',{
-        headers:{
-          data:"getSales"
+      const response = await axios.put('/api/sales', {
+       /*  headers: {
+          data: "getSales"
+        } */
+
+        data:{
+          header : "getSales",
+          from:from,
+          end:end
         }
+
       })
       setSalesList(response.data)
       console.log(response.data);
-      
     }
 
     fetchSales();
-  },[])
+  }, [])
 
+
+  const [from, setFrom] = useState<Date>(new Date);
+  const [end, setEnd] = useState<Date>(new Date);
+  
   return (
-    <div className='w-full px-10'> 
-        <h1>Sales List</h1>
-        <List list={salesList} Customer={Customer} path='new-sales' page="Sales" isSales={true} />
+    <div className='w-full px-10'>
+      <h1>Sales List</h1>
+      <List list={salesList} Customer={Customer} path='new-sales' page="Sales" setFrom = {setFrom} setEnd={setEnd} from={from} end={end} isSales={true} />
     </div>
   )
 }

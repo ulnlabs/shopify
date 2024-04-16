@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { FormState } from "../../../../../global";
 import axios from "axios";
 import { useAnimation } from "framer-motion";
+import { Headers } from "@tanstack/react-table";
 
 
 const page = () => {
@@ -20,15 +21,14 @@ const page = () => {
   useEffect(() => {
     const fetchItem = async () => {
 
-      const response = await axios.get("/api/sales",
+      const response = await axios.put("/api/sales",
         {
-          headers: {
-            data: "getItems"
-          }
+          data: { headers: "getItems" }
+
         },);
       setItem(response.data)
       console.log(response.data);
-      
+
 
     }
     fetchItem();
@@ -38,7 +38,7 @@ const page = () => {
   useEffect(() => {
     setProduct(item?.filter((item: any) => {
       console.log("open");
-      
+
       return inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase())
     }
     ))
@@ -66,7 +66,7 @@ const page = () => {
 
   const controls = useAnimation();
 
-  const [isComfirm, setIsComfirm] = useState<boolean>(false)
+
   const handleClick = async () => {
     await controls.start({ y: 0, transition: { duration: 0.5, ease: "easeOut" } });
 

@@ -25,9 +25,7 @@ import { Purchase } from "@/app/mongoose/models/purchases";
 } */
 
 
-export const GET = async (req: Request) => {
-    const header = req.headers.get("data")
-    console.log(header);
+export const PUT = async (req: Request) => {
 
     const findOverall = (sale: any) => {
         const initial = 0;
@@ -57,6 +55,16 @@ export const GET = async (req: Request) => {
         )
     }
 
+    const data = await req.json()
+
+    console.log(data);
+
+    const { header,from,end } = data.data
+    console.log(header);
+    console.log(from,end);
+    
+
+
     try {
         if (header === "getItems") {
             const data = await items.find().lean();
@@ -77,9 +85,12 @@ export const GET = async (req: Request) => {
             return NextResponse.json(modified);
         }
         else if (header === "getSales") {
-            const data = await Sales.find({})
-                .sort({ _id: -1 })
-                .limit(10)
+            const data = await Sales.find({date:{
+                $gt: new Date(from),
+                $lt: new Date(end)
+            }})
+                
+               
             const modified = data.map((sale: any) => {
                 return ({
                     date: format(sale.date, "dd-MM-yy"),
@@ -88,6 +99,8 @@ export const GET = async (req: Request) => {
                     total: findOverall(sale),
                 })
             })
+            console.log(modified);
+            
             return NextResponse.json(modified);
 
         }
@@ -114,8 +127,8 @@ export async function POST(req: any) {
         const counter = temp[0]?.salesCode.match(/\d+/g)!.map(Number)[0];
         console.log(counter);
 
-       
-        
+
+
         const codeValue = counter > 0 ? String(counter + 1) : "1"
 
         console.log("d", codeValue);
