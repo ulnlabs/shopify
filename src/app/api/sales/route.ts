@@ -86,8 +86,8 @@ export const PUT = async (req: Request) => {
         }
         else if (header === "getSales") {
             const data = await Sales.find({date:{
-                $gt: new Date(from),
-                $lt: new Date(end)
+                $gte: "2024-04-15T10:13:53.094+00:00",
+                $lte: end
             }})
                 
                
@@ -99,7 +99,7 @@ export const PUT = async (req: Request) => {
                     total: findOverall(sale),
                 })
             })
-            console.log(modified);
+            console.log(modified );
             
             return NextResponse.json(modified);
 
