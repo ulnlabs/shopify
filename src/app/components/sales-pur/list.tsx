@@ -12,7 +12,10 @@ import { Dispatch } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { columnHeader_dataTable } from "../../../../global";
 
+import { useRouter } from "next/navigation";
+
 import { Command, CommandList, CommandItem } from "@/components/ui/command";
+import { useReturn } from "./returnContext";
 interface propType {
     Customer: string[],
     page: string,
@@ -26,7 +29,8 @@ interface propType {
 }
 const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd }: propType) => {
 
-
+    const router = useRouter()
+    const { setParameter } = useReturn();
     console.log(Customer);
 
 
@@ -63,11 +67,6 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
         header: "ACTION",
         cell: (({ row }: any) => {
             const [isOpen, setIsOpen] = useState<boolean>(false);
-            const returnSales = () => {
-                console.log(row);
-                
-
-            }
             return (
                 <div className="relative ">
                     <AiOutlineMore onClick={() => setIsOpen(!isOpen)} />
@@ -78,9 +77,14 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
                             <button>Edit</button>
                             <button>Print</button>
                             <button>PDF</button>
-                            <button
-                                onClick={returnSales}
-                            >Sales Return</button>
+                            <button onClick={() => {
+                                setParameter(row);
+                                /*                                 router.push(`/sales/new-return`)
+ */                            }
+
+                            }>
+                                Sales Return
+                            </button>
                             <button>Delete</button>
 
                         </div>}
@@ -195,14 +199,14 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
                 </div>
             </section>
             <section className="z-5">
-                
-                    <DataTable
-                        columns={isSales ? s_LIST_Column : p_LIST_Column}
-                        data={list}
-                        rows={true}
-                        paginater={true}
-                        filter={true}
-                    />
+
+                <DataTable
+                    columns={isSales ? s_LIST_Column : p_LIST_Column}
+                    data={list}
+                    rows={true}
+                    paginater={true}
+                    filter={true}
+                />
             </section>
         </div>
     )

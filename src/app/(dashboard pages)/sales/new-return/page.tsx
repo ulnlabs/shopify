@@ -1,8 +1,11 @@
 "use client"
 import NewSales from "@/app/components/sales-pur/addnew";
+import { useReturn } from "@/app/components/sales-pur/returnContext";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+
 
 interface FormState {
   customerName: string,
@@ -21,13 +24,13 @@ interface FormState {
   billPaymentType: string,
   billAmount: any,
 
-
-
 }
 
-const page = ({ itemsList }: any) => {
+const page = () => {
 
-
+  const { parameter } = useReturn();
+  console.log(parameter);
+  
   const [salesReturnData, setSalesReturnData] = useState<FormState>({
     customerName: "",
     billDate: new Date,
@@ -47,6 +50,8 @@ const page = ({ itemsList }: any) => {
   })
 
   const handleClick = () => {
+
+
     console.log(salesReturnData);
   }
   const customerName = [
@@ -107,7 +112,7 @@ const page = ({ itemsList }: any) => {
   }, [inputItem])
 
 
-  const [itemList, setItemList] = useState<any>([itemsList]);
+  const [itemList, setItemList] = useState<any>([]);
 
 
   return (
@@ -127,6 +132,7 @@ const page = ({ itemsList }: any) => {
         setItemList={setItemList}
         isReturn
         searchPlaceholder="Search Sales Code"
+
 
       />      <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
