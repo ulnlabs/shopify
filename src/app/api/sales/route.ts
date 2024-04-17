@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/app/mongoose/db";
 import Sales from "@/app/mongoose/models/Sales";
-import { format } from "date-fns";
+import { format, setMinutes } from "date-fns";
 import Item from "@/app/mongoose/models/Items";
 import { items } from "@/app/mongoose/models/item";
 import { Purchase } from "@/app/mongoose/models/purchases";
@@ -56,14 +56,18 @@ export const PUT = async (req: Request) => {
     }
 
     const data = await req.json()
-
-    console.log(data);
-
     const { header, from, end } = data.data
     console.log(header);
-    console.log(from, end);
+    console.log(from);
 
+    const fromDate = new Date(from);
+    fromDate.setHours(fromDate.getHours() + 5)
+    fromDate.setMinutes(fromDate.getMinutes() + 30)
 
+    const endDate = new Date(end);
+    endDate.setHours(endDate.getHours() + 5)
+    endDate.setMinutes(endDate.getMinutes() + 30)
+    console.log(fromDate, "common", endDate);
 
     try {
         if (header === "getItems") {
@@ -85,24 +89,17 @@ export const PUT = async (req: Request) => {
             return NextResponse.json(modified);
         }
         else if (header === "getSales") {
-            const fromDate = new Date(from);
-            fromDate.setUTCHours(0, 0, 0, 0)
-
-            const endDate = new Date(end);
-            endDate.setUTCHours(0, 0, 0, 0)
-
-            console.log(fromDate.getDate(), "d", endDate.getDate());
-
-
             if (fromDate.getDate() === endDate.getDate()) {
 
+
+                console.log(fromDate, "inner", endDate);
+
+
                 const data = await Sales.find({
-                    date: {
-                        $gt: fromDate,
-                        $lt: new Date(fromDate).setHours(23, 59, 59, 999)
-                    }
+                    date: fromDate.setUTCHours(0, 0, 0, 0),
                 })
-                console.log(fromDate, "inner", fromDate.setHours(23, 59, 59, 999));
+                console.log("inner");
+
 
 
                 const modified = data.map((sale: any) => {
@@ -111,6 +108,7 @@ export const PUT = async (req: Request) => {
                         c_name: sale.c_name,
                         salesCode: sale.salesCode,
                         total: findOverall(sale),
+                        status: sale.status
                     })
                 })
                 console.log(modified);
@@ -118,12 +116,14 @@ export const PUT = async (req: Request) => {
                 return NextResponse.json(modified);
             }
             else {
+                console.log(fromDate, "outer", endDate);
+
                 const data = await Sales.find({
                     date: {
                         $gte: fromDate,
-                        $lte: end
+                        $lte: endDate
                     }
-                })
+                }).sort({ date: -1 })
 
 
                 const modified = data.map((sale: any) => {
@@ -132,6 +132,7 @@ export const PUT = async (req: Request) => {
                         c_name: sale.c_name,
                         salesCode: sale.salesCode,
                         total: findOverall(sale),
+                        status: sale.status
                     })
                 })
                 console.log("outer");
@@ -174,7 +175,15 @@ export async function POST(req: any) {
         console.log("s", salesCode);
 
 
-        const { customerName: c_name, customerId: c_id, billDate: date, billPaymentType: paymentType, billStatus: status } = data.sales;
+        const { customerName: c_name, customerId: c_id, billDate, billPaymentType: paymentType, billStatus: status } = data.sales;
+
+        const date = new Date(billDate);
+        date.setHours(date.getHours() + 5);
+        date.setMinutes(date.getMinutes() + 30);
+        date.setUTCHours(0, 0, 0, 0)
+
+
+
         const item = data.items.map(({ itemName, tax, taxType, quantity, price, discount, itemCode, discountType }: any) => ({
             itemName,
             tax,

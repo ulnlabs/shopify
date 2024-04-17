@@ -23,7 +23,7 @@ const page = () => {
 
       const response = await axios.put("/api/sales",
         {
-          data: { headers: "getItems" }
+          data: { header: "getItems" }
 
         },);
       setItem(response.data)

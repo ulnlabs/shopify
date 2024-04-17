@@ -4,7 +4,6 @@ import { format } from "date-fns"
 import { Input } from '@/components/ui/input'
 import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineCalendar } from 'react-icons/ai'
-import { useReactTable } from '@tanstack/react-table'
 
 interface dateType {
     date: Date,
@@ -15,20 +14,27 @@ const CalenSelect = ({ date, setDate }: dateType | any) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
     const handleDateClick = (label: any): void => {
-        setDate(label);
-        setIsOpen(false);
+        console.log(label);
 
+        console.log(label);
+
+        if (label) {
+            console.log("d");
+            setDate(label);
+            setIsOpen(false);
+        }
     }
 
-    const calRef=useRef<any>(null)
-    useEffect(()=>{
-        const handleClose = (e:any) =>{
-            if (!calRef.current?.contains(e.target)){
+    const calRef = useRef<any>(null)
+    useEffect(() => {
+        const handleClose = (e: any) => {
+            if (!calRef.current?.contains(e.target)) {
+
                 setIsOpen(false)
             }
         }
-        document.addEventListener('click',handleClose)
-    },[])
+        document.addEventListener('click', handleClose)
+    }, [])
 
 
     const today = new Date;
@@ -48,7 +54,7 @@ const CalenSelect = ({ date, setDate }: dateType | any) => {
                         <Calendar
                             mode="single"
                             toDate={today}
-                            fixedWeeks                           
+                            fixedWeeks
                             selected={date}
                             onSelect={handleDateClick}
                             initialFocus

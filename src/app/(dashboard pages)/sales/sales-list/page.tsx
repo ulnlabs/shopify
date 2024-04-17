@@ -17,9 +17,11 @@ const page = () => {
   const [end, setEnd] = useState<Date>(new Date);
   useEffect(() => {
     const fetchSales = async () => {
+      console.log(from.getHours());
+      
       const response = await axios.put('/api/sales', {
 
-        data: {
+        data: { 
           header: "getSales",
           from: from,
           end: end
