@@ -29,14 +29,14 @@ const sample = [
     subtotal: 10,
   }
 ]
-const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList }: any) => {
+const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList, isReturn, searchPlaceholder }: any) => {
 
   console.log(itemList);
 
-  const {data:session} = useSession();
+  const { data: session } = useSession();
 
-  console.log("ses",session);
-  
+  console.log("ses", session);
+
 
   const [modify, setModify] = useState<string>("")
   const i_NAME: any = {
@@ -373,6 +373,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                 onChange={(e) => {
                   setData({ ...data, customerName: e.target.value });
                 }}
+                className={`${isReturn && "pointer-events-none"}`}
               />
               <Link href={"/customers/new"}>
                 <BsPersonAdd className="ml-2 h-4 w-4 shrink-0  opacity-100" />
@@ -422,11 +423,11 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             </div>
           </div>
         </div>
-      
+
         <div ref={itemRef} className="mt-5 relative">
           <div className="flex items-center border py-1 bg-primary-gray px-2 rounded-lg">
             <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
-            <Input placeholder="Item Name / Barcode / Item Number"
+            <Input placeholder={searchPlaceholder}
               value={inputItem}
               onClick={() => {
 

@@ -4,6 +4,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
 const page = () => {
+
   const Customer = [
     "Deepath",
     "Hari",
@@ -18,17 +19,17 @@ const page = () => {
   useEffect(() => {
     const fetchSales = async () => {
       console.log(from.getHours());
-      
+
       const response = await axios.put('/api/sales', {
 
-        data: { 
+        data: {
           header: "getSales",
           from: from,
           end: end
         }
 
       })
-      setSalesList(response.data)
+      setSalesList(response.data);
       console.log(response.data);
     }
 

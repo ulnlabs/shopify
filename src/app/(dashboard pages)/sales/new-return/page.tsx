@@ -1,5 +1,6 @@
 "use client"
 import NewSales from "@/app/components/sales-pur/addnew";
+import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -24,7 +25,7 @@ interface FormState {
 
 }
 
-const page = () => {
+const page = ({ itemsList }: any) => {
 
 
   const [salesReturnData, setSalesReturnData] = useState<FormState>({
@@ -45,8 +46,8 @@ const page = () => {
     billAmount: 0,
   })
 
-  const handleClick = () =>{
-    console.log(salesReturnData);  
+  const handleClick = () => {
+    console.log(salesReturnData);
   }
   const customerName = [
     {
@@ -77,61 +78,36 @@ const page = () => {
 
   }, [salesReturnData.customerName])
 
-  const [inputItem, setInputItem] = useState<any>("");
+  const [item, setItem] = useState<any>([]);
 
-  const Items = [
-    {
-
-      name: "Deepath",
-      quantity: 10,
-      price: 200,
-      discount: 0,
-      tax_type: "VAT 5%",
-      tax: 10,
-      tax_category: "Exclusive",
-      dis_type: "Fixed",
-      taxPer: 5,
-      unitcost: 200,
-      subtotal: 210,
-    },
-    {
-
-      name: "fire10",
-      quantity: 5,
-      price: 200,
-      discount: 0,
-      tax_type: "VAT 5%",
-      tax: 10,
-      taxPer: 5,
-      tax_category: "Exclusive",
-      dis_type: "Fixed",
-      unitcost: 200,
-      subtotal: 210,
-    },
-    {
-
-      name: "dhilip",
-      quantity: 2,
-      price: 200,
-      discount: 0,
-      tax_type: "VAT 5%",
-      dis_type: "Fixed",
-      tax: 10,
-      taxPer: 5,
-      unitcost: 200,
-      subtotal: 210,
-      tax_category: "Exclusive",
-    }
-  ]
-
-  const [product, setProduct] = useState<any>("")
-  const [itemList, setItemList] = useState<any>([]);
+  const [inputItem, setInputItem] = useState<String>("");
+  const [product, setProduct] = useState<any>([])
   useEffect(() => {
-    setProduct(Items.filter((item: any) => {
-      return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
-    })
-    )
+    const fetchItem = async () => {
+
+      const response = await axios.put("/api/sales",
+        {
+          data: { header: "getItems" }
+
+        },);
+      setItem(response.data)
+      console.log(response.data);
+    }
+    fetchItem();
+  }, []);
+
+
+  useEffect(() => {
+    setProduct(item?.filter((item: any) => {
+      console.log("open");
+
+      return inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase())
+    }
+    ))
   }, [inputItem])
+
+
+  const [itemList, setItemList] = useState<any>([itemsList]);
 
 
   return (
@@ -149,9 +125,12 @@ const page = () => {
         isSales={true}
         itemList={itemList}
         setItemList={setItemList}
+        isReturn
+        searchPlaceholder="Search Sales Code"
+
       />      <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
-        <Link href={"../../dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
+        <Link href={"/dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
       </div>
     </div>
   );

@@ -12,29 +12,29 @@ import { Dispatch } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { columnHeader_dataTable } from "../../../../global";
 
-import { Command, CommandList,CommandItem } from "@/components/ui/command";
+import { Command, CommandList, CommandItem } from "@/components/ui/command";
 interface propType {
     Customer: string[],
     page: string,
     isSales?: boolean,
     path: string,
     list: any[],
-    from:Date,
-    end:Date,
+    from: Date,
+    end: Date,
     setFrom: Dispatch<SetStateAction<Date>>,
     setEnd: Dispatch<SetStateAction<Date>>
 }
-const List = ({ Customer, page, isSales, path, list,from,end,setFrom,setEnd }: propType) => {
-   
+const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd }: propType) => {
+
 
     console.log(Customer);
-    
+
 
     const DATE: columnHeader_dataTable = {
         accessorKey: "date",
         header: "DATE",
     };
-    const STATUS : columnHeader_dataTable = { 
+    const STATUS: columnHeader_dataTable = {
         accessorKey: "status",
         header: "STATUS"
     }
@@ -63,21 +63,27 @@ const List = ({ Customer, page, isSales, path, list,from,end,setFrom,setEnd }: p
         header: "ACTION",
         cell: (({ row }: any) => {
             const [isOpen, setIsOpen] = useState<boolean>(false);
+            const returnSales = () => {
+                console.log(row);
+                
+
+            }
             return (
-                <div>
+                <div className="relative ">
                     <AiOutlineMore onClick={() => setIsOpen(!isOpen)} />
-                    {isOpen && <div className="gap-2 absolute mt-4  bg-white  ">
-                        <Command>
-                            <CommandList>
-                                <CommandItem>View Sales</CommandItem>
-                                <CommandItem>Edit</CommandItem>
-                                <CommandItem>Print</CommandItem>
-                                <CommandItem>PDF</CommandItem>
-                                <CommandItem>Sales Return</CommandItem>
-                                <CommandItem>Delete</CommandItem>
-                            </CommandList>
-                        </Command>
-                    </div>}
+                    {isOpen &&
+                        <div className="gap-2 absolute mt-4 z-50 grid  bg-white  ">
+
+                            <button>View Sales</button>
+                            <button>Edit</button>
+                            <button>Print</button>
+                            <button>PDF</button>
+                            <button
+                                onClick={returnSales}
+                            >Sales Return</button>
+                            <button>Delete</button>
+
+                        </div>}
                 </div>)
         })
 
@@ -188,23 +194,15 @@ const List = ({ Customer, page, isSales, path, list,from,end,setFrom,setEnd }: p
                     </span>
                 </div>
             </section>
-            <section>
-                {isSales ?
+            <section className="z-5">
+                
                     <DataTable
-                        columns={s_LIST_Column}
-                        data={list}
-                        rows={true}
-                        paginater={true}
-                        filter={true}
-                    /> :
-                    <DataTable
-                        columns={p_LIST_Column}
+                        columns={isSales ? s_LIST_Column : p_LIST_Column}
                         data={list}
                         rows={true}
                         paginater={true}
                         filter={true}
                     />
-                }
             </section>
         </div>
     )

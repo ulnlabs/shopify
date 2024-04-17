@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { FormState } from "../../../../../global";
 import axios from "axios";
 import { useAnimation } from "framer-motion";
-import { Headers } from "@tanstack/react-table";
 
 
 const page = () => {
@@ -28,8 +27,6 @@ const page = () => {
         },);
       setItem(response.data)
       console.log(response.data);
-
-
     }
     fetchItem();
   }, []);

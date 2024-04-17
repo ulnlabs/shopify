@@ -56,26 +56,14 @@ export const PUT = async (req: Request) => {
     }
 
     const data = await req.json()
-    const { header, from, end } = data.data
+    const { header } = data.data
     console.log(header);
-    console.log(from);
 
-    const fromDate = new Date(from);
-    fromDate.setHours(fromDate.getHours() + 5)
-    fromDate.setMinutes(fromDate.getMinutes() + 30)
-
-    const endDate = new Date(end);
-    endDate.setHours(endDate.getHours() + 5)
-    endDate.setMinutes(endDate.getMinutes() + 30)
-    console.log(fromDate, "common", endDate);
 
     try {
         if (header === "getItems") {
             const data = await items.find().lean();
-
-
             const modified = data.map((item: any) => {
-
                 const { total, taxValue } = findTotal(item.price, 1, item.tax, item.discountType, item.discount, item.taxType)
                 return ({
                     ...item,
@@ -84,11 +72,20 @@ export const PUT = async (req: Request) => {
                 })
             })
             console.log(modified);
-
-
             return NextResponse.json(modified);
         }
         else if (header === "getSales") {
+            const { from, end } = data.data
+            console.log(from);
+            const fromDate = new Date(from);
+            fromDate.setHours(fromDate.getHours() + 5)
+            fromDate.setMinutes(fromDate.getMinutes() + 30)
+
+            const endDate = new Date(end);
+            endDate.setHours(endDate.getHours() + 5)
+            endDate.setMinutes(endDate.getMinutes() + 30)
+            console.log(fromDate, "common", endDate);
+
             if (fromDate.getDate() === endDate.getDate()) {
 
 

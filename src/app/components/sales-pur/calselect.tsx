@@ -23,6 +23,9 @@ const CalenSelect = ({ date, setDate }: dateType | any) => {
             setDate(label);
             setIsOpen(false);
         }
+        else{
+            setIsOpen(false);
+        }
     }
 
     const calRef = useRef<any>(null)

@@ -62,8 +62,8 @@ export default function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const { selectedRow, setSelectedRow } = useContext(ContextData);
   const { isChanged, setIsChanged } = useContext(UserContext);
-  console.log("dataTable",isChanged);
-  
+  console.log("dataTable", isChanged);
+
   const { toast } = useToast();
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -109,26 +109,26 @@ export default function DataTable<TData, TValue>({
           });
           setSelectedRow([]);
         }
-      } catch (error) {}
+      } catch (error) { }
     }
   };
   const exportCsv = async () => {
     let custData = data.filter((item: any) => {
       return selectedRow.includes(item._id);
     });
-    let exportable=custData.map((i:any)=>{
-return {
-  name:i.name,
-  email:i.email,
-  phone:i.phone,
-  address:i.address,
-  city:i.city,
-  state:i.state,
-  pincode:i.pincode
-}
-    }) 
+    let exportable = custData.map((i: any) => {
+      return {
+        name: i.name,
+        email: i.email,
+        phone: i.phone,
+        address: i.address,
+        city: i.city,
+        state: i.state,
+        pincode: i.pincode
+      }
+    })
     const firstIndex = exportable[0];
-    const header = Object.keys(firstIndex );
+    const header = Object.keys(firstIndex);
     console.log(header);
 
     const dataToConvert = {
@@ -143,7 +143,7 @@ return {
   /* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
   return (
     <>
-      <motion.div  className="flex items-center py-4">
+      <motion.div className="flex items-center py-4">
         {veiw.filter && (
           <Input
             placeholder="Search..."
@@ -202,11 +202,11 @@ return {
           </motion.div>
         )}
       </AnimatePresence>
-      <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }} className="rounded-md border ">
-        <Table className="">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }} className="rounded-md border ">
+        <Table className="z-5">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -216,9 +216,9 @@ return {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
