@@ -86,13 +86,22 @@ export const PUT = async (req: Request) => {
 
 
                 const modified = data.map((sale: any) => {
+                    const itemList = sale.items.map((item: any) => {
+                        const { total, taxValue } = findTotal(item.price, item.quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        return ({
+                            ...item,
+                            taxAmount: taxValue,
+                            subtotal: total
+                        })
+                    })
                     return ({
                         ...sale,
                         date: format(sale.date, "dd-MM-yy"),
                         c_name: sale.c_name,
                         salesCode: sale.salesCode,
                         total: findOverall(sale),
-                        status: sale.status
+                        status: sale.status,
+                        items: itemList
                     })
                 })
                 console.log(modified);
@@ -108,8 +117,6 @@ export const PUT = async (req: Request) => {
                         $lte: endDate
                     }
                 }).sort({ date: -1 }).lean();
-
-
                 const modified = data.map((sale: any) => {
                     return ({
                         ...sale,
@@ -149,9 +156,6 @@ export async function POST(req: any) {
 
         const counter = temp[0]?.salesCode.match(/\d+/g)!.map(Number)[0];
         console.log(counter);
-
-
-
         const codeValue = counter > 0 ? String(counter + 1) : "1"
 
         console.log("d", codeValue);
@@ -160,7 +164,7 @@ export async function POST(req: any) {
         console.log("s", salesCode);
 
 
-        const { customerName: c_name, customerId: c_id, billDate, billPaymentType: paymentType, billStatus: status } = data.sales;
+        const { customerName: c_name, billDiscountType: discountType, billDiscount: discount, billOtherCharges: otherCharges, customerId: c_id, billDate, billPaymentType: paymentType, billStatus: status, billTaxType: taxType } = data.sales;
 
         const date = new Date(billDate);
         date.setHours(date.getHours() + 5);
@@ -184,6 +188,10 @@ export async function POST(req: any) {
             c_name,
             date,
             salesCode,
+            taxType,
+            discountType,
+            discount,
+            otherCharges,
             items: item,
             paymentType,
             status

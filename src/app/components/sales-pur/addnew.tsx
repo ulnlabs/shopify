@@ -197,7 +197,10 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   useEffect(() => {
     setData({ ...data, billDiscountType: disType });
   }, [disType]);
-  const [payType, setPayType] = useState("");
+
+  console.log(data.billPaymentType);
+  const [payType, setPayType] = useState(data.billPaymentType || "");
+  
   useEffect(() => {
     setData({ ...data, billPaymentType: payType });
   }, [payType]);
