@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -88,16 +88,32 @@ export function DataTable<TData, TValue>({
     },
   });
   /* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
-
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [isBrandOpen, setIsBrandOpen] = useState<boolean>(false);
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const handleChange = (e: any) => {
     setSelectedBrand(e.target.value);
   };
+  useEffect(() => {
+    const handleClickOutside = (event:any) => {
+      if (inputRef.current && !inputRef.current.contains(event.target as Node) &&
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)) {
+        setIsBrandOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [inputRef, dropdownRef]);
 
   return (
     <>
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4" >
         {veiw.filter && (
           <Input style={selectedBrand?{width:"50%"}:{}}
             placeholder="Filter ItemName..."
@@ -111,21 +127,22 @@ export function DataTable<TData, TValue>({
         )}
         {
           selectedBrand ?
-            <div style={selectedBrand?{width:"50%"}:{}} className="max-w-sm ml-2  h-[40px] border rounded-lg flex justify-between px-4 items-center text-gray-700"  onClick={() => setIsBrandOpen(!isBrandOpen)}>
+            <div style={selectedBrand?{width:"50%"}:{}} className="max-w-sm ml-2  h-[40px] border rounded-lg flex justify-between px-4 items-center text-gray-700">
               <p>{selectedBrand}</p>
               <AiFillCloseCircle onClick={() => {setSelectedBrand("");
-                table.setColumnFilters([])
+                table.setColumnFilters([]); 
               }} className="cursor-pointer" />
             </div> :
             <Command className="ml-3">
-              <input placeholder="Filter by Brand..." value={selectedBrand} onChange={handleChange} readOnly onClick={() => setIsBrandOpen(!isBrandOpen)}
+              <input placeholder="Filter by Brand..." value={selectedBrand} onChange={handleChange} readOnly onClick={() => setIsBrandOpen(!isBrandOpen)} ref={inputRef}
               className="max-w-sm relative border px-[0.75rem] py-[0.42rem] border-gray-300 focus:outline-none rounded-md " />
               {isBrandOpen &&
-                <CommandList className="absolute max-w-sm mt-9 w-fulltext-left  bg-white rounded-md border z-10 ">
+                <CommandList className="absolute max-w-sm mt-9 w-fulltext-left  bg-white rounded-md border z-10 " ref={dropdownRef}>
                   {data!.map((item: any, index: any) => (
                     <CommandItem key={index} className="px-4 py-2 hover:bg-gray-100 border-b" value={item.brand} onSelect={() => {
                       setSelectedBrand(item.brand);
                       setIsBrandOpen(!isBrandOpen);
+                      
                       table.setColumnFilters([{ id: "brand", value: item.brand }])
                     }}>{item.brand}</CommandItem>
                   ))}
