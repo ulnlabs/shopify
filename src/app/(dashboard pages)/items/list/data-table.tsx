@@ -91,9 +91,6 @@ export function DataTable<TData, TValue>({
 
   const [isBrandOpen, setIsBrandOpen] = useState<boolean>(false);
   const [selectedBrand, setSelectedBrand] = useState<string>("");
-  const handleBackspace = () => {
-    setSelectedBrand(prev => prev.slice(0, -1));
-  };
   const handleChange = (e: any) => {
     setSelectedBrand(e.target.value);
   };
@@ -102,7 +99,7 @@ export function DataTable<TData, TValue>({
     <>
       <div className="flex items-center py-4">
         {veiw.filter && (
-          <Input
+          <Input style={selectedBrand?{width:"50%"}:{}}
             placeholder="Filter ItemName..."
             value={(table.getColumn("itemName")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
@@ -114,19 +111,15 @@ export function DataTable<TData, TValue>({
         )}
         {
           selectedBrand ?
-            <div className="w-full ml-2 h-[40px] border rounded-lg flex justify-between px-4 items-center text-gray-700">
+            <div style={selectedBrand?{width:"50%"}:{}} className="max-w-sm ml-2  h-[40px] border rounded-lg flex justify-between px-4 items-center text-gray-700"  onClick={() => setIsBrandOpen(!isBrandOpen)}>
               <p>{selectedBrand}</p>
               <AiFillCloseCircle onClick={() => {setSelectedBrand("");
                 table.setColumnFilters([])
               }} className="cursor-pointer" />
             </div> :
             <Command className="ml-3">
-              <input placeholder="Type a command or search..." value={selectedBrand} onChange={handleChange} onClick={() => setIsBrandOpen(!isBrandOpen)}
-                onKeyDown={(e) => {
-                  if (e.key === "Backspace") {
-                    handleBackspace();
-                  }
-                }} className="max-w-sm relative border px-[0.75rem] py-[0.42rem] border-gray-300 focus:outline-none rounded-md " />
+              <input placeholder="Filter by Brand..." value={selectedBrand} onChange={handleChange} readOnly onClick={() => setIsBrandOpen(!isBrandOpen)}
+              className="max-w-sm relative border px-[0.75rem] py-[0.42rem] border-gray-300 focus:outline-none rounded-md " />
               {isBrandOpen &&
                 <CommandList className="absolute max-w-sm mt-9 w-fulltext-left  bg-white rounded-md border z-10 ">
                   {data!.map((item: any, index: any) => (

@@ -98,6 +98,7 @@ function invoice({ date, customer, invoiceId, discountAll, otherCharges }: invoi
     accessorKey: "total_amount",
     header: "Total Amount",
   }
+
   const totalPrice = sampleData.reduce((total, Item: any) => total + Item.unit_price, 0)
   const totalQuantity = sampleData.reduce((total, Item: any) => total + Item.quantity, 0)
   const totalTaxAmount = sampleData.reduce((total, Item: any) => total + Item.tax_amount, 0)
