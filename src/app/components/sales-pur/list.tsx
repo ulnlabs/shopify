@@ -2,7 +2,7 @@
 import { AiOutlineMore } from "react-icons/ai";
 import { RxReload } from "react-icons/rx";
 import { BsFillHandbagFill } from "react-icons/bs";
-import React, { SetStateAction, useState } from 'react'
+import React, { SetStateAction, useContext, useState } from 'react'
 import Link from "next/link";
 import CalenSelect from "./calselect";
 import DataTable from "../datatable/DataTable";
@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 
 import { Command, CommandList, CommandItem } from "@/components/ui/command";
 import { useReturn } from "./returnContext";
+import { ContextData } from "../../../../contextapi";
 interface propType {
     Customer: string[],
     page: string,
@@ -30,7 +31,7 @@ interface propType {
 const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd }: propType) => {
 
     const router = useRouter()
-    const { setParameter } = useReturn();
+    const { setSalesRecord } = useContext(ContextData);
     console.log(Customer);
 
 
@@ -78,9 +79,9 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
                             <button>Print</button>
                             <button>PDF</button>
                             <button onClick={() => {
-                                setParameter(row);
-                                /*                                 router.push(`/sales/new-return`)
- */                            }
+                                setSalesRecord(row);
+                                router.push(`${isSales ? "/sales/new-return" : "purchases/new-return"}`)
+                            }
 
                             }>
                                 Sales Return

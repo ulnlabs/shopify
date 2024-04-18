@@ -3,7 +3,8 @@ import NewSales from "@/app/components/sales-pur/addnew";
 import { useReturn } from "@/app/components/sales-pur/returnContext";
 import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ContextData } from "../../../../../contextapi";
 
 
 
@@ -28,9 +29,9 @@ interface FormState {
 
 const page = () => {
 
-  const { parameter } = useReturn();
-  console.log(parameter);
-  
+  const { salesRecord } = useContext(ContextData);
+  console.log("jkj", salesRecord);
+
   const [salesReturnData, setSalesReturnData] = useState<FormState>({
     customerName: "",
     billDate: new Date,

@@ -9,20 +9,6 @@ import { items } from "@/app/mongoose/models/item";
 import { Purchase } from "@/app/mongoose/models/purchases";
 
 
-/* export const PUT = async (req: Request) => {
-    try {
-        const { data } = await req.json();
-        let search = new RegExp(data, 'i');
-        await connectDB();
-        const value = await items.find({ name: search });
-        console.log(value);
-        return NextResponse.json(value)
-    }
-    catch (err) {
-        console.log(err);
-        return new Response('Internal server error', { status: 500 })
-    }
-} */
 
 
 export const PUT = async (req: Request) => {
@@ -94,13 +80,14 @@ export const PUT = async (req: Request) => {
 
                 const data = await Sales.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
-                })
+                }).lean();
                 console.log("inner");
 
 
 
                 const modified = data.map((sale: any) => {
                     return ({
+                        ...sale,
                         date: format(sale.date, "dd-MM-yy"),
                         c_name: sale.c_name,
                         salesCode: sale.salesCode,
@@ -120,11 +107,12 @@ export const PUT = async (req: Request) => {
                         $gte: fromDate,
                         $lte: endDate
                     }
-                }).sort({ date: -1 })
+                }).sort({ date: -1 }).lean();
 
 
                 const modified = data.map((sale: any) => {
                     return ({
+                        ...sale,
                         date: format(sale.date, "dd-MM-yy"),
                         c_name: sale.c_name,
                         salesCode: sale.salesCode,
