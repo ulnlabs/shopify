@@ -30,9 +30,11 @@ const [supplierData,setSupplierData] =useState({
     address: "",
 })
 
+const [salesRecord,setSalesRecord] = useState<any>([]);
+
   return (
     <>
-      <ContextData.Provider value={{selectedRow, setSelectedRow, customerData, setCustomerData ,supplierData,setSupplierData}}>
+      <ContextData.Provider value={{selectedRow, setSelectedRow, customerData, setCustomerData ,supplierData,setSupplierData,salesRecord,setSalesRecord}}>
         {children}
       </ContextData.Provider>
     </>

@@ -1,8 +1,8 @@
 "use client"
-import { AiOutlineMore } from "react-icons/ai";
+import { AiOutlineLine, AiOutlineMore } from "react-icons/ai";
 import { RxReload } from "react-icons/rx";
 import { BsFillHandbagFill } from "react-icons/bs";
-import React, { SetStateAction, useState } from 'react'
+import React, { SetStateAction, useContext, useState } from 'react'
 import Link from "next/link";
 import CalenSelect from "./calselect";
 import DataTable from "../datatable/DataTable";
@@ -16,6 +16,10 @@ import { useRouter } from "next/navigation";
 
 import { Command, CommandList, CommandItem } from "@/components/ui/command";
 import { useReturn } from "./returnContext";
+import { ContextData } from "../../../../contextapi";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal } from "lucide-react";
 interface propType {
     Customer: string[],
     page: string,
@@ -30,7 +34,7 @@ interface propType {
 const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd }: propType) => {
 
     const router = useRouter()
-    const { setParameter } = useReturn();
+    const { setSalesRecord } = useContext(ContextData);
     console.log(Customer);
 
 
@@ -66,29 +70,46 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
         accessorKey: "action",
         header: "ACTION",
         cell: (({ row }: any) => {
-            const [isOpen, setIsOpen] = useState<boolean>(false);
             return (
-                <div className="relative ">
-                    <AiOutlineMore onClick={() => setIsOpen(!isOpen)} />
-                    {isOpen &&
-                        <div className="gap-2 absolute mt-4 z-50 grid  bg-white  ">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <AiOutlineMore className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="bg-white z-10 border px-3 rounded-md gap-1 grid">
+                        <DropdownMenuItem 
+                        /*  onClick={() => {
+                             handleDelete(row.original);
+                         }} */
+                        >
+                            View Sales
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                            setSalesRecord(row.original);
+                            router.push(`${isSales ? "/sales/new-return" : "purchases/new-return"}`)
+                        }
 
-                            <button>View Sales</button>
-                            <button>Edit</button>
-                            <button>Print</button>
-                            <button>PDF</button>
-                            <button onClick={() => {
-                                router.push(`/sales/new-return`);
-                                setParameter(row);
-                            }
-
-                            }>
-                                Sales Return
-                            </button>
-                            <button>Delete</button>
-
-                        </div>}
-                </div>)
+                        }>
+                            Sales Return
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem /* onClick={() => handleUpdate(row.original)} */>
+                            Print
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem /* onClick={() => handleUpdate(row.original)} */>
+                            PDF
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            Delete
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
         })
 
     };
@@ -98,12 +119,19 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
         header: "ACTION",
         cell: (({ row }: any) => (
             <div>
-                <button>View Sales</button>
-                <button>Edit</button>
-                <button>Print</button>
-                <button>PDF</button>
-                <button>Sales Return</button>
-                <button>Delete</button>
+                <DropdownMenuItem>View Sales</DropdownMenuItem>
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Print</DropdownMenuItem>
+                <DropdownMenuItem>PDF</DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => {
+                        setSalesRecord(row);
+                        router.push(`${isSales ? "/sales/new-return" : "purchases/new-return"}`)
+                    }
+
+                    }
+                >Sales Return</DropdownMenuItem>
+                <DropdownMenuItem>Delete</DropdownMenuItem>
             </div>
         ))
 

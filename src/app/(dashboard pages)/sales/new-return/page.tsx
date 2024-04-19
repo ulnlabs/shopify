@@ -3,7 +3,8 @@ import NewSales from "@/app/components/sales-pur/addnew";
 import { useReturn } from "@/app/components/sales-pur/returnContext";
 import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ContextData } from "../../../../../contextapi";
 
 
 
@@ -28,13 +29,16 @@ interface FormState {
 
 const page = () => {
 
-  const { parameter } = useReturn();
-  console.log(parameter);
-  
+  const { salesRecord } = useContext(ContextData);
+  console.log("jkj", salesRecord);
+
+  const { c_name, items, paymentType } = salesRecord;
+
+
   const [salesReturnData, setSalesReturnData] = useState<FormState>({
-    customerName: "",
+    customerName: c_name,
     billDate: new Date,
-    billStatus: "",
+    billStatus: "Returned",
     billQuantity: 0,
     billCharges: 0,
     billTaxType: "",
@@ -45,9 +49,12 @@ const page = () => {
     billOtherCharge: 0,
     billOverallDis: 0,
     billTotal: 0,
-    billPaymentType: "",
+    billPaymentType: paymentType,
     billAmount: 0,
   })
+
+  console.log(paymentType);
+  
 
   const handleClick = () => {
 
@@ -111,9 +118,15 @@ const page = () => {
     ))
   }, [inputItem])
 
+  console.log(items);
+
+  useEffect(()=>{
+    setItemList(items)
+  },[items])
 
   const [itemList, setItemList] = useState<any>([]);
 
+  
 
   return (
     <div className="w-full ">
