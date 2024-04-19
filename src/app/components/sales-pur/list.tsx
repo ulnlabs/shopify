@@ -78,9 +78,9 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
                             <button>Print</button>
                             <button>PDF</button>
                             <button onClick={() => {
+                                router.push(`/sales/new-return`);
                                 setParameter(row);
-                                /*                                 router.push(`/sales/new-return`)
- */                            }
+                            }
 
                             }>
                                 Sales Return
