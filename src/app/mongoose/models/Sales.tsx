@@ -14,15 +14,15 @@ const SalesSchema = new Schema({
         type: Date,
         required: true
     },
-    salesCode : {
-        type:String,
-        required:true
+    salesCode: {
+        type: String,
+        required: true
     },
     items: [{
         itemCode: {
             type: String,
             required: true
-          },
+        },
         itemName: {
             type: String,
             required: true
@@ -42,38 +42,38 @@ const SalesSchema = new Schema({
         discountType: {
             type: String,
             required: true
-          },
+        },
         tax: {
             type: String,
             required: true
         },
         taxType: {
             type: String,
-            required:true
-          },
+            required: true
+        },
     }],
     note: {
         type: String,
     },
-    otherCharges:{
-        type:Number,
+    otherCharges: {
+        type: Number,
 
     },
-    taxType:{
-      type:String,  
+    taxType: {
+        type: String,
     },
-    discount:{
-        type:Number,
-        
+    discount: {
+        type: Number,
+
     },
-    discountType:{
-      type:String  
+    discountType: {
+        type: String
     },
     paymentType: {
         type: String,
         required: true
     },
-    status:{
+    status: {
         type: String,
         required: true
     }
@@ -83,4 +83,6 @@ const SalesSchema = new Schema({
 
 const Sales = mongoose.models.Sales || mongoose.model('Sales', SalesSchema)
 
+
+export const Return = mongoose.models.Return || mongoose.model('Return', SalesSchema)
 export default Sales;

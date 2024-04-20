@@ -22,42 +22,56 @@ interface FormState {
   billOtherCharge: number,
   billOverallDis: number
   billTotal: number,
-  billPaymentType: string,
+  billPaymentType: string | "",
   billAmount: any,
+  customerId: number
 
 }
 
 const page = () => {
-
   const { salesRecord } = useContext(ContextData);
   console.log("jkj", salesRecord);
-
-  const { c_name, items, paymentType } = salesRecord;
-
-
+  const { c_name, items, paymentType, otherCharges, discount, discountType, taxType, note, c_id, salesCode } = salesRecord;
+  console.log(salesCode);
+  
   const [salesReturnData, setSalesReturnData] = useState<FormState>({
     customerName: c_name,
+    customerId: c_id,
     billDate: new Date,
     billStatus: "Returned",
     billQuantity: 0,
-    billCharges: 0,
-    billTaxType: "",
-    billDiscount: 0,
-    billDiscountType: "",
-    billNote: "",
+    billCharges: otherCharges | 0,
+    billTaxType: taxType || "",
+    billDiscount: discount || "",
+    billDiscountType: discountType || "",
+    billNote: note || "",
     billSubtotal: 0,
     billOtherCharge: 0,
     billOverallDis: 0,
     billTotal: 0,
-    billPaymentType: paymentType,
+    billPaymentType: paymentType || "",
     billAmount: 0,
   })
 
   console.log(paymentType);
-  
 
-  const handleClick = () => {
+  useEffect(() => {
+    setItemList(items)
+  }, [items])
 
+
+  const handleClick = async () => {
+
+    const data = await axios.post("/api/sales", {
+      header: "return",
+      data: {
+        sales: salesReturnData,
+        items: itemList,
+        salesCode: salesCode,
+      }
+
+    })
+    console.log("res", data);
 
     console.log(salesReturnData);
   }
@@ -120,13 +134,11 @@ const page = () => {
 
   console.log(items);
 
-  useEffect(()=>{
-    setItemList(items)
-  },[items])
+
 
   const [itemList, setItemList] = useState<any>([]);
 
-  
+
 
   return (
     <div className="w-full ">

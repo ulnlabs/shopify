@@ -189,18 +189,15 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   useEffect(() => {
     setData({ ...data, billStatus: statusValue });
   }, [statusValue]);
-  const [taxType, setTaxType] = useState("");
+  const [taxType, setTaxType] = useState(data.billTaxType || "");
   useEffect(() => {
     setData({ ...data, billTaxType: taxType });
   }, [taxType]);
-  const [disType, setDisType] = useState("");
+  const [disType, setDisType] = useState(data.billDiscountType || "");
   useEffect(() => {
     setData({ ...data, billDiscountType: disType });
   }, [disType]);
-
-  console.log(data.billPaymentType);
   const [payType, setPayType] = useState(data.billPaymentType || "");
-  
   useEffect(() => {
     setData({ ...data, billPaymentType: payType });
   }, [payType]);
@@ -213,11 +210,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     itemList.map((item: any) => (
       newSubTotal += item.subtotal,
       quantity += item.quantity
-
-
     ))
-
-
     const taxPer = (data.billTaxType && data.billTaxType.match) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
     updateCharge = (taxPer * data.billCharges) / 100
     updateDiscount = data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Per %" ? ((newSubTotal + updateCharge) * data.billDiscount) / 100 : 0
@@ -231,16 +224,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       billOverallDis: updateDiscount || prevData.billOtherCharge,
       billTotal: newTotal,
     }));
-
-    console.log(data.billQuantity);
-
   }, [itemList])
-
-
-
   useEffect(() => {
     const updateOnChange = () => {
-
       const taxPer = (data.billTaxType) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
       const newOtherCharge = (data.billCharges * taxPer) / 100;
       const subTotal = Math.floor((newOtherCharge + data.billSubtotal) * 10) / 10;
@@ -254,8 +240,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     }
     updateOnChange();
   }, [data.billCharges, data.billDiscount, data.billDiscountType, data.billTaxType])
-
-
   const handleItemClick = (value: any) => {
     let exist = itemList.find((item: any) => item.itemName === value.itemName)
     setItemList({ ...itemList, value })
@@ -280,14 +264,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         }
       }
     }
-
-
     setInputItem("");
-
   }
-
-  console.log(itemList);
-
   const taxex = [
     {
       label: "GST 5%",
@@ -330,23 +308,14 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         ease: [0.43, 0.13, 0.23, 0.96]
       }
     },
-
   }
-
-
-
-
-
   return (
     <div className='mx-10 mt-10 mb-10'>
       <AnimatePresence mode="wait">
         {isPopUp &&
-
-
           <motion.div className="fixed inset-0 z-50 flex justify-center items-center backdrop-filter backdrop-blur-md"
             {...framerTemplate(popBg)}
           >
-
             <PopUp
               framerTemplate={framerTemplate}
               isPopUp={isPopUp}
@@ -360,8 +329,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               Items={Items}
             />
           </motion.div>
-
-
         }
       </AnimatePresence>
       <section>
@@ -393,8 +360,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                             className="px-3 py-1 cursor-pointer"
                             onClick={() => {
                               setData({ ...data, customerName: item.value, customerId: item.id });
-
-
                               setCustomerOpen(false);
                             }}>
                             {item.label}
@@ -421,24 +386,20 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             >
               <AiOutlineCalendar className="mr-2 cursor-default  h-4 w-4 shrink-0  opacity-50" />
               <Input placeholder='Select Customer' value={billDate ? format(billDate, "PPP") : ''} readOnly onClick={() => {
-
               }} className="  cursor-default " />
             </div>
           </div>
         </div>
-
         <div ref={itemRef} className="mt-5 relative">
           <div className="flex items-center border py-1 bg-primary-gray px-2 rounded-lg">
             <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
             <Input placeholder={searchPlaceholder}
               value={inputItem}
               onClick={() => {
-
               }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setInputItem(e.target.value)
               }}
-
             />
           </div>
           {
@@ -447,7 +408,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               {
                 Items.map((item: any, index: any) => {
                   console.log(item)
-
                   return (
                     <div className="">
                       <p key={index}
@@ -493,6 +453,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             <input id="Charges"
               className={` w-full rounded-md ${data.billTaxType ? "" : "pointer-events-none"}  border px-2 h-10 outline-none`}
               type="text"
+              value={data?.billCharges || ""}
               onChange={(e) => {
                 setData({ ...data, billCharges: e.target.value })
               }}
@@ -511,6 +472,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           <div className="col-start-1 pl-2 col-end-7 md:col-end-4">
             <input id="overall discount"
               onChange={(e) => { setData({ ...data, billDiscount: e.target.value }) }}
+              value={data?.billDiscount || ""}
               className={` w-full border rounded-md px-2 h-10 outline-none  ${data.billDiscountType ? "" : "pointer-events-none"} `}
               onKeyDown={(e) => {
                 if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key) {
@@ -520,6 +482,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               placeholder="Overall Discount" />
           </div>
           <div className="md:col-start-4 col-start-7 col-end-13 relative md:col-end-7  bg-primary-gray">
+            {/*   <Selections inputData={[{ laebl: "Cash" }, { label: "Credit Card" }, { label: "Debit Card" }, { label: "Paytm" }]} 
+            label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} /> */}
+
             <Selections inputData={discountType} label={disType} placeholder="Type" setLabel={setDisType} icon={false} />
           </div>
         </div>
@@ -529,6 +494,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               id="Charges"
               className=" w-full rounded-md px-2 h-auto resize-none outline-none"
               placeholder="Note"
+              value={data.billNote || ""}
               onChange={(e) => { setData({ ...data, billNote: e.target.value }) }}
             />
           </div>
@@ -538,6 +504,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             <p className="col-start-1 md:text-end col-end-3">Subtotal</p>
             <p className="col-span-2 col-start-3 md-pr-2 "> $ {data.billSubtotal} </p>
           </div>
+
         </div>
         <div className="md:col-end-13 md:col-span-4 py-2 h-auto rounded-lg col-span-full grid items-center bg-primary-gray">
           <div className="grid grid-cols-4 h-auto lg:grid-cols-3 justify-start gap-4  px-5  ">
@@ -558,7 +525,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           </div>
         </div>
       </div>
-      <section className="pt-5">
+      {/* <section className="pt-5">
         <h2 className="text-green-500">Previous Payment Information :</h2>
         <DataTable
           columns={sales_Column}
@@ -566,7 +533,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           rows={true}
           paginater={true}
         />
-      </section>
+      </section> */}
       <section className="grid grid-cols-12 md:gap-10 gap-5">
         <div className="mt-5 col-start-1 col-span-6 relative ">
           <Selections inputData={[{ laebl: "Cash" }, { label: "Credit Card" }, { label: "Debit Card" }, { label: "Paytm" }]} label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} />

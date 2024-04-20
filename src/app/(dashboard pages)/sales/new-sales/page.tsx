@@ -77,18 +77,20 @@ const page = () => {
 
       try {
         const { data } = await axios.post("/api/sales", {
-          sales: salesData,
-          items: itemList
+          header: "sales",
+          data: {
+            sales: salesData,
+            items: itemList
+          }
         })
         console.log(data);
-
       }
       catch (err) {
         console.log(err);
       }
     }
     else {
-      console.log("Please Fill All The Field");
+      alert("Please Fill All The Field");
 
     }
   }
