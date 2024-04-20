@@ -127,8 +127,11 @@ export const PUT = async (req: Request) => {
             endDate.setHours(endDate.getHours() + 5)
             endDate.setMinutes(endDate.getMinutes() + 30)
             if (fromDate.getDate() === endDate.getDate()) {
-                const data = await Return.find({
+
+
+                const data = await Sales.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
+                    status: "Returned"
                 }).sort({ 'createdAt': -1 }).lean();
                 console.log(data);
 
@@ -156,11 +159,12 @@ export const PUT = async (req: Request) => {
                 return NextResponse.json(modified);
             }
             else {
-                const data = await Return.find({
+                const data = await Sales.find({
                     date: {
                         $gte: fromDate,
                         $lte: endDate
-                    }
+                    },
+                    status: "Returned"
 
                 }).sort({ 'createdAt': -1 }).lean();
 
@@ -262,7 +266,8 @@ export async function POST(req: any) {
         }
 
         else if (header === "return") {
-            const newSales = await Return.insertMany([{
+            
+            /* const newSales = await Return.insertMany([{
                 c_id,
                 c_name,
                 date,
@@ -276,8 +281,7 @@ export async function POST(req: any) {
                 status,
                 note
             }], { session });
-
-            console.log(newSales);
+            console.log(newSales); */
 
 
             for (const { itemCode, quantity } of items) {
