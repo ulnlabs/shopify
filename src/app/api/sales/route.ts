@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/app/mongoose/db";
@@ -17,6 +16,8 @@ export const PUT = async (req: Request) => {
             const { total } = findTotal(item.price, item.quantity, item.tax, item.discountType, item.discount, item.taxType)
             return total
         })
+        console.log("fun");
+        
         const temp = overall.reduce((prev: number, current: number) => prev + current, initial);
         const taxValue = (sale.taxType?.match(/\d+/g)!.map(Number)[0] * sale.otherCharges / 100)
         const discount = sale.discountType && sale.discountType === "Per %" ? Math.floor(((sale.discount / 100) * (temp + taxValue)) * 10) / 10 : sale.discount;
@@ -71,7 +72,6 @@ export const PUT = async (req: Request) => {
                     date: fromDate.setUTCHours(0, 0, 0, 0),
                 }).sort({ 'createdAt': -1 }).lean();
                 console.log(data);
-
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
                         const { total, taxValue } = findTotal(item.price, item.quantity, item.tax, item.discountType, item.discount, item.taxType)
@@ -92,7 +92,6 @@ export const PUT = async (req: Request) => {
                     })
                 })
                 console.log(modified);
-
                 return NextResponse.json(modified);
             }
             else {
@@ -101,9 +100,7 @@ export const PUT = async (req: Request) => {
                         $gte: fromDate,
                         $lte: endDate
                     }
-
                 }).sort({ 'createdAt': -1 }).lean();
-
                 const modified = data.map((sale: any) => {
                     return ({
                         ...sale,
@@ -127,14 +124,11 @@ export const PUT = async (req: Request) => {
             endDate.setHours(endDate.getHours() + 5)
             endDate.setMinutes(endDate.getMinutes() + 30)
             if (fromDate.getDate() === endDate.getDate()) {
-
-
                 const data = await Sales.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
                     status: "Returned"
                 }).sort({ 'createdAt': -1 }).lean();
                 console.log(data);
-
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
                         const { total, taxValue } = findTotal(item.price, item.quantity, item.tax, item.discountType, item.discount, item.taxType)
