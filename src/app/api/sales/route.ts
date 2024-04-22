@@ -13,13 +13,12 @@ export const PUT = async (req: Request) => {
     const findOverall = (sale: any) => {
         const initial = 0;
         const overall = sale.items.map((item: any) => {
-            const { total } = findTotal(item.price, item.quantity, item.tax, item.discountType, item.discount, item.taxType)
+            const { total } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
             return total
         })
-        console.log("fun");
-        
+
         const temp = overall.reduce((prev: number, current: number) => prev + current, initial);
-        const taxValue = (sale.taxType?.match(/\d+/g)!.map(Number)[0] * sale.otherCharges / 100)
+        const taxValue = sale.taxType ? (sale.taxType?.match(/\d+/g)!.map(Number)[0] * sale.otherCharges / 100) : 0
         const discount = sale.discountType && sale.discountType === "Per %" ? Math.floor(((sale.discount / 100) * (temp + taxValue)) * 10) / 10 : sale.discount;
         console.log(discount);
 
@@ -55,6 +54,8 @@ export const PUT = async (req: Request) => {
                     ...item,
                     taxAmount: taxValue,
                     subtotal: total
+
+
                 })
             })
             return NextResponse.json(modified);
@@ -74,7 +75,7 @@ export const PUT = async (req: Request) => {
                 console.log(data);
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
-                        const { total, taxValue } = findTotal(item.price, item.quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        const { total, taxValue } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
                             taxAmount: taxValue,
@@ -131,7 +132,7 @@ export const PUT = async (req: Request) => {
                 console.log(data);
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
-                        const { total, taxValue } = findTotal(item.price, item.quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        const { total, taxValue } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
                             taxAmount: taxValue,
@@ -216,20 +217,22 @@ export async function POST(req: any) {
         date.setMinutes(date.getMinutes() + 30);
         date.setUTCHours(0, 0, 0, 0)
 
-        const items = data.items.map(({ itemName, tax, taxType, quantity: sold_quantity, price, discount, itemCode, discountType }: any) => (
+        const items = data.items.map(({ itemName, tax, taxType, quantity, price, discount, itemCode, discountType }: any) => {
+            const renamedQuantity = header === "sales" ? "sold_quantity" : header ===
+                "return" ? "returned_quantity" : " quantity";
 
-
-            {
+            return {
                 itemName,
                 tax,
-                sold_quantity,
+                [renamedQuantity]: quantity,
                 price,
                 taxType,
                 discount,
                 discountType,
                 itemCode
-            })
-        );
+            };
+        });
+
         console.log(typeof (items[0].sold_quantity));
 
         if (header === "sales") {
@@ -284,9 +287,18 @@ export async function POST(req: any) {
             console.log(newSales); */
 
 
-            for (const { itemCode, quantity } of items) {
-                const updated = await stocks.updateMany({ itemCode: itemCode }, { $inc: { quantity: +quantity }, $set: { status: "returned" } }, { session });
+            for (const { itemCode, returned_quantity } of items) {
+                const updated = await stocks.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity }, $set: { status: "returned" } }, { session });
                 console.log(updated);
+
+                const changeSales = await Sales.updateMany({ itemCode: itemCode }, {
+                    $inc: { sold_quantity: -returned_quantity },
+                    $set: { returned_quantity: returned_quantity }
+                }, { session });
+
+                console.log(changeSales);
+
+
             }
 
             const change = await Sales.updateOne({ salesCode: code }, { $set: { status: "Returned" } });
