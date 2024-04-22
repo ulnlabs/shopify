@@ -28,10 +28,15 @@ export const PUT = async (req: Request) => {
         return temp + taxValue - discount;
     }
 
-    const findTotal = (price: number, quantity: number, tax: string, discountType: string, discount: number, taxType: string,) => {
+    const findTotal = (price: number, quantity: number = 0, tax: string, discountType: string, discount: number, taxType: string,) => {
         const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
+        console.log(taxValue);
+
+
         const discountValue = discountType === "Fixed" ? discount * quantity : discountType === "Per %" ? (discount * price / 100) * quantity : 0;
-        const total = taxType.toLocaleLowerCase() === "inclusive" ? price + discountValue : taxValue + price + discountValue
+        console.log(discountValue);
+
+        const total = taxType.toLocaleLowerCase() === "inclusive" ? price * quantity + discountValue : taxValue + price * quantity + discountValue
         return { total, taxValue };
     }
     try {
@@ -71,6 +76,11 @@ export const PUT = async (req: Request) => {
             if (fromDate.getDate() === endDate.getDate()) {
                 const data = await Sales.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
+                    $or: [
+                        { status: "Sold" },
+                        { status: "Return Raised" }
+
+                    ]
                 }).sort({ 'createdAt': -1 }).lean();
                 console.log(data);
                 const modified = data.map((sale: any) => {
@@ -79,7 +89,8 @@ export const PUT = async (req: Request) => {
                         return ({
                             ...item,
                             taxAmount: taxValue,
-                            subtotal: total
+                            subtotal: total,
+                            quantity: item.sold_quantity
                         })
                     })
                     return ({
@@ -99,17 +110,37 @@ export const PUT = async (req: Request) => {
                 const data = await Sales.find({
                     date: {
                         $gte: fromDate,
-                        $lte: endDate
-                    }
+                        $lte: endDate,
+                    },
+                    $or: [
+                        { status: "Sold" },
+                        { status: "Return Raised" }
+
+                    ]
+
                 }).sort({ 'createdAt': -1 }).lean();
+
+
                 const modified = data.map((sale: any) => {
+
+                    const itemList = sale.items.map((item: any) => {
+                        const { total, taxValue } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        return ({
+                            ...item,
+                            taxAmount: taxValue,
+                            subtotal: total,
+                            quantity: item.sold_quantity
+                        })
+                    })
+
                     return ({
                         ...sale,
                         date: format(sale.date, "dd-MM-yy"),
                         c_name: sale.c_name,
                         salesCode: sale.salesCode,
                         total: findOverall(sale),
-                        status: sale.status
+                        status: sale.status,
+                        items: itemList
                     })
                 })
                 console.log(modified);
@@ -208,8 +239,10 @@ export async function POST(req: any) {
         const codeValue = counter > 0 ? String(counter + 1) : "1"
         const salesCode = "sl" + codeValue.padStart(4, '0');
 
-        const { customerName: c_name, billDiscountType: discountType, billDiscount: discount, billCharges: otherCharges, customerId: c_id, billDate, billPaymentType: paymentType, billStatus: status, billTaxType: taxType, billNote: note } = data.sales;
+        const { customerName: c_name, billDiscountType: discountType, billDiscount: discount, billCharges: otherCharges, customerId: c_id, billDate, billPaymentType: paymentType/* , billStatus: status */, billTaxType: taxType, billNote: note } = data.sales;
 
+        const { status } = data
+        console.log(status);
 
 
         const date = new Date(billDate);
@@ -290,18 +323,20 @@ export async function POST(req: any) {
             for (const { itemCode, returned_quantity } of items) {
                 const updated = await stocks.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity }, $set: { status: "returned" } }, { session });
                 console.log(updated);
+                console.log(returned_quantity);
 
-                const changeSales = await Sales.updateMany({ itemCode: itemCode }, {
-                    $inc: { sold_quantity: -returned_quantity },
-                    $set: { returned_quantity: returned_quantity }
-                }, { session });
+                const changeSales = await Sales.updateMany(
+                    { "items.itemCode": itemCode }, // Filter criteria
+                    { $inc: { "items.$.sold_quantity": -returned_quantity, "items.$.returned_quantity": +returned_quantity } },
+                    { session }
+                );
 
                 console.log(changeSales);
 
 
             }
 
-            const change = await Sales.updateOne({ salesCode: code }, { $set: { status: "Returned" } });
+            const change = await Sales.updateOne({ salesCode: code }, { $set: { status: status } });
 
             console.log(change);
 

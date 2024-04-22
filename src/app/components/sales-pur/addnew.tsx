@@ -47,7 +47,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     ) */
   };
   const i_QUANTITY: any = {
-    accessorKey: "sold_quantity",
+    accessorKey: "quantity",
     header: "QUANTITY",
     cell: ({ row }: any) => (
       <span className="flex gap-1 items-center">
@@ -72,7 +72,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         }} >
           <AiOutlineMinus />
         </button>
-        {row.original.sold_quantity}
+        {row.original.quantity}
         <button onClick={() => {
           const check = itemList.find((item: any) => item.itemName === row.original.itemName)
           const update = Items.find((item: any) => item.itemName === row.original.itemName)

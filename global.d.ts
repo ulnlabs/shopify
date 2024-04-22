@@ -7,7 +7,7 @@ type customerAdd = {
   city: string;
   pincode: string;
   address: string;
-  id:number
+  id: number
 };
 type contextData = {
   formData: customerAdd;
@@ -48,8 +48,9 @@ type supplierColumn = {
 };
 export interface FormState {
   customerName: string,
-  customerId:number,
-  billDate: Date ,
+  billReturnQuantity?: number;
+  customerId: number,
+  billDate: Date,
   billStatus?: string,
   billQuantity: number,
   billCharges: any,

@@ -11,7 +11,7 @@ import { ContextData } from "../../../../../contextapi";
 interface FormState {
   customerName: string,
   billDate: Date,
-  billStatus: string,
+  billStatus?: string,
   billQuantity: number,
   billCharges: any,
   billTaxType: string,
@@ -33,12 +33,11 @@ const page = () => {
   console.log("jkj", salesRecord);
   const { c_name, items, paymentType, otherCharges, discount, discountType, taxType, note, c_id, salesCode } = salesRecord;
   console.log(salesCode);
-  
+
   const [salesReturnData, setSalesReturnData] = useState<FormState>({
     customerName: c_name,
     customerId: c_id,
     billDate: new Date,
-    billStatus: "Returned",
     billQuantity: 0,
     billCharges: otherCharges | 0,
     billTaxType: taxType || "",
@@ -59,6 +58,7 @@ const page = () => {
     setItemList(items)
   }, [items])
 
+  const [status, setStatus] = useState<string>("")
 
   const handleClick = async () => {
 
@@ -68,6 +68,7 @@ const page = () => {
         sales: salesReturnData,
         items: itemList,
         salesCode: salesCode,
+        status: status
       }
 
     })
@@ -138,7 +139,21 @@ const page = () => {
 
   const [itemList, setItemList] = useState<any>([]);
 
+  useEffect(() => {
+    const length = itemList.length;
+    console.log(length);
 
+    if (items != itemList) {
+      setStatus("Return Raised")
+    }
+
+    else if (items == itemList) {
+      setStatus("Returned");
+    }
+
+  }, [itemList])
+
+  console.log(salesReturnData);
 
   return (
     <div className="w-full ">

@@ -45,9 +45,9 @@ const page = () => {
   const [salesData, setSalesData] = useState<FormState>({
     customerName: "",
     customerId: 0,
-    billStatus: "Sold",
     billDate: new Date,
     billQuantity: 0,
+    billReturnQuantity: 0,
     billCharges: 0,
     billTaxType: "",
     billDiscount: 0,
@@ -80,7 +80,8 @@ const page = () => {
           header: "sales",
           data: {
             sales: salesData,
-            items: itemList
+            items: itemList,
+            status: "Sold"
           }
         })
         console.log(data);
