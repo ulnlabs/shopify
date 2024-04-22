@@ -222,16 +222,22 @@ export async function POST(req: any) {
         date.setMinutes(date.getMinutes() + 30);
         date.setUTCHours(0, 0, 0, 0)
 
-        const items = data.items.map(({ itemName, tax, taxType, quantity, price, discount, itemCode, discountType }: any) => ({
-            itemName,
-            tax,
-            quantity,
-            price,
-            taxType,
-            discount,
-            discountType,
-            itemCode
-        }));
+        const items = data.items.map(({ itemName, tax, taxType, quantity: sold_quantity, price, discount, itemCode, discountType }: any) => (
+
+
+            {
+                itemName,
+                tax,
+                sold_quantity,
+                price,
+                taxType,
+                discount,
+                discountType,
+                itemCode
+            })
+        );
+        console.log(typeof (items[0].sold_quantity));
+
         if (header === "sales") {
 
 
@@ -253,8 +259,8 @@ export async function POST(req: any) {
             console.log(newSales);
 
 
-            for (const { itemCode, quantity } of items) {
-                const updated = await stocks.updateOne({ itemCode: itemCode }, { $inc: { quantity: -quantity } }, { session });
+            for (const { itemCode, sold_quantity } of items) {
+                const updated = await stocks.updateOne({ itemCode: itemCode }, { $inc: { quantity: -sold_quantity } }, { session });
                 console.log(updated);
             }
 
@@ -266,7 +272,7 @@ export async function POST(req: any) {
         }
 
         else if (header === "return") {
-            
+
             /* const newSales = await Return.insertMany([{
                 c_id,
                 c_name,
@@ -285,7 +291,7 @@ export async function POST(req: any) {
 
 
             for (const { itemCode, quantity } of items) {
-                const updated = await stocks.updateOne({ itemCode: itemCode }, { $inc: { quantity: +quantity } }, { session });
+                const updated = await stocks.updateMany({ itemCode: itemCode }, { $inc: { quantity: +quantity }, $set: { status: "returned" } }, { session });
                 console.log(updated);
             }
 

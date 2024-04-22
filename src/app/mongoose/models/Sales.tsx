@@ -27,9 +27,12 @@ const SalesSchema = new Schema({
             type: String,
             required: true
         },
-        quantity: {
+        sold_quantity: {
             type: Number,
             required: true
+        },
+        returned_quantity: {
+            type: Number,
         },
         price: {
             type: Number,
