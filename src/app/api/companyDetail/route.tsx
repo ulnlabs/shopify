@@ -11,18 +11,23 @@ export async function PUT(req: Request) {
     }
     catch (error) {
         console.log(error);
+        return NextResponse.json({ message: "Error fetching data"  }, { status: 500 });
     }
 
 }
 
 
 export async function POST(req: Request) {
+
     await connectDB();
     try {
-        const { data } = await req.json();
-        await companyDetail.create(data)
-
-        return NextResponse.json({ message: "Data saved successfully" }, { status: 200 });
+        const { data,edit } = await req.json();
+        if(edit==true){
+        
+            await companyDetail.updateMany({},{ $set: data },{new:true });
+    
+            return NextResponse.json({ message: "Data saved successfully" ,alert:true }, { status: 200 });
+        }
     } catch (error) {
         console.error("Error saving data:", error);
         return NextResponse.json({ message: "Error saving data" }, { status: 500 });
