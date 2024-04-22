@@ -25,7 +25,7 @@ function Companyprofile() {
 
   const [formdata, setformdata] = useState<any>({})
   const [edit, setEdit] = useState(false)
-  const [alert,setAlert]=useState(false)
+  const [alert, setAlert] = useState(false)
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -40,16 +40,16 @@ function Companyprofile() {
       reader.readAsDataURL(file);
     }
   }
-  useEffect(()  => {
+  useEffect(() => {
     const fetchData = async () => {
-      const response=await axios.put("/api/companyDetail");
-      const fetchData=response.data[0];
+      const response = await axios.put("/api/companyDetail");
+      const fetchData = response.data[0];
       if (fetchData) {
         setformdata(fetchData)
+      }
     }
-  }
-  fetchData()
-}, []);
+    fetchData()
+  }, []);
 
 
 
@@ -58,13 +58,14 @@ function Companyprofile() {
     setEdit(false)
 
     const handuler = async () => {
-      
+
       const { data } = await axios.post("/api/companyDetail",
-        { data: formdata ,
-          edit:edit
+        {
+          data: formdata,
+          edit: edit
         }
       )
-    setAlert(data.alert)
+      setAlert(data.alert)
     }
     handuler()
 
@@ -75,20 +76,20 @@ function Companyprofile() {
   function handleChange(e: any) {
     setformdata({ ...formdata, [e.target.name]: e.target.value })
   }
-  
+
 
   return (
-    <div className=" flex justify-center relative py-4 ">
+    <div className=" flex justify-center relative py-4  ">
       <div className=" border w-[97%] rounded-md">
-       <AnimatePresence>
+        <AnimatePresence>
 
-        
-        {
-        alert && <Update close={setAlert}  />
-}
 
-       </AnimatePresence>
-       
+          {
+            alert && <Update close={setAlert} />
+          }
+
+        </AnimatePresence>
+
         <div className="flex justify-between p-4 mt-7 ">
           <div className=""></div>
           <div className="">
@@ -98,61 +99,61 @@ function Companyprofile() {
             }} className=" border rounded-md px-5 hover:bg-blue-300 transition-all duration-500 hover:scale-110 ease-in-out font-medium  ">Edit</button>
           </div>
         </div>
-        <form onSubmit={handlesubmit} action="" className='  grid  grid-col-1 lg:grid-cols-2 gap-y-3  pr-10' >
+        <form onSubmit={handlesubmit} action="" className='  grid  grid-col-1 lg:grid-cols-2 gap-y-3 py-7  pr-10' >
           <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-5  ">
             <label htmlFor="companyName" className='mr-2 md:col-span-5 col-span-12 '>
               Company Name <span className=' text-red-600'> *</span>
             </label>
-            <input value={formdata.companyName}  style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" autoFocus id="companyName" name="companyName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
+            <input value={formdata.companyName} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" autoFocus id="companyName" name="companyName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12 grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="mobile" className='mr-2 md:col-span-5 col-span-12 '>
               Mobile  <span className=' text-red-600'> *</span>
             </label>
-            <input  value={formdata.mobile} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="mobile" id="mobile" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
+            <input value={formdata.mobile} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="mobile" id="mobile" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="email" className='mr-2 md:col-span-5 col-span-12 '>
               Email  <span className=' text-red-600'> *</span>
             </label>
-            <input  value={formdata.email} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="email" id="email" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
+            <input value={formdata.email} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="email" id="email" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="gstNo" className='mr-2 md:col-span-5 col-span-12 '>
               GST Number  <span className=' text-red-600'> *</span>
             </label>
-            <input  value={formdata.gstNo} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="gstNo" id="gstNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
+            <input value={formdata.gstNo} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="gstNo" id="gstNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="vatNo" className='mr-2 md:col-span-5 col-span-12 '>
               VAT Number  <span className=' text-red-600'> *</span>
             </label>
-            <input  value={formdata.vatNo} style={edit ? {} : { cursor: "not-allowed" }}onChange={handleChange} type="text" name="vatNo" id="vatNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
+            <input value={formdata.vatNo} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="vatNo" id="vatNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="bankdetails" className='mr-2 md:col-span-5 col-span-12 '>
               Bank Details  <span className=' text-red-600'> *</span>
             </label>
-            <input  value={formdata.bankdetails} style={edit ? {} : { cursor: "not-allowed" }}onChange={handleChange} type="text" name="bankdetails" id="bankdetails" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
+            <input value={formdata.bankdetails} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="bankdetails" id="bankdetails" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="panNo" className='mr-2 md:col-span-5 col-span-12 '>PAN Number
               <span className=' text-red-600'> *</span>
             </label>
-            <input  value={formdata.panNo} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="panNo" id="panNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
+            <input value={formdata.panNo} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="panNo" id="panNo" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
             <label htmlFor="country" className='mr-2 md:col-span-5 col-span-12 '>
               Country <span className=' text-red-600'> *</span>
             </label>
-            <select value={formdata.country} style={edit ? {} : { cursor: "not-allowed" }}onChange={handleChange} name="country" id="state" className=' border rounded-md h-8 md:col-span-6 col-span-12' disabled={!edit} >
+            <select value={formdata.country} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} name="country" id="state" className=' border rounded-md h-8 md:col-span-6 col-span-12' disabled={!edit} >
               <option value={""} >
               </option>
               <option value={"India"} >
@@ -164,7 +165,7 @@ function Companyprofile() {
             <label htmlFor="city" className='mr-2 md:col-span-5 col-span-12 '>
               City <span className=' text-red-600'> *</span>
             </label>
-            <select value={formdata.city} style={edit ? {} : { cursor: "not-allowed" }}onChange={handleChange} name="city" disabled={!edit} id="state" className=' border rounded-md h-8 md:col-span-6 col-span-12'>
+            <select value={formdata.city} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} name="city" disabled={!edit} id="state" className=' border rounded-md h-8 md:col-span-6 col-span-12'>
               {Data.map((City, index) => (
 
                 <option key={index} value={City.city}>{City.city}</option>
@@ -176,7 +177,7 @@ function Companyprofile() {
             <label htmlFor="postalcode" className='mr-2 md:col-span-5 col-span-12 '>
               Postal Code <span className=' text-red-600'> *</span>
             </label>
-            <input   value={formdata.postalcode} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="postalcode" id="postalcode" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
+            <input value={formdata.postalcode} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} type="text" name="postalcode" id="postalcode" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
@@ -201,9 +202,9 @@ function Companyprofile() {
 
             <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
               <label htmlFor="logo" className='mr-2 md:col-span-5 col-span-12 '>
-                Site logo 
+                Site logo
               </label>
-              <input  value={formdata.logo} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} disabled={!edit} type="file" id="logo" accept=".png,.jpeg" className=' border rounded-md h-8 md:col-span-6 col-span-12 border-none  ' />
+              <input value={formdata.logo} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} disabled={!edit} type="file" id="logo" accept=".png,.jpeg" className=' border rounded-md h-8 md:col-span-6 col-span-12 border-none  ' />
 
             </div>
             <div className="md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5">
