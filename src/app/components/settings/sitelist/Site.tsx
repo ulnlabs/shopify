@@ -1,21 +1,13 @@
 "use client";
-import React, { useState } from "react";
-interface Siteinformation {
-  siteName: String,
-  dateFormat: String,
-  currency: String,
-  enableRoundOff: Boolean,
-  disableTax: Boolean,
-  language: String,
-  siteLogo: String
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
-}
 const dateFormat=["DD/MM/YYYY","YYYY/MM/DD"]
 
 
 
 
-function Companyprofile({ edit }: any) {
+function Site({ edit }: any) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   function handleFileChange(e: any) {
@@ -32,38 +24,62 @@ function Companyprofile({ edit }: any) {
     }
   }
 
-  const [formData, setformdata] = useState<Siteinformation>({
-    siteName: "",
-    dateFormat: "",
-    currency: " ₹ INR",
-    enableRoundOff: false,
-    disableTax: false,
-    language: "",
-    siteLogo: ""
-  })
+  const [formdata, setformdata] = useState<any>({})
+  
+  const [edited, setEdited] = useState(false)
+  const [alert, setAlert] = useState(false)
 
-  function handleData(event: any) {
-    const { name, value } = event.target
-    setformdata(previous => ({ ...previous, [name]: value }))
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = await axios.put("/api/sitelist");
+  //     const fetchData = response.data[0];
+  //     if (fetchData) {
+  //       setformdata(fetchData)
+  //     }
+  //   }
+  //   fetchData()
+  // }, []);
 
 
+
+  function handlesubmit(e: any) {
+    e.preventDefault();
+    console.log(formdata);
+    
+    setEdited(false)
+    const handuler = async () => {
+      console.log("start ");
+      
+
+      const { data } = await axios.post("/api/sitelist",
+        {
+          data: formdata,
+        }
+      )
+      console.log("end");
+      
+      setAlert(data.alert)
+    }
+    handuler()
+
+    setTimeout(() => {
+      setAlert(false)
+    }, 3000)
   }
-  function hanndleSubmit(event: any) {
-    event.preventDefault();
-    console.log(formData);
-
-
+  function handleChange(e: any) {
+    setformdata({ ...formdata, [e.target.name]: e.target.value })
   }
+
 
   return (
     <>
       <div className="">
-        <form action="" onSubmit={hanndleSubmit} className=' relative  flex flex-col   lg:grid lg:grid-cols-2 gap-y-3  p-5'>
+        <form action="" onSubmit={handlesubmit} className=' relative  flex flex-col   lg:grid lg:grid-cols-2 gap-y-3  p-5'>
           <div className=" md:grid md:grid-cols-12 grid   p-2 md:text-end  md:gap-x-5  ">
             <label htmlFor="siteName" className='mr-2 md:col-span-5 col-span-12 '>
               Site Name <span className=' text-red-600'> *</span>
             </label>
-            <input disabled={!edit} onChange={handleData} type="text" id="siteName" name="siteName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input disabled={!edit} onChange={handleChange} type="text" id="siteName" name="siteName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
 
@@ -71,7 +87,7 @@ function Companyprofile({ edit }: any) {
             <label htmlFor="dateFormat" className='mr-2 md:col-span-5 col-span-12 '>
               Date Format  <span className=' text-red-600'> *</span>
             </label>
-            <select name="dateFormat" id="dateFormat" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleData}>
+            <select name="dateFormat" id="dateFormat" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleChange}>
               <option value=""></option>
               <option value="DD/MM/YYYY">DD/MM/YYYY</option>
               <option value="YYYY/MM/DD">YYYY/MM/DD</option>
@@ -83,21 +99,21 @@ function Companyprofile({ edit }: any) {
             <label htmlFor="currency" className='mr-2 md:col-span-5 col-span-12 '>
               Currency  <span className=' text-red-600'> *</span>
             </label>
-            <input disabled={!edit} onChange={handleData} type="text" value={formData.currency as any} name="currency" className=' border pl-3 rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input disabled={!edit} onChange={handleChange} type="text" value={formdata.currency as any} name="currency" className=' border pl-3 rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
           <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
             <label htmlFor="enableRoundOff" className=' md:col-span-5 col-span-1 basis-1/4 sm:text-stat md:text-end md:mr-[10%] '>
               Enable Round Off
             </label>
-            <input disabled={!edit} onChange={handleData} type="checkbox" name="enableRoundOff" className=' cursor-pointer md:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
+            <input disabled={!edit} onChange={handleChange} type="checkbox" name="enableRoundOff" className=' cursor-pointer md:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
 
           </div>
           <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
             <label htmlFor="disableTax" className=' md:col-span-5 col-span-1 basis-1/4 sm:text-stat md:text-end md:mr-[10%] '>
               Disable Tax
             </label>
-            <input disabled={!edit} onChange={handleData} type="checkbox" name="disableTax" className=' cursor-pointer md:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
+            <input disabled={!edit} onChange={handleChange} type="checkbox" name="disableTax" className=' cursor-pointer md:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
@@ -105,7 +121,7 @@ function Companyprofile({ edit }: any) {
               Language <span className=' text-red-600'> *</span>
             </label>
           
-            <select name="language" id="language" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleData}>
+            <select name="language" id="language" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleChange}>
               <option value=""></option>
               <option value="English">English</option>
              
@@ -153,4 +169,4 @@ function Companyprofile({ edit }: any) {
   );
 }
 
-export default Companyprofile;
+export default Site;

@@ -1,13 +1,12 @@
 "use client";
 import React, { FormEvent, useContext, useState, useEffect } from "react";
 import Data from "@/app/components/settings/settingsData"
-import { json } from "stream/consumers";
 import axios from "axios";
 import { AnimatePresence } from 'framer-motion';
 import Update from "@/app/components/settings/popup/Update"
 // interface companydata {
 //   companyName: string,
-//   mobile?: number,
+//   mobile?: string,
 //   address: string,
 //   state: string,
 //   postalcode: string,
@@ -17,16 +16,16 @@ import Update from "@/app/components/settings/popup/Update"
 //   bankdetails: string,
 //   vatNo: string,
 //   gstNo: string,
-//   email: string,
-//   logo: string
+//   email: string
 // }
+
 function Companyprofile() {
 
 
-  const [formdata, setformdata] = useState<any>({logo:""})
+  const [formdata, setformdata] = useState<any>({})
+  
   const [edit, setEdit] = useState(false)
   const [alert, setAlert] = useState(false)
- 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,17 +42,12 @@ function Companyprofile() {
 
   function handlesubmit(e: any) {
     e.preventDefault();
-    console.log(formdata);
-    
     setEdit(false)
-
     const handuler = async () => {
 
       const { data } = await axios.post("/api/companyDetail",
         {
           data: formdata,
-          edit: edit,
-        
         }
       )
       setAlert(data.alert)
@@ -67,6 +61,7 @@ function Companyprofile() {
   function handleChange(e: any) {
     setformdata({ ...formdata, [e.target.name]: e.target.value })
   }
+
   return (
     <div className=" flex justify-center relative py-4  ">
       <div className=" border w-[97%] rounded-md">
@@ -181,10 +176,9 @@ function Companyprofile() {
             <label htmlFor="address" className='mr-2 md:col-span-5 col-span-12 '>
               Address <span className=' text-red-600'> *</span>
             </label>
-            <textarea value={formdata.address} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} disabled={!edit} cols={10} rows={10} name="address" id="address" className=' border rounded-md  md:col-span-6 h-[60px] col-span-12  ' />
+            <textarea value={formdata.address} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} disabled={!edit}   name="address" id="address" className=' border p-2 rounded-md resize-none md:col-span-6 h-[80px] col-span-12  ' />
 
           </div>
-         
           {
             edit && <div className="sm:p-10 mt-10 flex justify-center gap-4 lg:absolute lg:-bottom-10 lg:right-[50%] lg:p-0 lg:translate-x-[50%] ">
               <input
