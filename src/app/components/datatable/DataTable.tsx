@@ -41,6 +41,7 @@ interface DataTableProps<TData, TValue> {
   filter?: boolean;
   rows?: boolean;
   paginater?: boolean;
+  route?: string;
   final?: boolean;
   totalPrice?: number;
   totalQuantity?: number;
@@ -65,6 +66,7 @@ export default function DataTable<TData, TValue>({
   rows,
   paginater,
   final,
+  route,
   totalPrice,
   totalQuantity,
   totalTaxAmount,
@@ -156,7 +158,7 @@ export default function DataTable<TData, TValue>({
 
 
 
-  
+
 
   /* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
   return (
@@ -268,79 +270,79 @@ export default function DataTable<TData, TValue>({
                 ></TableCell>
               </TableRow>
             )
-            
-           
+
+
             }
 
           </TableBody>
           <TableFooter>
-                        {
+            {
               final && (
                 <TableRow>
-                    <TableCell
-                      colSpan={2}
-                      rowSpan={1}
-                      className=" text-center text-base "
-                    >Total :
-                    </TableCell>
-                    <TableCell
-                      colSpan={1}
-                      rowSpan={1}
-                      className=""
-                    >{totalPrice}
-                    </TableCell>
-                    <TableCell
-                      colSpan={1}
-                      rowSpan={1}
-                      className=""
-                    >{totalQuantity}
-                    </TableCell>
-                    <TableCell
-                      colSpan={1}
-                      rowSpan={1}
-                      className=""
-                    >
-                    </TableCell> <TableCell
-                      colSpan={1}
-                      rowSpan={1}
-                      className=""
-                    >
-                    </TableCell> <TableCell
-                      colSpan={1}
-                      rowSpan={1}
-                      className=""
-                    >{totalTaxAmount}
-                    </TableCell>
-                    <TableCell
-                      colSpan={1}
-                      rowSpan={1}
-                      className=""
-                    >
-                    </TableCell>
-                    <TableCell
-                      colSpan={1}
-                      rowSpan={1}
-                      className=""
-                    >{totalDisAmount}
-                    </TableCell>
-                     <TableCell
-                      colSpan={1}
-                      rowSpan={1}
-                      className=""
-                    >
-                    </TableCell>
-                     <TableCell
-                      colSpan={1}
-                      rowSpan={1}
-                      className=""
-                    >{totalAmount}
-                    </TableCell>
-                  </TableRow>
+                  <TableCell
+                    colSpan={2}
+                    rowSpan={1}
+                    className=" text-center text-base "
+                  >Total :
+                  </TableCell>
+                  <TableCell
+                    colSpan={1}
+                    rowSpan={1}
+                    className=""
+                  >{totalPrice}
+                  </TableCell>
+                  <TableCell
+                    colSpan={1}
+                    rowSpan={1}
+                    className=""
+                  >{totalQuantity}
+                  </TableCell>
+                  <TableCell
+                    colSpan={1}
+                    rowSpan={1}
+                    className=""
+                  >
+                  </TableCell> <TableCell
+                    colSpan={1}
+                    rowSpan={1}
+                    className=""
+                  >
+                  </TableCell> <TableCell
+                    colSpan={1}
+                    rowSpan={1}
+                    className=""
+                  >{totalTaxAmount}
+                  </TableCell>
+                  <TableCell
+                    colSpan={1}
+                    rowSpan={1}
+                    className=""
+                  >
+                  </TableCell>
+                  <TableCell
+                    colSpan={1}
+                    rowSpan={1}
+                    className=""
+                  >{totalDisAmount}
+                  </TableCell>
+                  <TableCell
+                    colSpan={1}
+                    rowSpan={1}
+                    className=""
+                  >
+                  </TableCell>
+                  <TableCell
+                    colSpan={1}
+                    rowSpan={1}
+                    className=""
+                  >{totalAmount}
+                  </TableCell>
+                </TableRow>
               )
             }
-            </TableFooter>        
-            </Table>
-      </div>
+          </TableFooter>
+        </Table>
+      </motion.div>
       {veiw.rows && (
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}

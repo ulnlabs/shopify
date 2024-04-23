@@ -77,7 +77,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           console.log(update.quantity);
           console.log(row.original.quantity < update.quantity);
 
-          if (row.original.quantity < update.quantity || !isSales || (isReturn && row.original.quantity <= update.quantity)) {
+          if (row.original.quantity < update.quantity || !isSales) {
+            console.log("entered");
+
             const updateTax = Math.floor(((row.original.taxAmount / row.original.quantity)) * 10) / 10;
             const updateDis = Math.floor((row.original.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
             const subTotal = Math.floor((row.original.taxType === "Exclusive" ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 10) / 10;
@@ -322,6 +324,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       }
     },
   }
+  console.log(Items);
+
   return (
     <div className='mx-10 mt-10 mb-10'>
       <AnimatePresence mode="wait">
@@ -340,6 +344,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               inputData={taxex}
               icon={false}
               Items={Items}
+
             />
           </motion.div>
         }
@@ -452,6 +457,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           columns={isSales ? sales_Column : pur_Column}
           rows={true}
           paginater={true}
+          route="/api/Sales"
           data={itemList} />
       </section>
       <div className={`grid grid-cols-12 grid-rows-4 ${itemList.length > 0 ? "" : "pointer-events-none"} grid-flow-col gap-4`}>
