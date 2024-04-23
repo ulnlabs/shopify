@@ -1,6 +1,5 @@
 "use client"
-import NewSales from "@/app/components/sales-pur/addnew";
-import { useReturn } from "@/app/components/sales-pur/returnContext";
+import NewReturn from "@/app/components/sales-pur/return";
 import axios from "axios";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
@@ -105,45 +104,20 @@ const page = () => {
 
   }, [salesReturnData.customerName])
 
-  const [item, setItem] = useState<any>(items);
 
   const [inputItem, setInputItem] = useState<String>("");
-  const [product, setProduct] = useState<any>(items)
-  /*   useEffect(() => {
-      const fetchItem = async () => {
-  
-        const response = await axios.put("/api/sales",
-          {
-            data: { header: "getItems" }
-  
-          },);
-        setItem(response.data)
-        console.log(response.data);
-      }
-      fetchItem();
-    }, []); */
-
-  console.log("product", product);
+  const [product, setProduct] = useState<any>([])
 
   useEffect(() => {
-    setProduct(item?.filter((item: any) => {
-      console.log("open");
-
+    setProduct(items?.filter((item: any) => {
       return inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase())
     }
     ))
   }, [inputItem])
 
-  console.log(items);
-
-
-
   const [itemList, setItemList] = useState<any>([]);
 
   useEffect(() => {
-    const length = itemList.length;
-    console.log(length);
-
     if (items != itemList) {
       setStatus("Return Raised")
     }
@@ -160,22 +134,21 @@ const page = () => {
     <div className="w-full ">
       <h1 className="px-10 pt-5 ">New Sales Return</h1>
 
-      <NewSales
+      <NewReturn
         placeholder="Search Customer"
         data={salesReturnData}
         setData={setSalesReturnData}
         inputItem={inputItem}
         setInputItem={setInputItem}
         Items={product}
+        products={items}
         customerData={cus}
         isSales={true}
         itemList={itemList}
         setItemList={setItemList}
-        isReturn
         searchPlaceholder="Search Sales Code"
-
-
-      />      <div className="flex justify-center pt-5 pb-10 gap-10">
+      />
+      <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
         <Link href={"/dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
       </div>

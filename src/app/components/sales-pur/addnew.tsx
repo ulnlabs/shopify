@@ -29,7 +29,7 @@ const sample = [
     subtotal: 10,
   }
 ]
-const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList, isReturn, searchPlaceholder }: any) => {
+const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList, searchPlaceholder }: any) => {
 
   console.log(itemList);
 
@@ -53,6 +53,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       <span className="flex gap-1 items-center">
 
         <button onClick={() => {
+          /*    const update = Items.find((item: any) => item.itemName === row.original.itemName)
+             console.log(update.quantity); */
+          console.log(row.original.quantity);
           if (row.original.quantity > 1) {
             const updateTax = Math.floor(((row.original.taxAmount / row.original.quantity)) * 10) / 10;
             const updateDis = Math.floor((row.original.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
@@ -65,6 +68,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               taxAmount: Math.floor(row.original.quantity * updateTax * 10) / 10,
               subtotal: Math.floor(row.original.quantity * subTotal * 10) / 10
             }
+            console.log(row.original.quantity);
+
             const upQuantity = itemList.map((item: any) => item.itemName === row.original.itemName ? uplist : item)
             setItemList(upQuantity)
           }
@@ -75,10 +80,11 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         <button onClick={() => {
           const update = Items.find((item: any) => item.itemName === row.original.itemName)
           console.log(update.quantity);
+          console.log(row.original.quantity);
+
           console.log(row.original.quantity < update.quantity);
 
           if (row.original.quantity < update.quantity || !isSales) {
-            console.log("entered");
 
             const updateTax = Math.floor(((row.original.taxAmount / row.original.quantity)) * 10) / 10;
             const updateDis = Math.floor((row.original.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
@@ -107,24 +113,17 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   const i_DISCOUNT: any = {
     accessorKey: "discount",
     header: "DISOUNT",
-    cell: (({ row }: any) => {
-      if (!isReturn)
-        return (
+    cell: (({ row }: any) => (
 
-          <button onClick={() => {
-            setModify(row);
-            setIsPopUp(true);
-          }}>
-            {row.original.discount}
-          </button>
+      <button onClick={() => {
+        setModify(row);
+        setIsPopUp(true);
+      }}>
+        {row.original.discount}
+      </button>
 
 
-        )
-      else
-        return <p>{row.original.discount}</p>
-
-
-    })
+    ))
   };
   const i_TAX_AMOUNT: columnHeader_dataTable = {
     accessorKey: "taxAmount",
@@ -361,7 +360,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                 onChange={(e) => {
                   setData({ ...data, customerName: e.target.value });
                 }}
-                className={`${isReturn && "pointer-events-none"}`}
               />
               <Link href={"/customers/new"}>
                 <BsPersonAdd className="ml-2 h-4 w-4 shrink-0  opacity-100" />
