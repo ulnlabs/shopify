@@ -53,14 +53,13 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       <span className="flex gap-1 items-center">
 
         <button onClick={() => {
-          const check = itemList.find((item: any) => item.itemName === row.original.itemName)
           if (row.original.quantity > 1) {
             const updateTax = Math.floor(((row.original.taxAmount / row.original.quantity)) * 10) / 10;
-            const updateDis = Math.floor((check.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
-            const subTotal = Math.floor((check.taxType === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis) * 10) / 10;
+            const updateDis = Math.floor((row.original.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
+            const subTotal = Math.floor((row.original.taxType === "Exclusive" ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 10) / 10;
 
             const uplist = {
-              ...check,
+              ...row.original,
               quantity: --row.original.quantity,
               discount: Math.floor(row.original.quantity * updateDis * 10) / 10,
               taxAmount: Math.floor(row.original.quantity * updateTax * 10) / 10,
@@ -74,14 +73,16 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         </button>
         {row.original.quantity}
         <button onClick={() => {
-          const check = itemList.find((item: any) => item.itemName === row.original.itemName)
           const update = Items.find((item: any) => item.itemName === row.original.itemName)
-          if (check.quantity < update.quantity || !isSales) {
+          console.log(update.quantity);
+          console.log(row.original.quantity < update.quantity);
+
+          if (row.original.quantity < update.quantity || !isSales || (isReturn && row.original.quantity <= update.quantity)) {
             const updateTax = Math.floor(((row.original.taxAmount / row.original.quantity)) * 10) / 10;
-            const updateDis = Math.floor((check.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
-            const subTotal = Math.floor((check.taxType === "Exclusive" ? check.price + updateTax - updateDis : check.price - updateDis) * 10) / 10;
+            const updateDis = Math.floor((row.original.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
+            const subTotal = Math.floor((row.original.taxType === "Exclusive" ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 10) / 10;
             const uplist = {
-              ...check,
+              ...row.original,
               quantity: ++row.original.quantity,
 
               discount: Math.floor(row.original.quantity * updateDis * 10) / 10,
@@ -104,14 +105,24 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   const i_DISCOUNT: any = {
     accessorKey: "discount",
     header: "DISOUNT",
-    cell: (({ row }: any) => (
-      <button onClick={() => {
-        setModify(row);
-        setIsPopUp(true);
-      }}>
-        {row.original.discount}
-      </button>
-    ))
+    cell: (({ row }: any) => {
+      if (!isReturn)
+        return (
+
+          <button onClick={() => {
+            setModify(row);
+            setIsPopUp(true);
+          }}>
+            {row.original.discount}
+          </button>
+
+
+        )
+      else
+        return <p>{row.original.discount}</p>
+
+
+    })
   };
   const i_TAX_AMOUNT: columnHeader_dataTable = {
     accessorKey: "taxAmount",
@@ -222,7 +233,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       billSubtotal: newSubTotal,
       billOtherCharge: updateCharge || prevData.billOtherCharge,
       billOverallDis: updateDiscount || prevData.billOtherCharge,
-      billTotal: newTotal,
+      billTotal: Math.floor(newTotal * 10) / 10,
     }));
   }, [itemList])
   useEffect(() => {

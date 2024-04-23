@@ -29,6 +29,8 @@ export const PUT = async (req: Request) => {
     }
 
     const findTotal = (price: number, quantity: number = 0, tax: string, discountType: string, discount: number, taxType: string,) => {
+        console.log(quantity);
+
         const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
         console.log(taxValue);
 
@@ -84,16 +86,17 @@ export const PUT = async (req: Request) => {
                         { status: "Return Raised" }
 
                     ]
-                }).sort({ 'createdAt': -1 }).lean();
+                }).sort({ 'createdAt': -1 }).limit(1).lean();
                 console.log(data);
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
-                        const { total, taxValue } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        const { total, taxValue, discountValue } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
                             taxAmount: taxValue,
                             subtotal: total,
-                            quantity: item.sold_quantity
+                            quantity: item.sold_quantity,
+                            discount: discountValue
                         })
                     })
                     return ({
@@ -127,12 +130,13 @@ export const PUT = async (req: Request) => {
                 const modified = data.map((sale: any) => {
 
                     const itemList = sale.items.map((item: any) => {
-                        const { total, taxValue } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        const { total, taxValue, discountValue } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
                             taxAmount: taxValue,
                             subtotal: total,
-                            quantity: item.sold_quantity
+                            quantity: item.sold_quantity,
+                            discount: discountValue
                         })
                     })
 
@@ -244,6 +248,8 @@ export async function POST(req: any) {
 
         const { customerName: c_name, billDiscountType: discountType, billDiscount: discount, billCharges: otherCharges, customerId: c_id, billDate, billPaymentType: paymentType/* , billStatus: status */, billTaxType: taxType, billNote: note } = data.sales;
 
+
+
         const { status } = data
         console.log(status);
 
@@ -257,13 +263,15 @@ export async function POST(req: any) {
             const renamedQuantity = header === "sales" ? "sold_quantity" : header ===
                 "return" ? "returned_quantity" : " quantity";
 
+            const discountValue = (discount / quantity) / price * 100
+
             return {
                 itemName,
                 tax,
                 [renamedQuantity]: quantity,
                 price,
                 taxType,
-                discount,
+                discount: discountValue,
                 discountType,
                 itemCode
             };

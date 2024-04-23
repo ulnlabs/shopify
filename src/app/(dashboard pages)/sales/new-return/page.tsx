@@ -105,24 +105,25 @@ const page = () => {
 
   }, [salesReturnData.customerName])
 
-  const [item, setItem] = useState<any>([]);
+  const [item, setItem] = useState<any>(items);
 
   const [inputItem, setInputItem] = useState<String>("");
-  const [product, setProduct] = useState<any>([])
-  useEffect(() => {
-    const fetchItem = async () => {
+  const [product, setProduct] = useState<any>(items)
+  /*   useEffect(() => {
+      const fetchItem = async () => {
+  
+        const response = await axios.put("/api/sales",
+          {
+            data: { header: "getItems" }
+  
+          },);
+        setItem(response.data)
+        console.log(response.data);
+      }
+      fetchItem();
+    }, []); */
 
-      const response = await axios.put("/api/sales",
-        {
-          data: { header: "getItems" }
-
-        },);
-      setItem(response.data)
-      console.log(response.data);
-    }
-    fetchItem();
-  }, []);
-
+  console.log("product", product);
 
   useEffect(() => {
     setProduct(item?.filter((item: any) => {

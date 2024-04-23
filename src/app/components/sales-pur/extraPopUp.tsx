@@ -4,11 +4,10 @@ import { MdArrowDropDown } from 'react-icons/md';
 import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
 const PopUp = ({ modify, itemList, inputData, setItemList, setIsPopUp, Items, framerTemplate }: any) => {
-    const find = Items.find((item: any) => item.name === modify.original.name)
     const [tax, setTax] = useState<string>(modify.original.tax);
     const [taxType, setTaxType] = useState<string>(modify.original.taxType)
     const [discountType, setDiscountType] = useState<string>(modify.original.discountType)
-    const [discount, setDiscount] = useState<any>(discountType === "Per %" ? modify.original.discount * 100 / find.price / modify.original.quantity : modify.original.discount / modify.original.quantity)
+    const [discount, setDiscount] = useState<any>(discountType === "Percentage" ? modify.original.discount * 100 / modify.original.price / modify.original.quantity : modify.original.discount / modify.original.quantity)
 
 
     const handlePopUp = () => {
@@ -16,15 +15,15 @@ const PopUp = ({ modify, itemList, inputData, setItemList, setIsPopUp, Items, fr
         const taxPer = tax.match(/\d+/g)!.map(Number)[0]
         console.log(taxPer);
 
-        const taxValue = taxPer * find.price / 100;
-        const DiscountValue = discountType === "Fixed" ? discount : (discount * find.price) / 100;
-        const subTotal = taxType === "Exclusive" ? taxValue + find.price - DiscountValue : find.price - DiscountValue;
+        const taxValue = taxPer * modify.original.price / 100;
+        const DiscountValue = discountType === "Fixed" ? discount : (discount * modify.original.price) / 100;
+        const subTotal = taxType === "Exclusive" ? taxValue + modify.original.price - DiscountValue : modify.original.price - DiscountValue;
         const updateTax = {
             ...modify.original,
             taxType: taxType,
             tax: tax,
             taxAmount: modify.original.quantity * taxValue,
-            discount: discountType === "Per %" ? modify.original.quantity * DiscountValue : modify.original.quantity * DiscountValue,
+            discount: discountType === "Percentage" ? modify.original.quantity * DiscountValue : modify.original.quantity * DiscountValue,
             discountType: discountType,
             subtotal: modify.original.quantity * subTotal
         }
@@ -91,7 +90,7 @@ const PopUp = ({ modify, itemList, inputData, setItemList, setIsPopUp, Items, fr
                     <label htmlFor="discount-type">Discount Type</label>
                     <Selections
                         id="tax-type"
-                        inputData={[{ label: "Fixed" }, { label: "Per %" }]}
+                        inputData={[{ label: "Fixed" }, { label: "Percentage" }]}
                         label={discountType}
                         setLabel={setDiscountType}
                         payment
