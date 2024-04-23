@@ -20,18 +20,37 @@ export const PUT = async (req: Request) => {
         console.log("test");
 
         const res = await items.find().lean();
+
+        const findTotal = (price: number, quantity: number = 0, tax: string, discountType: string, discount: number, taxType: string,) => {
+            const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
+            console.log(taxValue);
+
+
+            const discountValue = discountType === "Fixed" ? discount * quantity : discountType === "Percentage" ? (discount * price / 100) * quantity : 0;
+            console.log(discountValue);
+
+            const total = taxType === "Inclusive" ? price * quantity - discountValue : taxValue + price * quantity - discountValue
+            console.log(total);
+
+            return { total, taxValue, discountValue };
+        }
+
         const data = res.map((item: any) => {
-            const taxAmount = item.taxType && item.taxType.toLowerCase() === "exclusive" ? item.tax : item.taxType === "" ? item.tax : 0
-            console.log(taxAmount);
-            console.log("a", item.taxType);
+            const { total, taxValue, discountValue } = findTotal(item.price, 1, item.tax, item.discountType, item.discount, item.taxType)
+            return ({
+                ...item,
+                taxAmount: taxValue,
+                subtotal: total,
+                discount: discountValue
 
 
-            return { ...item, taxAmount: taxAmount }
+            })
+
+
         })
         console.log(data[0].taxAmount);
         console.log(data);
-        console.log(res);
-        return NextResponse.json(res);
+        return NextResponse.json(data);
 
     }
     catch (err) {

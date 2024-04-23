@@ -213,7 +213,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     ))
     const taxPer = (data.billTaxType && data.billTaxType.match) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
     updateCharge = (taxPer * data.billCharges) / 100
-    updateDiscount = data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Per %" ? ((newSubTotal + updateCharge) * data.billDiscount) / 100 : 0
+    updateDiscount = data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Percentage" ? ((newSubTotal + updateCharge) * data.billDiscount) / 100 : 0
     newTotal = newSubTotal + updateCharge - updateDiscount;
     console.log(quantity);
     setData((prevData: any) => ({
@@ -230,7 +230,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       const taxPer = (data.billTaxType) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
       const newOtherCharge = (data.billCharges * taxPer) / 100;
       const subTotal = Math.floor((newOtherCharge + data.billSubtotal) * 10) / 10;
-      const newDiscount = Math.floor((data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Per %" ? ((data.billDiscount * subTotal) / 100) : 0) * 10) / 10;
+      const newDiscount = Math.floor((data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Percentage" ? ((data.billDiscount * subTotal) / 100) : 0) * 10) / 10;
       setData({
         ...data,
         billOtherCharge: newOtherCharge,
@@ -240,6 +240,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     }
     updateOnChange();
   }, [data.billCharges, data.billDiscount, data.billDiscountType, data.billTaxType])
+
+
   const handleItemClick = (value: any) => {
     let exist = itemList.find((item: any) => item.itemName === value.itemName)
     setItemList({ ...itemList, value })
@@ -280,7 +282,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
     },
     {
-      label: "Per %"
+      label: "Percentage"
     }
   ]
   const framerTemplate = (variants: any) => {

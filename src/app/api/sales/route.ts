@@ -33,11 +33,13 @@ export const PUT = async (req: Request) => {
         console.log(taxValue);
 
 
-        const discountValue = discountType === "Fixed" ? discount * quantity : discountType === "Per %" ? (discount * price / 100) * quantity : 0;
+        const discountValue = discountType === "Fixed" ? discount * quantity : discountType === "Percentage" ? (discount * price / 100) * quantity : 0;
         console.log(discountValue);
 
-        const total = taxType.toLocaleLowerCase() === "inclusive" ? price * quantity + discountValue : taxValue + price * quantity + discountValue
-        return { total, taxValue };
+        const total = taxType === "Inclusive" ? price * quantity - discountValue : taxValue + price * quantity - discountValue
+        console.log(total);
+
+        return { total, taxValue, discountValue };
     }
     try {
         await connectDB();
@@ -54,11 +56,12 @@ export const PUT = async (req: Request) => {
         if (header === "getItems") {
             const data = await stocks.find().lean();
             const modified = data.map((item: any) => {
-                const { total, taxValue } = findTotal(item.price, 1, item.tax, item.discountType, item.discount, item.taxType)
+                const { total, taxValue, discountValue } = findTotal(item.price, 1, item.tax, item.discountType, item.discount, item.taxType)
                 return ({
                     ...item,
                     taxAmount: taxValue,
-                    subtotal: total
+                    subtotal: total,
+                    discount: discountValue
 
 
                 })
@@ -271,7 +274,7 @@ export async function POST(req: any) {
         if (header === "sales") {
 
 
-            const newSales = await Sales.insertMany([{
+            const newSales = await Sales.create([{
                 c_id,
                 c_name,
                 date,
@@ -303,21 +306,9 @@ export async function POST(req: any) {
 
         else if (header === "return") {
 
-            /* const newSales = await Return.insertMany([{
-                c_id,
-                c_name,
-                date,
-                salesCode: code,
-                taxType,
-                discountType,
-                discount,
-                otherCharges,
-                items,
-                paymentType,
-                status,
-                note
-            }], { session });
-            console.log(newSales); */
+            const getSales = await Sales.find({ salesCode: code })
+            console.log(getSales);
+
 
 
             for (const { itemCode, returned_quantity } of items) {
@@ -325,13 +316,33 @@ export async function POST(req: any) {
                 console.log(updated);
                 console.log(returned_quantity);
 
-                const changeSales = await Sales.updateMany(
-                    { "items.itemCode": itemCode }, // Filter criteria
-                    { $inc: { "items.$.sold_quantity": -returned_quantity, "items.$.returned_quantity": +returned_quantity } },
-                    { session }
+                const changeSales = await Sales.updateOne(
+                    {
+                        'items.itemCode': { $regex: new RegExp(itemCode, 'i') },
+                        salesCode: code
+                    }, // Using case-insensitive regex
+                    { $inc: { 'items.$.sold_quantity': -returned_quantity, 'items.$.returned_quantity': + returned_quantity } }
                 );
 
+
                 console.log(changeSales);
+
+                /*  items.forEach(({ itemCode: tempCode, returned_quantity: tempQuantity, sold_quantity }: any) => {
+ 
+                     if (tempCode === itemCode) {
+                         return {
+                             ...items,
+                             sold_quantity: sold_quantity - tempQuantity,
+                             returned_quantity: returned_quantity + tempQuantity
+                         }
+                     }
+                     else {
+                         return items;
+                     }
+ 
+                 }) */
+                console.log(items);
+
 
 
             }
@@ -343,13 +354,13 @@ export async function POST(req: any) {
 
         }
         await session.commitTransaction();
-        session.endSession();
+        await session.endSession();
         return NextResponse.json({ res: "data success" });
     } catch (error) {
         console.error('Error creating sales:', error);
         if (session) {
             await session.abortTransaction();
-            session.endSession();
+            await session.endSession();
         }
         return NextResponse.json({ error: "An error occurred" });
     }

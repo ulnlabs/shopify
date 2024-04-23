@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 
 const page = () => {
 
-const {data:session} =useSession();
+  const { data: session } = useSession();
   const [purchaseData, setPurchaseData] = useState<FormState>({
     customerName: "",
     billDate: new Date,
@@ -26,9 +26,9 @@ const {data:session} =useSession();
     billTotal: 0,
     billPaymentType: "",
     billAmount: 0,
-    billUserName:"",
-    billUserEmail:session?.user?.email,
-    
+    billUserName: "",
+    billUserEmail: session?.user?.email,
+
   })
 
   const getItems = async () => {
@@ -39,20 +39,7 @@ const {data:session} =useSession();
     return data;
   }
   const [inputItem, setInputItem] = useState<any>("");
-  const { data: ItemData, error: itemError } = useSWR("/api/purchase", getItems)
-  const Items = ItemData ? ItemData.map((item: any) => {
-    const tax = item.tax.match(/\d+/g).map(Number)
-
-    const taxAmount = Math.floor(((tax / 100) * item.price) * 10) / 10
-    const discount = Math.floor(((item.discount / 100) * item.price) * 10) / 10
-    console.log(item.price, taxAmount, discount);
-
-
-    const subTotal = Math.floor((taxAmount + item.price - discount) * 10) / 10
-
-
-    return { ...item, taxAmount: taxAmount, subtotal: subTotal, discount: discount }
-  }) : []
+  const { data: Items, error: itemError } = useSWR("/api/purchase", getItems)
   console.log(Items);
   useEffect(() => {
     setProduct(Items ? Items.filter((item: any) => {
