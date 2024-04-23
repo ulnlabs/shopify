@@ -28,6 +28,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -40,13 +41,19 @@ interface DataTableProps<TData, TValue> {
   filter?: boolean;
   rows?: boolean;
   paginater?: boolean;
-  route?: string;
+  final?: boolean;
+  totalPrice?: number;
+  totalQuantity?: number;
+  totalTaxAmount?: number;
+  totalDisAmount?: number;
+  totalAmount?: number;
 }
 import { useContext } from "react";
 import { ContextData } from "../../../../contextapi";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import { UserContext } from "@/UserContext";
+import { Item } from "@radix-ui/react-accordion";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -57,7 +64,12 @@ export default function DataTable<TData, TValue>({
   filter,
   rows,
   paginater,
-  route
+  final,
+  totalPrice,
+  totalQuantity,
+  totalTaxAmount,
+  totalDisAmount,
+  totalAmount,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const { selectedRow, setSelectedRow } = useContext(ContextData);
@@ -139,6 +151,12 @@ export default function DataTable<TData, TValue>({
     };
     csvDownload(dataToConvert);
   };
+
+
+
+
+
+  
 
   /* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
   return (
@@ -249,10 +267,80 @@ export default function DataTable<TData, TValue>({
                   className="h-24 text-center"
                 ></TableCell>
               </TableRow>
-            )}
+            )
+            
+           
+            }
+
           </TableBody>
-        </Table>
-      </motion.div>
+          <TableFooter>
+                        {
+              final && (
+                <TableRow>
+                    <TableCell
+                      colSpan={2}
+                      rowSpan={1}
+                      className=" text-center text-base "
+                    >Total :
+                    </TableCell>
+                    <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=""
+                    >{totalPrice}
+                    </TableCell>
+                    <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=""
+                    >{totalQuantity}
+                    </TableCell>
+                    <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=""
+                    >
+                    </TableCell> <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=""
+                    >
+                    </TableCell> <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=""
+                    >{totalTaxAmount}
+                    </TableCell>
+                    <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=""
+                    >
+                    </TableCell>
+                    <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=""
+                    >{totalDisAmount}
+                    </TableCell>
+                     <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=""
+                    >
+                    </TableCell>
+                     <TableCell
+                      colSpan={1}
+                      rowSpan={1}
+                      className=""
+                    >{totalAmount}
+                    </TableCell>
+                  </TableRow>
+              )
+            }
+            </TableFooter>        
+            </Table>
+      </div>
       {veiw.rows && (
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -282,4 +370,5 @@ export default function DataTable<TData, TValue>({
     </>
   );
 }
+
 /* at all you have your own data table to use your data table call this component like this on your code exam : page.tsx    <DataTable columns={c_columns} data={customerData} /> the c_colums is your column replace it with your and data also  for reference how i share my data see dashboard/customers/list/page.tsx ,i hope u got it  */
