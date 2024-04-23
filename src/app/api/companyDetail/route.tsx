@@ -21,9 +21,8 @@ export async function POST(req: Request) {
 
     await connectDB();
     try {
-        const { data,edit } = await req.json();
+        const { data,edit,logo } = await req.json();
         if(edit==true){
-        
             await companyDetail.updateMany({},{ $set: data },{new:true });
     
             return NextResponse.json({ message: "Data saved successfully" ,alert:true }, { status: 200 });

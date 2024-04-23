@@ -23,23 +23,11 @@ import Update from "@/app/components/settings/popup/Update"
 function Companyprofile() {
 
 
-  const [formdata, setformdata] = useState<any>({})
+  const [formdata, setformdata] = useState<any>({logo:""})
   const [edit, setEdit] = useState(false)
   const [alert, setAlert] = useState(false)
+ 
 
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          setSelectedImage(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  }
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.put("/api/companyDetail");
@@ -55,6 +43,8 @@ function Companyprofile() {
 
   function handlesubmit(e: any) {
     e.preventDefault();
+    console.log(formdata);
+    
     setEdit(false)
 
     const handuler = async () => {
@@ -62,7 +52,8 @@ function Companyprofile() {
       const { data } = await axios.post("/api/companyDetail",
         {
           data: formdata,
-          edit: edit
+          edit: edit,
+        
         }
       )
       setAlert(data.alert)
@@ -76,18 +67,13 @@ function Companyprofile() {
   function handleChange(e: any) {
     setformdata({ ...formdata, [e.target.name]: e.target.value })
   }
-
-
   return (
     <div className=" flex justify-center relative py-4  ">
       <div className=" border w-[97%] rounded-md">
         <AnimatePresence>
-
-
           {
             alert && <Update close={setAlert} />
           }
-
         </AnimatePresence>
 
         <div className="flex justify-between p-4 mt-7 ">
@@ -198,25 +184,7 @@ function Companyprofile() {
             <textarea value={formdata.address} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} disabled={!edit} cols={10} rows={10} name="address" id="address" className=' border rounded-md  md:col-span-6 h-[60px] col-span-12  ' />
 
           </div>
-          <div className="">
-
-            <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
-              <label htmlFor="logo" className='mr-2 md:col-span-5 col-span-12 '>
-                Site logo
-              </label>
-              <input value={formdata.logo} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} disabled={!edit} type="file" id="logo" accept=".png,.jpeg" className=' border rounded-md h-8 md:col-span-6 col-span-12 border-none  ' />
-
-            </div>
-            <div className="md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5">
-              <div className="md:col-span-5 col-span-12 "></div>
-
-              <div style={edit ? {} : { cursor: "not-allowed" }} className=" border rounded-md h-[100px] md:col-span-4  ">
-                {selectedImage &&
-                  <img style={edit ? {} : { cursor: "not-allowed" }} className="h-[100%] w-[100%]" src={selectedImage} alt="company Logo" />
-                }
-              </div>
-            </div>
-          </div>
+         
           {
             edit && <div className="sm:p-10 mt-10 flex justify-center gap-4 lg:absolute lg:-bottom-10 lg:right-[50%] lg:p-0 lg:translate-x-[50%] ">
               <input

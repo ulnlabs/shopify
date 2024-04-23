@@ -48,12 +48,8 @@ const companyData=new mongoose.Schema({
     email:{
         type:String,
         require:true
-    },
-    logo:{
-        name: String, // Name of the image
-        data: Buffer, // Image data
-        contentType: String
     }
+   
     
 
 
