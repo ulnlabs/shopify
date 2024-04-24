@@ -32,10 +32,7 @@ const siteData = new mongoose.Schema({
         type:String,
         required:true
     }
-}
-    
-   
-    
+} 
 )
 const Site=mongoose.models.Site || mongoose.model("Site",siteData)
 export default Site;
