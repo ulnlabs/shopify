@@ -15,17 +15,15 @@ const siteData = new mongoose.Schema({
     currency:{
         type:String,
         required:true,
-        default:"₹ INR"
+       
     },
     roundOf:{
         type:Boolean,
-        default:false,
-        required:true
+       
     },
     disableTax :{
         type:Boolean,
-        default:false,
-        required:true
+       
     
     },
     language :{
@@ -37,5 +35,5 @@ const siteData = new mongoose.Schema({
    
     
 )
-const Site=mongoose.models.Site || mongoose.model("Site",siteData)
-export default Site;
+const siteList=mongoose.models.siteList || mongoose.model("siteList",siteData)
+export default siteList;

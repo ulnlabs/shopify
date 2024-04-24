@@ -3,19 +3,19 @@ import Sales from '@/app/components/settings/sitelist/Sales'
 import Prefixes from '@/app/components/settings/sitelist/Prefixes'
 import { useState } from 'react'
 function Sitesettings() {
-    const [edit,setEdit]=useState<Boolean>(false)
+    
     const [page, setpage] = useState("Site");
     const navigateoption = ["Site", "Sales", "Prefixes"];
     const [activeIndex, setActiveIndex] = useState(0); // State to track active navigation item index
     var renderpage;
     if (page === "Sales") {
-        renderpage = <Sales edit={edit} />;
+        renderpage = <Sales />;
     }
     else if (page === "Prefixes") {
-        renderpage = <Prefixes edit={edit} />;
+        renderpage = <Prefixes />;
     }
     else {
-        renderpage = <Site edit={edit} />;
+        renderpage = <Site />;
     }
     return (
         <>
@@ -32,13 +32,7 @@ function Sitesettings() {
                                     ))}
                                 </ul>
                             </nav>
-                            <div className="flex justify-between p-5">
-                                <div className=""></div>
-                                <div className="">
-
-                                <button onClick={()=>{setEdit(!edit)}} className='px-5 border rounded-md  font-medium '>Edit </button>
-                                </div>
-                            </div>
+                          
                         </div>
                         {renderpage}
                     </div>

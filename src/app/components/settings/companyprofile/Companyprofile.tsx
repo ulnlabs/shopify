@@ -29,8 +29,12 @@ function Companyprofile() {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log("fetching data");
+      
       const response = await axios.put("/api/companyDetail");
       const fetchData = response.data[0];
+      console.log("fetched data ", fetchData);
+      
       if (fetchData) {
         setformdata(fetchData)
       }
@@ -51,6 +55,8 @@ function Companyprofile() {
         }
       )
       setAlert(data.alert)
+ 
+      
     }
     handuler()
 

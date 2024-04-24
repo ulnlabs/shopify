@@ -1,13 +1,13 @@
 "use client";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
-const dateFormat=["DD/MM/YYYY","YYYY/MM/DD"]
-
-
+import Update from "../popup/Update";
+import { AnimatePresence } from "framer-motion";
 
 
-function Site({ edit }: any) {
+
+function Site() {
+  const dateFormat = ["DD/MM/YYYY", "YYYY/MM/DD"]
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   function handleFileChange(e: any) {
@@ -25,8 +25,8 @@ function Site({ edit }: any) {
   }
 
   const [formdata, setformdata] = useState<any>({})
-  
-  const [edited, setEdited] = useState(false)
+
+  const [edit, setEdit] = useState(false)
   const [alert, setAlert] = useState(false)
 
   // useEffect(() => {
@@ -44,20 +44,17 @@ function Site({ edit }: any) {
 
   function handlesubmit(e: any) {
     e.preventDefault();
-    console.log(formdata);
-    
-    setEdited(false)
+    setEdit(false)
     const handuler = async () => {
-      console.log("start ");
       
 
       const { data } = await axios.post("/api/sitelist",
         {
-          data: formdata,
+          data: formdata
+
         }
       )
-      console.log("end");
-      
+
       setAlert(data.alert)
     }
     handuler()
@@ -74,6 +71,22 @@ function Site({ edit }: any) {
   return (
     <>
       <div className="">
+        <AnimatePresence>
+          {
+            alert && <Update close={setAlert} />
+          }
+        </AnimatePresence>
+        <div className="">
+          <div className="flex justify-between p-5">
+            <div className=""></div>
+            <div className="">
+
+              <button onClick={() => { setEdit(!edit) }} className='px-5 border rounded-md  font-medium '>Edit </button>
+            </div>
+          </div>
+
+        </div>
+
         <form action="" onSubmit={handlesubmit} className=' relative  flex flex-col   lg:grid lg:grid-cols-2 gap-y-3  p-5'>
           <div className=" md:grid md:grid-cols-12 grid   p-2 md:text-end  md:gap-x-5  ">
             <label htmlFor="siteName" className='mr-2 md:col-span-5 col-span-12 '>
@@ -120,11 +133,11 @@ function Site({ edit }: any) {
             <label htmlFor="language" className='mr-2 md:col-span-5 col-span-12 '>
               Language <span className=' text-red-600'> *</span>
             </label>
-          
+
             <select name="language" id="language" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleChange}>
               <option value=""></option>
               <option value="English">English</option>
-             
+
             </select>
 
           </div>
