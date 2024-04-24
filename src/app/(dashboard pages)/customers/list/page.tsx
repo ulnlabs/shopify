@@ -20,6 +20,7 @@ import { UserContext } from "@/UserContext";
 import { ColumnDef } from "@tanstack/react-table";
 import axios from "axios";
 import { ContextData } from "../../../../../contextapi";
+import { AnimatePresence, motion } from "framer-motion";
 export default function Page() {
   const { toast } = useToast();
   const [customerData, setCustomerData] = useState<customerList[]>([]);
@@ -38,7 +39,6 @@ export default function Page() {
 
       setCustomerData(data);
       console.log(data);
-      
     }
     getData();
   }, [isChanged]);
@@ -210,36 +210,74 @@ export default function Page() {
 
     C_ACTION,
   ];
+const tableAnimtion={
+  hidden:{
+    opacity:0,
+    x:-1000,
+    
+  },
+  visible:{
+opacity:1,
+    x:0,
+    transition:{
+      duration:0.5,
+     
+      stiffness:100
+    }
 
+  },
+  exit:{
+    x:1000,
+    transition:{
+      duration:0.2,
+    }
+  }
+}
   return (
     <>
-      {!isUpdate && (
-        <>
-          <DashboardHeader title="customers" />
+      <AnimatePresence mode="wait">
+        {!isUpdate && (
+         <>
+         
+         
+            <DashboardHeader title="customers" />
+            
+            <motion.div  variants={tableAnimtion}
+            animate="visible"
+            initial="hidden"
+            exit="exit" className="container mx-auto py-3">
+              <DataTable
+                columns={c_columns}
+                data={customerData}
+                column={true}
+                filter={true}
+                rows={true}
+                paginater={true}
+                route="/api/customers"
+              />
+            </motion.div>
+         </>
+          
+        )}
+      </AnimatePresence>
 
-          <div className="container mx-auto py-3">
-            <DataTable
-              columns={c_columns}
-              data={customerData}
-              column={true}
-              filter={true}
-              rows={true}
-              paginater={true}
+      <AnimatePresence mode="wait">
+        {isUpdate && (
+          <motion.div
+            exit={{ y: 1000 }}
+            initial={{  y: -500 }}
+            animate={{ y: 0 }}
+            transition={{ duration: .5,stiffness:100 }}
+            className=" bg-white absolute "
+          >
+            <UpdateData
+              data={updateCust}
+              route={"/api/customers"}
+              setUpdate={setIsUpdate}
             />
-          </div>
-        </>
-      )}
-
-      {isUpdate && (
-        <div className=" w-full  bg-white  ">
-          <UpdateData
-            data={updateCust}
-            route={"/api/customers"}
-            setUpdate={setIsUpdate}
-
-          />
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

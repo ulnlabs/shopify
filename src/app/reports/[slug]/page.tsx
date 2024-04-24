@@ -3,11 +3,15 @@ import Proandloss from '@/app/components/reports/profit and loss report/Proandlo
 import Purchasereprot from '@/app/components/reports/purchasereport/Purchasereprot';
 import ReturnPurchase from '@/app/components/reports/Purchasereturn/ReturnPurchase';
 import PaymentReport from '@/app/components/reports/purchasepayment/PaymentReport';
-import ItemSalesReport from "@/app/components/reports/itemSalesReport/ItemSalesReport"
-import ItemReport from "@/app/components/reports/itemreport/ItemReport"
-import SalesReport from "@/app/components/reports/salesreport/SalesReport"
-import SalesReturnReport from "@/app/components/reports/salesreturnreport/SalesReturnReport"
+import ItemSalesReport from "@/app/components/reports/itemSalesReport/ItemSalesReport";
+import ItemReport from "@/app/components/reports/itemreport/ItemReport";
+import SalesReport from "@/app/components/reports/salesreport/SalesReport";
+import SalesReturnReport from "@/app/components/reports/salesreturnreport/SalesReturnReport";
+import SalesPaymentReport from "@/app/components/reports/salesPaymentreport/SalesPaymentReport";
+import StackReport from "@/app/components/reports/stockreport/StackReport";
+import ExpiredItemReport from "@/app/components/reports/Expireditem/ExpiredItemReport"
 import ExpenseReport from "@/app/components/reports/expensereport/ExpenseReport"
+
 
 function page({params}:{params:{slug:string}}) {
     const route=params.slug
@@ -54,13 +58,23 @@ function page({params}:{params:{slug:string}}) {
             report.current_route=<SalesReturnReport />
             report.header="Sales Return Report"
             break;
+        case "sales-payments":
+            report.current_route=<SalesPaymentReport />
+            report.header="Sales Payment Report"
+            break;
+        case "stock":
+            report.current_route=<StackReport/>
+            report.header="Stock Report"
+            break;
+        case "expired-items":
+            report.current_route=<ExpiredItemReport/>
+            report.header="Expired Item Report"
+            break;
         case "expense":
-            report.current_route=<ExpenseReport />
+            report.current_route=<ExpenseReport/>
             report.header="Expense Report"
+            break;
         
-        
-            
-       
     }
     
   return (

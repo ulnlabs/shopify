@@ -43,23 +43,21 @@ function ReturnPurchase() {
                                 To Date:
                             </label>
                             <div className=" h-8 md:col-span-6 col-span-12 ">
-                                
+ 
                             <DateCalender  />
                             </div>
-                        
-                           
 
                         </div>
                         <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
                             <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
-                                Item Name:
+                                Customer Name:
                             </label>
                             <input type="text" className=' border rounded-md h-9 md:col-span-6 col-span-12 ' />
 
                         </div>
                         <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-10 ">
                             <label htmlFor="" className='mr-2 md:col-span-5 col-span-12 '>
-                                Payment Type :
+                                Payment Status :
                             </label>
                             <input type="text" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
