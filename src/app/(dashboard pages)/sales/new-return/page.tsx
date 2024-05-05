@@ -146,7 +146,7 @@ const page = () => {
         isSales={true}
         itemList={itemList}
         setItemList={setItemList}
-        searchPlaceholder="Search Sales Code"
+
       />
       <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>

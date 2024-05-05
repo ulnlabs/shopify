@@ -21,7 +21,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 interface propType {
-    Customer: string[],
     page: string,
     isSales?: boolean,
     path: string,
@@ -31,11 +30,11 @@ interface propType {
     setFrom: Dispatch<SetStateAction<Date>>,
     setEnd: Dispatch<SetStateAction<Date>>
 }
-const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd }: propType) => {
+const List = ({ page, isSales, path, list, from, end, setFrom, setEnd }: propType) => {
 
     const router = useRouter()
-    const { setSalesRecord } = useContext(ContextData);
-    console.log(Customer);
+    const { setSalesRecord, setPurchaseRecord } = useContext(ContextData);
+
 
 
     const DATE: columnHeader_dataTable = {
@@ -54,6 +53,7 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
         accessorKey: "c_name",
         header: "CUSTOMER NAME",
     };
+
 
     const TOTAL: columnHeader_dataTable = {
         accessorKey: "total",
@@ -79,32 +79,94 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="bg-white z-10 border px-3 rounded-md gap-1 grid">
-                        <DropdownMenuItem 
-                        /*  onClick={() => {
-                             handleDelete(row.original);
-                         }} */
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => {
+                                setSalesRecord(row.original);
+                                router.push("/sales/invoice")
+                            }}
                         >
                             View Sales
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="cursor-pointer" onClick={() => {
-                            setSalesRecord(row.original);
-                            router.push(`${isSales ? "/sales/new-return" : "purchases/new-return"}`)
-                        }
-
-                        }>
+                        <DropdownMenuItem
+                            className="cursor-pointer" onClick={() => {
+                                setSalesRecord(row.original);
+                                router.push("/sales/new-return")
+                            }
+                            }>
                             Sales Return
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem /* onClick={() => handleUpdate(row.original)} */>
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                        /* onClick={() => handleUpdate(row.original)} */>
                             Print
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem /* onClick={() => handleUpdate(row.original)} */>
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                        /* onClick={() => handleUpdate(row.original)} */>
                             PDF
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                        >
+                            Delete
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
+        })
+    };
+
+    const PUR_ACTION: any = {
+        accessorKey: "action",
+        header: "ACTION",
+        cell: (({ row }: any) => {
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <AiOutlineMore className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="bg-white z-10 border px-3 rounded-md gap-1 grid">
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                        /*  onClick={() => {
+                             handleDelete(row.original);
+                         }} */
+                        >
+                            View Purchase
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                            setPurchaseRecord(row.original);
+                            router.push(`/purchases/new-return`)
+                        }
+
+                        }>
+                            Purchase Return
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                        /* onClick={() => handleUpdate(row.original)} */>
+                            Print
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                        /* onClick={() => handleUpdate(row.original)} */>
+                            PDF
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                        >
                             Delete
                         </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -112,37 +174,19 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
             )
         })
 
-    };
-
-    const PUR_ACTION: any = {
-        accessorKey: "action",
-        header: "ACTION",
-        cell: (({ row }: any) => (
-            <div>
-                <DropdownMenuItem>View Sales</DropdownMenuItem>
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Print</DropdownMenuItem>
-                <DropdownMenuItem>PDF</DropdownMenuItem>
-                <DropdownMenuItem
-                    onClick={() => {
-                        setSalesRecord(row);
-                        router.push(`${isSales ? "/sales/new-return" : "purchases/new-return"}`)
-                    }
-
-                    }
-                >Sales Return</DropdownMenuItem>
-                <DropdownMenuItem>Delete</DropdownMenuItem>
-            </div>
-        ))
 
     };
 
     const s_NAME: columnHeader_dataTable = {
 
-        accessorKey: "name",
+        accessorKey: "s_name",
         header: "SUPPLIER NAME",
     }
 
+    const PURCHASE_CODE: columnHeader_dataTable = {
+        accessorKey: "purchaseCode",
+        header: "PURCHASE CODE"
+    }
 
     const s_LIST_Column: ColumnDef<any>[] = [
 
@@ -161,6 +205,7 @@ const List = ({ Customer, page, isSales, path, list, from, end, setFrom, setEnd 
 
         DATE,
         s_NAME,
+        PURCHASE_CODE,
         TOTAL,
         STATUS,
         USER,

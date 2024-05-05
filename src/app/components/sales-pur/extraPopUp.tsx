@@ -7,7 +7,7 @@ const PopUp = ({ modify, itemList, inputData, setItemList, setIsPopUp, Items, fr
     const [tax, setTax] = useState<string>(modify.original.tax);
     const [taxType, setTaxType] = useState<string>(modify.original.taxType)
     const [discountType, setDiscountType] = useState<string>(modify.original.discountType)
-    const [discount, setDiscount] = useState<any>(discountType === "Percentage" ? modify.original.discount * 100 / modify.original.price / modify.original.quantity : modify.original.discount / modify.original.quantity)
+    const [discount, setDiscount] = useState<any>(discountType.toLowerCase() === "Percentage".toLowerCase() ? modify.original.discount * 100 / modify.original.price / modify.original.quantity : modify.original.discount / modify.original.quantity)
 
 
     const handlePopUp = () => {
@@ -16,18 +16,18 @@ const PopUp = ({ modify, itemList, inputData, setItemList, setIsPopUp, Items, fr
         console.log(taxPer);
 
         const taxValue = taxPer * modify.original.price / 100;
-        const DiscountValue = discountType === "Fixed" ? discount : (discount * modify.original.price) / 100;
-        const subTotal = taxType === "Exclusive" ? taxValue + modify.original.price - DiscountValue : modify.original.price - DiscountValue;
+        const DiscountValue = discountType.toLowerCase() === "Fixed".toLowerCase() ? discount : (discount * modify.original.price) / 100;
+        const subTotal = taxType.toLowerCase() === "Exclusive".toLowerCase() ? taxValue + modify.original.price - DiscountValue : modify.original.price - DiscountValue;
         const updateTax = {
             ...modify.original,
             taxType: taxType,
             tax: tax,
             taxAmount: modify.original.quantity * taxValue,
-            discount: discountType === "Percentage" ? modify.original.quantity * DiscountValue : modify.original.quantity * DiscountValue,
+            discount: discountType.toLowerCase() === "Percentage".toLowerCase() ? modify.original.quantity * DiscountValue : modify.original.quantity * DiscountValue,
             discountType: discountType,
             subtotal: modify.original.quantity * subTotal
         }
-        const update = itemList.map((item: any) => item.name === modify.original.name ? updateTax : item)
+        const update = itemList.map((item: any) => item.itemName === modify.original.itemName ? updateTax : item)
         setItemList(update)
         setIsPopUp(false);
     }
@@ -61,7 +61,7 @@ const PopUp = ({ modify, itemList, inputData, setItemList, setIsPopUp, Items, fr
 
             className='z-50 absolute bg-white shadow-lg px-5 rounded-md py-5 grid gap-5'>
             <h3 className='text-center py-2'>Manage Item</h3>
-            <p>Item Name: {modify.original.name}</p>
+            <p>Item Name: {modify.original.itemName}</p>
             <section className='flex gap-5'>
                 <div>
                     <label htmlFor="tax-type">Tax Type</label>

@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { columnHeader_dataTable } from '../../../../../global';
 export const data =
   [
     {

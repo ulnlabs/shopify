@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/app/mongoose/db";
-import Sales, { Return } from "@/app/mongoose/models/Sales";
+import Sales from "@/app/mongoose/models/Sales";
 import { format } from "date-fns";
 import { items as stocks } from "@/app/mongoose/models/item";
 
@@ -13,13 +13,22 @@ export const PUT = async (req: Request) => {
     const findOverall = (sale: any) => {
         const initial = 0;
         const overall = sale.items.map((item: any) => {
-            const { total } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+
+            const { total } = findTotal(item.price, sale.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+            console.log(total);
+            console.log(item.returned_quantity);
+
+
             return total
         })
 
         const temp = overall.reduce((prev: number, current: number) => prev + current, initial);
+        console.log(temp);
+
         const taxValue = sale.taxType ? (sale.taxType?.match(/\d+/g)!.map(Number)[0] * sale.otherCharges / 100) : 0
-        const discount = sale.discountType && sale.discountType === "Per %" ? Math.floor(((sale.discount / 100) * (temp + taxValue)) * 10) / 10 : sale.discount;
+        console.log(sale.discount);
+
+        const discount = sale.discountType && (sale.discountType).toLowerCase() === "Percentage".toLowerCase() ? Math.floor(((sale.discount / 100) * (temp + taxValue)) * 10) / 10 : sale.discount;
         console.log(discount);
 
         console.log(taxValue);
@@ -35,10 +44,10 @@ export const PUT = async (req: Request) => {
         console.log(taxValue);
 
 
-        const discountValue = discountType === "Fixed" ? discount * quantity : discountType === "Percentage" ? (discount * price / 100) * quantity : 0;
+        const discountValue = discountType.toLowerCase() === "Fixed".toLowerCase() ? discount * quantity : discountType.toLowerCase() === "Percentage".toLowerCase() ? (discount * price / 100) * quantity : 0;
         console.log(discountValue);
 
-        const total = taxType === "Inclusive" ? price * quantity - discountValue : taxValue + price * quantity - discountValue
+        const total = taxType.toLowerCase() === "Inclusive".toLowerCase() ? price * quantity - discountValue : taxValue + price * quantity - discountValue
         console.log(total);
 
         return { total, taxValue, discountValue };
@@ -64,8 +73,6 @@ export const PUT = async (req: Request) => {
                     taxAmount: taxValue,
                     subtotal: total,
                     discount: discountValue
-
-
                 })
             })
             return NextResponse.json(modified);
@@ -90,7 +97,7 @@ export const PUT = async (req: Request) => {
                 console.log(data);
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
-                        const { total, taxValue, discountValue } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        const { total, taxValue, discountValue } = findTotal(item.price, sale.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
                             taxAmount: taxValue,
@@ -130,7 +137,7 @@ export const PUT = async (req: Request) => {
                 const modified = data.map((sale: any) => {
 
                     const itemList = sale.items.map((item: any) => {
-                        const { total, taxValue, discountValue } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        const { total, taxValue, discountValue } = findTotal(item.price, sale.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
                             taxAmount: taxValue,
@@ -304,26 +311,15 @@ export async function POST(req: any) {
                 const updated = await stocks.updateOne({ itemCode: itemCode }, { $inc: { quantity: -sold_quantity } }, { session });
                 console.log(updated);
             }
-
-
-
             console.log('Sales created successfully:', newSales);
-
-
         }
-
         else if (header === "return") {
-
             const getSales = await Sales.find({ salesCode: code })
             console.log(getSales);
-
-
-
             for (const { itemCode, returned_quantity } of items) {
                 const updated = await stocks.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity }, $set: { status: "returned" } }, { session });
                 console.log(updated);
                 console.log(returned_quantity);
-
                 const changeSales = await Sales.updateOne(
                     {
                         'items.itemCode': { $regex: new RegExp(itemCode, 'i') },
@@ -331,8 +327,6 @@ export async function POST(req: any) {
                     }, // Using case-insensitive regex
                     { $inc: { 'items.$.sold_quantity': -returned_quantity, 'items.$.returned_quantity': + returned_quantity } }
                 );
-
-
                 console.log(changeSales);
 
                 /*  items.forEach(({ itemCode: tempCode, returned_quantity: tempQuantity, sold_quantity }: any) => {
@@ -350,16 +344,9 @@ export async function POST(req: any) {
  
                  }) */
                 console.log(items);
-
-
-
             }
-
             const change = await Sales.updateOne({ salesCode: code }, { $set: { status: status } });
-
             console.log(change);
-
-
         }
         await session.commitTransaction();
         await session.endSession();

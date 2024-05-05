@@ -1,36 +1,62 @@
 "use client"
-import NewSales from "@/app/components/sales-pur/addnew";
+import NewReturn from "@/app/components/sales-pur/return";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { FormState } from "@/app/components/sales-pur/global";
+import { useContext, useEffect, useState } from "react";
+import { FormState } from "../../../../../global";
+import { ContextData } from "../../../../../contextapi";
+import axios from "axios";
+
 
 
 const page = () => {
 
+  const { purhcaseRecord } = useContext(ContextData);
+
+  const { s_name, items, paymentType, otherCharges, discount, discountType, taxType, note, s_id, purchaseCode } = purhcaseRecord;
+
+  console.log(purhcaseRecord);
+
 
   const [purchaseReturnData, setPurchaseReturnData] = useState<FormState>({
-    customerName: "",
+    customerName: s_name,
+    customerId: s_id,
     billDate: new Date,
-    billStatus: "",
     billQuantity: 0,
-    billCharges: 0,
-    billTaxType: "",
-    billDiscount: 0,
-    billDiscountType: "",
-    billNote: "",
+    billCharges: otherCharges | 0,
+    billTaxType: taxType || "",
+    billDiscount: discount || "",
+    billDiscountType: discountType || "",
+    billNote: note || "",
     billSubtotal: 0,
     billOtherCharge: 0,
     billOverallDis: 0,
     billTotal: 0,
-    billPaymentType: "",
+    billPaymentType: paymentType || "",
     billAmount: 0,
   })
 
-  const handleClick = () =>{
-    console.log(purchaseReturnData);  
+  useEffect(() => {
+    setItemList(items)
+  }, [items])
+
+  const [status, setStatus] = useState<string>("")
+
+  const handleClick = async () => {
+
+    const data = await axios.post("/api/purchase", {
+      header: "return",
+      data: {
+        purchase: purchaseReturnData,
+        items: itemList,
+        purchaseCode: purchaseCode,
+        status: status
+      }
+
+    })
+    console.log("res", data);
+
+    console.log(purchaseReturnData);
   }
-
-
   const customerName = [
     {
       value: "Fire10",
@@ -60,67 +86,38 @@ const page = () => {
 
   }, [purchaseReturnData.customerName])
 
-  const [inputItem, setInputItem] = useState<any>("");
 
-  const Items = [
-    {
+  const [inputItem, setInputItem] = useState<String>("");
+  const [product, setProduct] = useState<any>([])
 
-      name: "Deepath",
-      quantity: 10,
-      price: 200,
-      discount: 0,
-      tax_type: "VAT 5%",
-      tax: 10,
-      tax_category: "Exclusive",
-      dis_type: "Fixed",
-      taxPer: 5,
-      unitcost: 200,
-      subtotal: 210,
-    },
-    {
-
-      name: "fire10",
-      quantity: 5,
-      price: 200,
-      discount: 0,
-      tax_type: "VAT 5%",
-      tax: 10,
-      taxPer: 5,
-      tax_category: "Exclusive",
-      dis_type: "Fixed",
-      unitcost: 200,
-      subtotal: 210,
-    },
-    {
-
-      name: "dhilip",
-      quantity: 2,
-      price: 200,
-      discount: 0,
-      tax_type: "VAT 5%",
-      dis_type: "Fixed",
-      tax: 10,
-      taxPer: 5,
-      unitcost: 200,
-      subtotal: 210,
-      tax_category: "Exclusive",
-    }
-  ]
-
-  const [product, setProduct] = useState<any>("")
-  const [itemList, setItemList] = useState<any>([]);
   useEffect(() => {
-    setProduct(Items.filter((item: any) => {
-      return inputItem === "" ? true : item.name.toLowerCase().includes(inputItem.toLowerCase())
-    })
-    )
+    setProduct(items?.filter((item: any) => {
+      return inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase())
+    }
+    ))
   }, [inputItem])
+
+  const [itemList, setItemList] = useState<any>([]);
+
+  useEffect(() => {
+    if (items != itemList) {
+      setStatus("Return Raised")
+    }
+
+    else if (items == itemList) {
+      setStatus("Returned");
+    }
+
+  }, [itemList])
+
+  console.log(purchaseReturnData);
+
 
   return (
     <div className="w-full ">
       <h1 className="px-10 pt-5 ">New Purchase Return</h1>
 
-      <NewSales
+      <NewReturn
         isSales={false}
         placeholder="Search Customer"
         data={purchaseReturnData}
@@ -128,6 +125,7 @@ const page = () => {
         inputItem={inputItem}
         setInputItem={setInputItem}
         Items={product}
+        products={items}
         customerData={cus}
         itemList={itemList}
         setItemList={setItemList}

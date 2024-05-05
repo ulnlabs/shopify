@@ -3,7 +3,7 @@ import NewSales from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import useSWR from 'swr'
-import { FormState } from "@/app/components/sales-pur/global";
+import { FormState } from "../../../../../global";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
@@ -12,6 +12,7 @@ const page = () => {
   const { data: session } = useSession();
   const [purchaseData, setPurchaseData] = useState<FormState>({
     customerName: "",
+    customerId: 0,
     billDate: new Date,
     billStatus: "Purchased",
     billQuantity: 0,
@@ -27,15 +28,16 @@ const page = () => {
     billPaymentType: "",
     billAmount: 0,
     billUserName: "",
-    billUserEmail: session?.user?.email,
+
 
   })
 
   const getItems = async () => {
-    const res = await axios.put("/api/purchase");
+    const res = await axios.put("/api/purchase", {
+      data: { header: "getItems" }
+    },);
     const data = await res.data;
     console.log(data);
-
     return data;
   }
   const [inputItem, setInputItem] = useState<any>("");
@@ -80,54 +82,6 @@ const page = () => {
 
   }, [purchaseData.customerName])
 
-
-  /*  const Items = [
-     {
-   
-       name: "Deepath",
-       quantity: 10,
-       price: 200,
-       discount: 0,
-       tax_type: "VAT 5%",
-       tax: 10,
-       tax_category: "Exclusive",
-       dis_type: "Fixed",
-       taxPer: 5,
-       unitcost: 200,
-       subtotal: 210,
-     },
-     {
-   
-       name: "fire10",
-       quantity: 5,
-       price: 200,
-       discount: 0,
-       tax_type: "VAT 5%",
-       tax: 10,
-       taxPer: 5,
-       tax_category: "Exclusive",
-       dis_type: "Fixed",
-       unitcost: 200,
-       subtotal: 210,
-     },
-     {
-   
-       name: "dhilip",
-       quantity: 2,
-       price: 200,
-       discount: 0,
-       tax_type: "VAT 5%",
-       dis_type: "Fixed",
-       tax: 10,
-       taxPer: 5,
-       unitcost: 200,
-       subtotal: 210,
-       tax_category: "Exclusive",
-     }
-   ]
-   
-  */
-
   const [itemList, setItemList] = useState<any>([]);
 
 
@@ -138,8 +92,12 @@ const page = () => {
 
     try {
       const { data } = await axios.post("/api/purchase", {
-        purchase: purchaseData,
-        items: itemList
+        header: "purchase",
+        data: {
+          purchase: purchaseData,
+          items: itemList,
+          status: "Purchased"
+        }
       });
       console.log(data);
       alert("saved")

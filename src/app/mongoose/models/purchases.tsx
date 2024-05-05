@@ -1,11 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
+
 const purchaseSchema = new Schema({
-    c_id: {
+    s_id: {
         type: String,
         required: true
     },
-    c_name: {
+    s_name: {
         type: String,
         required: true
     },
@@ -26,9 +27,14 @@ const purchaseSchema = new Schema({
             type: String,
             required: true
         },
-        quantity: {
+        Purchase_quantity: {
             type: Number,
             required: true
+        },
+        returned_quantity: {
+            type: Number,
+            required: true,
+            default: 0
         },
         price: {
             type: Number,

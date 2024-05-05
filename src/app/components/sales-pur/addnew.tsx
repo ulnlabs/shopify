@@ -58,8 +58,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           console.log(row.original.quantity);
           if (row.original.quantity > 1) {
             const updateTax = Math.floor(((row.original.taxAmount / row.original.quantity)) * 10) / 10;
-            const updateDis = Math.floor((row.original.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
-            const subTotal = Math.floor((row.original.taxType === "Exclusive" ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 10) / 10;
+            const updateDis = Math.floor(((row.original.discountType).toLowerCase() === "Fixed".toLowerCase() ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
+            const subTotal = Math.floor(((row.original.taxType).toLowerCase() === "Exclusive".toLowerCase() ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 10) / 10;
 
             const uplist = {
               ...row.original,
@@ -87,8 +87,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           if (row.original.quantity < update.quantity || !isSales) {
 
             const updateTax = Math.floor(((row.original.taxAmount / row.original.quantity)) * 10) / 10;
-            const updateDis = Math.floor((row.original.discountType === "Fixed" ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
-            const subTotal = Math.floor((row.original.taxType === "Exclusive" ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 10) / 10;
+            const updateDis = Math.floor(((row.original.discountType).toLowerCase() === "Fixed".toLowerCase() ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
+            const subTotal = Math.floor(((row.original.taxType).toLowerCase() === "Exclusive".toLowerCase() ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 10) / 10;
             const uplist = {
               ...row.original,
               quantity: ++row.original.quantity,
@@ -225,7 +225,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     ))
     const taxPer = (data.billTaxType && data.billTaxType.match) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
     updateCharge = (taxPer * data.billCharges) / 100
-    updateDiscount = data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Percentage" ? ((newSubTotal + updateCharge) * data.billDiscount) / 100 : 0
+    updateDiscount = (data.billDiscountType).toLowerCase() === "Fixed".toLowerCase() ? data.billDiscount : (data.billDiscountType).toLowerCase() === "Percentage".toLowerCase() ? ((newSubTotal + updateCharge) * data.billDiscount) / 100 : 0
     newTotal = newSubTotal + updateCharge - updateDiscount;
     console.log(quantity);
     setData((prevData: any) => ({
@@ -242,7 +242,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       const taxPer = (data.billTaxType) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
       const newOtherCharge = (data.billCharges * taxPer) / 100;
       const subTotal = Math.floor((newOtherCharge + data.billSubtotal) * 10) / 10;
-      const newDiscount = Math.floor((data.billDiscountType === "Fixed" ? data.billDiscount : data.billDiscountType === "Percentage" ? ((data.billDiscount * subTotal) / 100) : 0) * 10) / 10;
+      const newDiscount = Math.floor(((data.billDiscountType).toLowerCase() === "Fixed".toLowerCase() ? data.billDiscount : (data.billDiscountType).toLowerCase() === "Percentage".toLowerCase() ? ((data.billDiscount * subTotal) / 100) : 0) * 10) / 10;
       setData({
         ...data,
         billOtherCharge: newOtherCharge,

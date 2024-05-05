@@ -168,7 +168,7 @@ export default function page() {
     useEffect(() => {
         const onChangeEvent = () => {
             const taxes = taxValue ? taxValue.match(/\d+/g)!.map(Number)[0] : 0
-            const taxValues = (taxType.toLowerCase() === "Exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
+            const taxValues = (taxType.toLowerCase() === "Exclusive".toLowerCase() || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
             const price = (formDetails?.price + taxValues);
             const profit = Math.round(((formDetails?.profitmargin * formDetails.price) / 100));
             const salePrice = profit ? profit + formDetails.price : formDetails.price;
