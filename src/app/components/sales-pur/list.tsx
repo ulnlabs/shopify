@@ -20,6 +20,8 @@ import { ContextData } from "../../../../contextapi";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import axios from "axios";
+
 interface propType {
     page: string,
     isSales?: boolean,
@@ -28,9 +30,10 @@ interface propType {
     from: Date,
     end: Date,
     setFrom: Dispatch<SetStateAction<Date>>,
-    setEnd: Dispatch<SetStateAction<Date>>
+    setEnd: Dispatch<SetStateAction<Date>>,
+    isReturn?: string,
 }
-const List = ({ page, isSales, path, list, from, end, setFrom, setEnd }: propType) => {
+const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn }: propType) => {
 
     const router = useRouter()
     const { setSalesRecord, setPurchaseRecord } = useContext(ContextData);
@@ -89,7 +92,7 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd }: propTyp
                             View Sales
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
+                        {isReturn && <DropdownMenuItem
                             className="cursor-pointer" onClick={() => {
                                 setSalesRecord(row.original);
                                 router.push("/sales/new-return")
@@ -97,6 +100,7 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd }: propTyp
                             }>
                             Sales Return
                         </DropdownMenuItem>
+                        }
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             className="cursor-pointer"
@@ -112,11 +116,23 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd }: propTyp
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             className="cursor-pointer"
+                            onClick={async () => {
+                                console.log(row.original.salesCode);
+
+                                const remove = await axios.put("/api/sales", {
+                                    data: {
+                                        header: "deleteSales",
+                                        salesCode: row.original.salesCode
+                                    }
+                                })
+                                console.log(remove);
+
+                            }}
                         >
                             Delete
                         </DropdownMenuItem>
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu >
             )
         })
     };
@@ -160,12 +176,24 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd }: propTyp
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             className="cursor-pointer"
-                        /* onClick={() => handleUpdate(row.original)} */>
+                        >
                             PDF
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             className="cursor-pointer"
+                            onClick={async () => {
+                                console.log(row.original.purchaseCode);
+
+                                const remove = await axios.put("/api/purchase", {
+                                    data: {
+                                        header: "deletePurchase",
+                                        purchaseCode: row.original.purchaseCode
+                                    }
+                                })
+                                console.log(remove);
+
+                            }}
                         >
                             Delete
                         </DropdownMenuItem>

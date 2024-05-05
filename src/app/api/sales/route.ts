@@ -222,6 +222,16 @@ export const PUT = async (req: Request) => {
                 return NextResponse.json(modified);
             }
         }
+        else if (header === "deleteSales") {
+            const { salesCode } = data.data
+            console.log(salesCode);
+
+            const res = await Sales.findOneAndDelete({ salesCode: salesCode });
+            console.log(res);
+
+
+            return new Response("done", { status: 200 })
+        }
     }
     catch (err) {
         console.log(err);

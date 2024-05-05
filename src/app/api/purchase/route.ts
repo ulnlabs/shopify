@@ -228,6 +228,17 @@ export const PUT = async (req: Request) => {
                 return NextResponse.json(modified);
             }
         }
+
+        else if (header === "deletePurchase") {
+            const { purchaseCode } = data.data
+            console.log(purchaseCode);
+
+            const res = await Purchase.findOneAndDelete({ purchaseCode: purchaseCode });
+            console.log(res);
+
+
+            return new Response("done", { status: 200 })
+        }
     }
     catch (err) {
         console.log(err);
@@ -314,7 +325,7 @@ export async function POST(req: any) {
 
 
             for (const { itemCode, Purchase_quantity } of itemData) {
-                const updated = await stocks.updateOne({ itemCode: itemCode }, { $inc: { quantity: -Purchase_quantity } }, { session });
+                const updated = await stocks.updateOne({ itemCode: itemCode }, { $inc: { quantity: +Purchase_quantity } }, { session });
                 console.log(updated);
             }
             console.log('Purchase created successfully:', newPurchase);

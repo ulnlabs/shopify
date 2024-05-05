@@ -56,14 +56,52 @@ function invoice({ date, customer, invoiceId, discountAll, otherCharges, itemLis
     accessorKey: "total_amount",
     header: "Total Amount",
   }
+  const SI_NO: columnHeader_dataTable = {
+    accessorKey: "si_no",
+    header : "SI.NO"
+  };
+  const DATE: columnHeader_dataTable = {
+    accessorKey: "date",
+    header: "Date"
+  };
+  const PAYMENT_TYPE: columnHeader_dataTable = {
+    accessorKey: "payment_type",
+    header: "Payment Type"
+  };
+  const PAYMENT_NOTE: columnHeader_dataTable = {
+    accessorKey: "payment_note",
+    header: "Payment Note"
+  };
+  const PAYMENT: columnHeader_dataTable ={
+    accessorKey: "payment",
+    header: "Payment"
+  };
+  const currentDate = new Date();
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1;
+  const year = currentDate.getFullYear();
+  console.log(year);
+  
+  
+  const totalPrice = sampleData.reduce((total, Item: any) => total + Item.unit_price, 0)
+  const totalQuantity = sampleData.reduce((total, Item: any) => total + Item.quantity, 0)
+  const totalTaxAmount = sampleData.reduce((total, Item: any) => total + Item.tax_amount, 0)
+  const totalDisAmount = sampleData.reduce((total, Item: any) => total + Item.discount_amount, 0)
+  const totalAmount = sampleData.reduce((total, Item: any) => total + Item.total_amount, 0)
+  const discountamount=totalAmount / 100 * discountAll;
+  const grandTotal = totalAmount -discountamount + otherCharges
 
-  const totalPrice = itemList.reduce((total, Item: any) => total + Item.unit_price, 0)
-  const totalQuantity = itemList.reduce((total, Item: any) => total + Item.quantity, 0)
-  const totalTaxAmount = itemList.reduce((total, Item: any) => total + Item.tax_amount, 0)
-  const totalDisAmount = itemList.reduce((total, Item: any) => total + Item.discount_amount, 0)
-  const totalAmount = itemList.reduce((total, Item: any) => total + Item.total_amount, 0)
-  const discountamount = totalAmount / 100 * discountAll;
-  const grandTotal = totalAmount - discountamount + otherCharges
+
+  const sampleInformation = [
+    {
+      si_no: 1,
+      date: `${day}/${month}/${year}`,
+      payment_type: "Cash",
+      payment_note: "Paid By Cash",
+      payment: totalAmount,
+    },
+  ]
+
 
   return (
     <div className="">
@@ -76,50 +114,58 @@ function invoice({ date, customer, invoiceId, discountAll, otherCharges, itemLis
 
         <div className="w-[95%]">
 
-          <div className='border-b-2 w-[100%] p-3 flex  justify-between'>
-            <h1>Sales Invoice</h1>
-            <p>Date:{date}</p>
+      <div className='border-b-2 w-[100%] p-3 flex  justify-between'>
+        <h1>Sales Invoice</h1>
+        <p>Date:{date}</p>
+      </div>
+      <div className="flex w-[100%] p-4 flex-col">
+        <div className="w-full flex md:flex-row flex-col justify-between md:gap-0 gap-3">
+          <div>
+            <p>From</p>
+            <p>{customer.name}</p>
+            <p>{customer.address}</p>
+            <p>{customer.mobile}</p>
+            <p>{customer.email}</p>
+            <p>{customer.gstNumber}</p>
+            <p>{customer.vatNumber}</p>
           </div>
-          <div className="flex w-[100%] p-4 flex-col">
-            <div className="w-full flex justify-between">
-              <div>
-                <p>From</p>
-                <p>{customer.name}</p>
-                <p>{customer.address}</p>
-                <p>{customer.mobile}</p>
-                <p>{customer.email}</p>
-                <p>{customer.gstNumber}</p>
-                <p>{customer.vatNumber}</p>
-              </div>
-              <div>
-                <p>Invoice #{invoiceId}</p>
-              </div>
-            </div>
-            <div>
-              <DataTable columns={[S_NO, ITEM_NAME, UNIT_PRICE, QUANTITY, NET_COST, TAX, TAX_AMOUNT, DISCOUNT, DISCOUNT_AMOUNT, UNIT_COST, TOTAL_AMOUNT]} final data={itemList} totalPrice={totalPrice} totalQuantity={totalQuantity} totalTaxAmount={totalTaxAmount} totalDisAmount={totalDisAmount} totalAmount={totalAmount} />
-            </div>
-            <div className="w-full flex flex-col gap-2 text-base font-semibold mt-4">
-              <div className="">
-                <p>Discount on All :{discountAll}%</p>
-                <p>Note :{ }</p>
-              </div>
-              <div className="">
-                <p>SubTotal : ₹{totalAmount}</p>
-                <p>Other Charges : ₹{otherCharges}</p>
-                <p>Discount on All :{discountAll}%</p>
-                <p>Grand Total : ₹{grandTotal}</p>
-              </div>
-              <div className="flex gap-3 p-2">
+          <div className="">
+            <p>Customer Details</p>
+            <p>Walk-in Customer</p>
+          </div>
+          <div>
+            <p>Invoice #{invoiceId}</p>
+          </div>
+        </div>
+        <div>
+          <DataTable columns={[S_NO, ITEM_NAME, UNIT_PRICE, QUANTITY, NET_COST, TAX, TAX_AMOUNT, DISCOUNT, DISCOUNT_AMOUNT, UNIT_COST, TOTAL_AMOUNT]} data={sampleData} />
+        </div>
+        <div className="w-full flex flex-col gap-2 text-base font-semibold mt-4">
+          <div className="">
+            <p>Discount on All :{discountAll}%</p>
+            <p>Note :{}</p>
+          </div>
+          <div className="">
+            <h3 className="text-xl">Payment Information :</h3>
+            <DataTable columns={[SI_NO, DATE, PAYMENT_TYPE, PAYMENT_NOTE, PAYMENT]} data={sampleInformation} />
+          </div>
+          <div className="pt-3">
+            <p>SubTotal : ₹{totalAmount}</p>
+            <p>Other Charges : ₹{otherCharges}</p>
+            <p>Discount on All :{discountAll}%</p>
+            <p>Grand Total : ₹{grandTotal}</p>
+          </div>
+          <div className="w-full flex gap-3 flex-wrap mt-2 ">
 
-                <button className='bg-blue-400 p-2 rounded-md'>Edit</button>
-                <button className='bg-green-400  p-2 rounded-md'>Print</button>
-                <button className='bg-red-400  p-2 rounded-md'>PDF</button>
-                <button className='bg-yellow-400  p-2 rounded-md'>Sales Return</button>
-              </div>
-            </div>
+          <button className='bg-blue-400 px-2 py-3 rounded-md'>Edit</button>
+          <button className='bg-green-400  px-2 py-3 rounded-md'>Print</button>
+          <button className='bg-red-400  px-2 py-3 rounded-md'>PDF</button>
+          <button className='bg-yellow-400  px-2 py-3 rounded-md'>Sales Return</button>
           </div>
         </div>
       </div>
+      </div>
+    </div>
     </div>
   )
 }

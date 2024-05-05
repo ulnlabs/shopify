@@ -1,5 +1,5 @@
 "use client"
-import NewSales from "@/app/components/sales-pur/addnew";
+import NewPurchase from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import useSWR from 'swr'
@@ -54,21 +54,22 @@ const page = () => {
     {
       value: "Fire10",
       label: "Fire10",
+      id: 4,
     },
     {
       value: "deepath",
       label: "Deepath",
-      id: 1
+      id: 1,
     },
     {
       value: "deepak",
       label: "Deepak",
-      id: 2
+      id: 2,
     },
     {
       value: "999",
       label: "Dhilip",
-      id: 3
+      id: 3,
     },
   ]
 
@@ -112,7 +113,7 @@ const page = () => {
     <div className="w-full ">
       <h1 className="px-10 pt-5 ">New Purchase</h1>
 
-      <NewSales
+      <NewPurchase
         isSales={false}
         placeholder="Search Customer"
         data={purchaseData}

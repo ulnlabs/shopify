@@ -1,4 +1,5 @@
 const cityData = [
+  { city: '', district: '', state: '' },
     { city: 'Mumbai', district: 'Mumbai', state: 'Maharashtra' },
     { city: 'Delhi', district: 'Delhi', state: 'Delhi' },
     { city: 'Bengaluru', district: 'Bengaluru', state: 'Karnataka' },
