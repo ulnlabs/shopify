@@ -38,7 +38,6 @@ export default function page() {
         brand?: string
         category?: string
         unit?: string
-        /* minQty: number */
         expdate?: Date
         barcode?: string
         description?: string
@@ -58,7 +57,6 @@ export default function page() {
         brand: "",
         category: "",
         unit: "",
-        /* minQty: 1, */
         expdate: new Date,
         barcode: "",
         description: "",
@@ -152,6 +150,8 @@ export default function page() {
 
     const addItemEvent = async (event: React.FormEvent) => {
         event.preventDefault();
+        console.log(formDetails.taxtype);
+
         if (formDetails.itemCode === "" || formDetails.itemName === "" || formDetails.category === "" || formDetails.unit === "" || formDetails.price === 0 || formDetails.tax === "") {
             alert("Please Fill All The Filed");
             return
@@ -197,7 +197,7 @@ export default function page() {
     useEffect(() => {
         const onChangeEvent = () => {
             const taxes = taxValue ? taxValue.match(/\d+/g)!.map(Number)[0] : 0
-            const taxValues = (taxType.toLowerCase() === "exclusive" || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
+            const taxValues = (taxType.toLowerCase() === "Exclusive".toLowerCase() || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
             const price = (formDetails?.price + taxValues);
             const profit = ((formDetails?.profitmargin * formDetails.price) / 100);
             const salePrice = profit ? profit + formDetails.price : formDetails.price;
@@ -324,7 +324,7 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="taxType">Tax Type (%)<span className='text-red-400'>*</span></label>
-                                <Selector commonTitle='Select Tax Type' changeState={setTaxType} currentstate={taxType} data={['inclusive', 'exclusive']} />
+                                <Selector commonTitle='Select Tax Type' changeState={setTaxType} currentstate={taxType} data={['Inclusive', 'Exclusive']} />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="profitMargin">Profit Margin(%)<span className='text-red-400'>*</span></label>

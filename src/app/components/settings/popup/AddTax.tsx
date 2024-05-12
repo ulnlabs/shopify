@@ -1,24 +1,26 @@
 "use client"
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { motion } from 'framer-motion';
+
 interface props {
     close: Dispatch<SetStateAction<boolean | null>>
+
 }
-export default function AddTax({ close }: props) {
-    const [taxName, setTaxName] = useState('');
-    const [taxPercentage, setTaxPercentage] = useState('');
 
+export default function AddTax({ close, dataset }: any) {
+    const [addData, setdata] = useState({ id: null, taxname: "", taxpercentage: "" })
     const handleTaxNameChange = (event: any) => {
-        setTaxName(event.target.value);
-    }
 
-    const handleTaxPercentageChange = (event: any) => {
-        setTaxPercentage(event.target.value);
+        const { name, value } = event.target
+        setdata({ ...addData, [name]: value })
+
     }
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        // Handle form submission here
+        dataset(addData);
+        close(false)
+
     }
     const animi = (variants: any) => {
         return {
@@ -73,16 +75,16 @@ export default function AddTax({ close }: props) {
                     <form onSubmit={handleSubmit} className="w-[400px] h-fit flex flex-col gap-3">
                         <div>
                             <label htmlFor="taxName" className="block text-sm font-medium text-gray-700">Tax Name</label>
-                            <input type="text" id="taxName" name="taxName" value={taxName} onChange={handleTaxNameChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                            <input type="text" id="taxName" name="taxname" onChange={handleTaxNameChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                         </div>
                         <div>
                             <label htmlFor="taxPercentage" className="block text-sm font-medium text-gray-700">Tax Percentage</label>
-                            <input type="number" id="taxPercentage" name="taxPercentage" value={taxPercentage} onChange={handleTaxPercentageChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                            <input type="text" id="taxPercentage" name="taxpercentage" onChange={handleTaxNameChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                         </div>
                         <div className='w-full flex gap-3'>
                             <button type="submit" className="px-4 py-2 bg-[--primary] text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Submit</button>
                             <button
-                                onClick={() => close(false)}
+                                onClick={() =>{close(false)} } type='button'
                                 className="px-4 py-2 bg-[--primary] text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Cancel</button>
                         </div>
                     </form>

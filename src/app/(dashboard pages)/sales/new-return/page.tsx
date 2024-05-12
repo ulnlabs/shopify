@@ -1,12 +1,16 @@
 "use client"
-import NewSales from "@/app/components/sales-pur/addnew";
+import NewReturn from "@/app/components/sales-pur/return";
+import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ContextData } from "../../../../../contextapi";
+
+
 
 interface FormState {
   customerName: string,
   billDate: Date,
-  billStatus: string,
+  billStatus?: string,
   billQuantity: number,
   billCharges: any,
   billTaxType: string,
@@ -17,48 +21,136 @@ interface FormState {
   billOtherCharge: number,
   billOverallDis: number
   billTotal: number,
-  billPaymentType: string,
+  billPaymentType: string | "",
   billAmount: any,
-  billPayNote: string,
-
+  customerId: number
 
 }
 
 const page = () => {
-
+  const { salesRecord } = useContext(ContextData);
+  console.log("jkj", salesRecord);
+  const { c_name, items, paymentType, otherCharges, discount, discountType, taxType, note, c_id, salesCode } = salesRecord;
+  console.log(salesCode);
 
   const [salesReturnData, setSalesReturnData] = useState<FormState>({
-    customerName: "",
+    customerName: c_name,
+    customerId: c_id,
     billDate: new Date,
-    billStatus: "",
     billQuantity: 0,
-    billCharges: 0,
-    billTaxType: "",
-    billDiscount: 0,
-    billDiscountType: "",
-    billNote: "",
-    billSubtotal: 100000000,
+    billCharges: otherCharges | 0,
+    billTaxType: taxType || "",
+    billDiscount: discount || "",
+    billDiscountType: discountType || "",
+    billNote: note || "",
+    billSubtotal: 0,
     billOtherCharge: 0,
     billOverallDis: 0,
     billTotal: 0,
-    billPaymentType: "",
+    billPaymentType: paymentType || "",
     billAmount: 0,
-    billPayNote: "",
   })
 
-  const handleClick = () =>{
-    console.log(salesReturnData);  
-  }
+  console.log(paymentType);
 
+  useEffect(() => {
+    setItemList(items)
+  }, [items])
+
+  const [status, setStatus] = useState<string>("")
+
+  const handleClick = async () => {
+
+    const data = await axios.post("/api/sales", {
+      header: "return",
+      data: {
+        sales: salesReturnData,
+        items: itemList,
+        salesCode: salesCode,
+        status: status
+      }
+
+    })
+    console.log("res", data);
+
+    console.log(salesReturnData);
+  }
+  const customerName = [
+    {
+      value: "Fire10",
+      label: "Fire10",
+    },
+    {
+      value: "deepath",
+      label: "Deepath",
+    },
+    {
+      value: "deepak",
+      label: "Deepak",
+    },
+    {
+      value: "999",
+      label: "Dhilip",
+    },
+  ]
+
+  const [cus, setCus] = useState<any>("");
+
+  useEffect(() => {
+    setCus(customerName.filter((item: any) => {
+      return salesReturnData.customerName === "" ? true : item.value.toLowerCase().includes(salesReturnData.customerName.toLowerCase())
+    })
+    )
+
+  }, [salesReturnData.customerName])
+
+
+  const [inputItem, setInputItem] = useState<String>("");
+  const [product, setProduct] = useState<any>([])
+
+  useEffect(() => {
+    setProduct(items?.filter((item: any) => {
+      return inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase())
+    }
+    ))
+  }, [inputItem])
+
+  const [itemList, setItemList] = useState<any>([]);
+
+  useEffect(() => {
+    if (items != itemList) {
+      setStatus("Return Raised")
+    }
+
+    else if (items == itemList) {
+      setStatus("Returned");
+    }
+
+  }, [itemList])
+
+  console.log(salesReturnData);
 
   return (
     <div className="w-full ">
       <h1 className="px-10 pt-5 ">New Sales Return</h1>
 
-      <NewSales data={salesReturnData} setData={setSalesReturnData} placeholder="Select Customer" isSales={true} />
+      <NewReturn
+        placeholder="Search Customer"
+        data={salesReturnData}
+        setData={setSalesReturnData}
+        inputItem={inputItem}
+        setInputItem={setInputItem}
+        Items={product}
+        products={items}
+        customerData={cus}
+        isSales={true}
+        itemList={itemList}
+        setItemList={setItemList}
+
+      />
       <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
-        <Link href={"../../dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
+        <Link href={"/dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
       </div>
     </div>
   );

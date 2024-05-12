@@ -9,12 +9,11 @@ const UnitSchema = new mongoose.Schema({
         type: String,
         default: ""
     }
-});
+})
+const Unit = mongoose.models.Unit || mongoose.model<unitType>("Unit", Unitmodel)
+export default Unit
 
-const Unit = mongoose.models.Unit || mongoose.model<unitType>("Unit", UnitSchema);
-export default Unit;
-
-export interface unitType {
-    name: string;
-    description: string;
+ interface unitType{
+    name:string;
+    description?:string
 }

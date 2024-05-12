@@ -1,7 +1,7 @@
 "use client"
-import React from 'react'
+import React, { use } from 'react'
 import { useState } from 'react';
-import Taxdata from "@/app/components/settings/taxlist/DT_Tax/Taxdata"
+import DataTable from "../datatableforsettings/DataTable"
 import { RiEdit2Fill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
 import { BiCaretDown } from "react-icons/bi";
@@ -9,18 +9,23 @@ import { BiCaretDown } from "react-icons/bi";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import AddTax from '../popup/AddTax';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { ColumnDef } from "@tanstack/react-table";
-export const data =
+import Edit from "@/app/components/settings/popup/Edit"
+ interface initial{
+  id:number|null,
+  taxname:string,
+  taxpercentage:string
+    
+}
+export const data  =
   [
     {
       id: 1,
@@ -38,7 +43,6 @@ export const data =
       taxpercentage: "4.50"
     },
   ]
-
 
 
 function Taxlist() {
@@ -106,7 +110,9 @@ function Taxlist() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem className="flex justify-between" onClick={() => {
-              handleDelete(row.original);
+              setEdit(true);
+             
+              
             }}>
               <h1>
 
@@ -144,38 +150,38 @@ function Taxlist() {
     C_ACTION,
   ];
 
-
+  const user=(NewTax:any)=>{
+    NewTax.id=Tax.length+1;
+    setTax([...Tax,NewTax])
+   
+  }
   const [Tax, setTax] = useState(data);
   function handleDelete(row: any): void {
-
-
     setTax(Tax.filter((item) => item.id !== row.id));
 
-
   }
-
   const [popup, setpopup] = useState<boolean | null>(false)
+  const [edit, setEdit] = useState<boolean | null>(false)
+  const [initial,setinitial]=useState<initial>({id:null,taxname:"",taxpercentage:""})
+  
   return (
-    <div className="relative">
+    <div className="relative ">
       <div className=" h-screen ">
         <AnimatePresence mode='wait'>
           {
-            popup && <AddTax close={setpopup} />
+            popup && <AddTax close={setpopup} dataset={user}  />||edit&&<Edit close={setpopup} setinitial={setinitial} />
           }
         </AnimatePresence>
-        <div className="mx-auto w-[95%] p-5 mt-3">
-          <div className=" border-t-2 border-violet-500 border-b-2   rounded-md">
+        <div className="mx-auto w-[95%]   mt-3">
+          <div className=" border rounded-md p-2 ">
 
-            <div className="flex justify-between p-3">
-              <h1 className='text-sm tracking-[.2rem] font-medium'>Tax List</h1>
-              <button onClick={() => setpopup(true)} type='submit' className='p-2  font-bold rounded-md text-black border  hover:bg-violet-200 text-sm' > <span className='text-lg'>+</span>Add Tax</button>
+            <div className="flex justify-between items-center p-3">
+              <h1 className='text-md tracking-[.2rem] font-extralight'>Tax List :-</h1>
+              <button onClick={() => setpopup(true)} type='submit' className='px-1 font-normal rounded-md  text-black border  hover:bg-white text-sm' > <span className='text-lg'>+</span>Add Tax</button>
             </div>
 
             <div className=" ">
-              <Taxdata columns={c_columns} data={Tax} />
-
-
-
+              <DataTable columns={c_columns} data={Tax} />
             </div>
           </div>
         </div>
@@ -186,3 +192,4 @@ function Taxlist() {
 }
 
 export default Taxlist
+

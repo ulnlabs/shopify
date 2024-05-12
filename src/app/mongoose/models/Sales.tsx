@@ -1,33 +1,40 @@
 import mongoose, { Schema } from 'mongoose';
 
 
-export type items = {
-    name: String,
-
-}
-
 const SalesSchema = new Schema({
-    cud_id: {
+    c_id: {
         type: String,
         required: true
     },
-    name: {
+    c_name: {
         type: String,
         required: true
     },
-    data: {
+    date: {
         type: Date,
         required: true
     },
-    item: {
-        name: {
+    salesCode: {
+        type: String,
+        required: true
+    },
+    items: [{
+        itemCode: {
             type: String,
             required: true
         },
-
-        quantity: {
+        itemName: {
+            type: String,
+            required: true
+        },
+        sold_quantity: {
             type: Number,
             required: true
+        },
+        returned_quantity: {
+            type: Number,
+            required: true,
+            default: 0
         },
         price: {
             type: Number,
@@ -37,54 +44,50 @@ const SalesSchema = new Schema({
             type: Number,
             required: true
         },
+        discountType: {
+            type: String,
+            required: true
+        },
         tax: {
-            type: Number,
-            required: true
-        },
-        subtotal: {
-            type: Number,
-            required: true
-        },
-    },
-    quantity: {
-        type: String,
-        required: true
-    },
-    charges: {
-        value: {
-            type: Number,
-        },
-        valueType: {
-            type: String,
-        }
-    },
-    discount: {
-        disType: {
             type: String,
             required: true
         },
-        discountvalue: {
-            type: Number,
+        taxType: {
+            type: String,
             required: true
         },
-    },
+    }],
     note: {
         type: String,
     },
-    subtotal: {
+    otherCharges: {
+        type: Number,
+
+    },
+    taxType: {
         type: String,
     },
-    total: {
-        type: String,
+    discount: {
+        type: Number,
+
+    },
+    discountType: {
+        type: String
     },
     paymentType: {
         type: String,
         required: true
     },
+    status: {
+        type: String,
+        required: true
+    }
 }, {
     timestamps: true
 });
 
 const Sales = mongoose.models.Sales || mongoose.model('Sales', SalesSchema)
 
+
+export const Return = mongoose.models.Return || mongoose.model('Return', SalesSchema)
 export default Sales;

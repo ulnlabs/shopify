@@ -1,69 +1,159 @@
 "use client"
 import NewSales from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { FormState } from "../../../../../global";
+import axios from "axios";
+import { useAnimation } from "framer-motion";
 
-interface FormState {
-  customerName: string,
-  billDate: Date,
-  billStatus: string,
-  billQuantity: number,
-  billCharges: any,
-  billTaxType: string,
-  billDiscount: any,
-  billDiscountType: string,
-  billNote: string,
-  billSubtotal: number,
-  billOtherCharge: number,
-  billOverallDis: number
-  billTotal: number,
-  billPaymentType: string,
-  billAmount: any,
-  billPayNote: string,
-
-
-}
 
 const page = () => {
 
 
+
+
+  const [item, setItem] = useState<any>([]);
+
+  const [inputItem, setInputItem] = useState<String>("");
+  const [product, setProduct] = useState<any>([])
+  useEffect(() => {
+    const fetchItem = async () => {
+
+      const response = await axios.put("/api/sales",
+        {
+          data: { header: "getItems" }
+
+        },);
+      setItem(response.data)
+      console.log(response.data);
+    }
+    fetchItem();
+  }, []);
+
+
+  useEffect(() => {
+    setProduct(item?.filter((item: any) => {
+      console.log("open");
+
+      return inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase())
+    }
+    ))
+  }, [inputItem])
+
+
   const [salesData, setSalesData] = useState<FormState>({
     customerName: "",
+    customerId: 0,
     billDate: new Date,
-    billStatus: "",
     billQuantity: 0,
+    billReturnQuantity: 0,
     billCharges: 0,
     billTaxType: "",
     billDiscount: 0,
     billDiscountType: "",
     billNote: "",
-    billSubtotal: 100000000,
+    billSubtotal: 0,
     billOtherCharge: 0,
     billOverallDis: 0,
     billTotal: 0,
     billPaymentType: "",
     billAmount: 0,
-    billPayNote: "",
   })
 
-  const handleClick = async () =>{
+  const controls = useAnimation();
 
-     console.log(salesData);
-     
-   
+
+  const handleClick = async () => {
+    await controls.start({ y: 0, transition: { duration: 0.5, ease: "easeOut" } });
+
+    // Scroll to top after animation completes
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+
+
+    if (salesData.customerName && itemList.length > 0 && salesData.billPaymentType) {
+
+
+      try {
+        const { data } = await axios.post("/api/sales", {
+          header: "sales",
+          data: {
+            sales: salesData,
+            items: itemList,
+            status: "Sold"
+          }
+        })
+        console.log(data);
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+    else {
+      alert("Please Fill All The Field");
+
+    }
   }
+
+  const customerName = [
+    {
+      value: "Fire10",
+      label: "Fire10",
+      id: 1,
+    },
+    {
+      value: "deepath",
+      label: "Deepath",
+      id: 2,
+    },
+    {
+      value: "deepak",
+      label: "Deepak",
+      id: 3,
+    },
+    {
+      value: "999",
+      label: "Dhilip",
+      id: 4,
+    },
+  ]
+
+  const [cus, setCus] = useState<any>("");
+  useEffect(() => {
+    setCus(customerName.filter((item: any) => {
+      return item.value.toLowerCase().includes(salesData.customerName.toLowerCase())
+    })
+    )
+  }, [salesData.customerName])
+
+
+
+  const [itemList, setItemList] = useState<any>([]);
 
 
   return (
     <div className="w-full ">
       <h1 className="px-10 pt-5 ">New Sales</h1>
-
-      <NewSales data={salesData} setData={setSalesData} placeholder="Select Customer" isSales={true} />
+      <NewSales
+        placeholder="Search Customer"
+        data={salesData}
+        setData={setSalesData}
+        inputItem={inputItem}
+        setInputItem={setInputItem}
+        Items={product}
+        customerData={cus}
+        isSales={true}
+        itemList={itemList}
+        setItemList={setItemList}
+      />
       <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
-        <Link href={"../../dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
+        <Link href={"/dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
       </div>
+
+    
+
     </div>
   );
 };
