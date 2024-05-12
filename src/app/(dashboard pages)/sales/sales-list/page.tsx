@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 
 const page = () => {
 
-  
+
 
   const Customer = [
     "Deepath",
@@ -43,7 +43,7 @@ const page = () => {
   return (
     <div className='w-full px-10'>
       <h1>Sales List</h1>
-      <List list={salesList} Customer={Customer} path='new-sales' page="Sales" setFrom={setFrom} setEnd={setEnd} from={from} end={end} isSales={true} />
+      <List list={salesList} path='new-sales' page="Sales" setFrom={setFrom} setEnd={setEnd} from={from} end={end} isReturn={false} isSales={true} />
     </div>
   )
 }

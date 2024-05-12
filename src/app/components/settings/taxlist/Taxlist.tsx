@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import Edit from "@/app/components/settings/popup/Edit"
+import { columnHeader_dataTable } from '../../../../../global';
  interface initial{
   id:number|null,
   taxname:string,

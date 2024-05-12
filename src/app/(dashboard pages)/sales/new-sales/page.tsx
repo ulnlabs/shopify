@@ -1,45 +1,35 @@
 "use client"
 import NewSales from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { FormState } from "../../../../../global";
 import axios from "axios";
 import { useAnimation } from "framer-motion";
-
+import { ContextData } from "../../../../../contextapi";
 
 const page = () => {
 
 
+  const { salesStocks: item } = useContext(ContextData)
 
 
-  const [item, setItem] = useState<any>([]);
+
 
   const [inputItem, setInputItem] = useState<String>("");
   const [product, setProduct] = useState<any>([])
-  useEffect(() => {
-    const fetchItem = async () => {
-
-      const response = await axios.put("/api/sales",
-        {
-          data: { header: "getItems" }
-
-        },);
-      setItem(response.data)
-      console.log(response.data);
-    }
-    fetchItem();
-  }, []);
 
 
   useEffect(() => {
     setProduct(item?.filter((item: any) => {
-      console.log("open");
+     
 
       return inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase())
     }
     ))
   }, [inputItem])
+
+
 
 
   const [salesData, setSalesData] = useState<FormState>({
@@ -84,7 +74,6 @@ const page = () => {
             status: "Sold"
           }
         })
-        console.log(data);
       }
       catch (err) {
         console.log(err);
@@ -152,7 +141,7 @@ const page = () => {
         <Link href={"/dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
       </div>
 
-    
+
 
     </div>
   );

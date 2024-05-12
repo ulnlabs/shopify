@@ -1,11 +1,12 @@
 "use client"
 import NewPurchase from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import useSWR from 'swr'
 import { FormState } from "../../../../../global";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { ContextData } from "../../../../../contextapi";
 
 const page = () => {
 
@@ -28,20 +29,11 @@ const page = () => {
     billPaymentType: "",
     billAmount: 0,
     billUserName: "",
-
-
   })
 
-  const getItems = async () => {
-    const res = await axios.put("/api/purchase", {
-      data: { header: "getItems" }
-    },);
-    const data = await res.data;
-    console.log(data);
-    return data;
-  }
+  const { purchaseStocks: Items } = useContext(ContextData)
+
   const [inputItem, setInputItem] = useState<any>("");
-  const { data: Items, error: itemError } = useSWR("/api/purchase", getItems)
   console.log(Items);
   useEffect(() => {
     setProduct(Items ? Items.filter((item: any) => {

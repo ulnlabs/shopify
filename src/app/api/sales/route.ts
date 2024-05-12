@@ -13,27 +13,15 @@ export const PUT = async (req: Request) => {
     const findOverall = (sale: any) => {
         const initial = 0;
         const overall = sale.items.map((item: any) => {
-
             const { total } = findTotal(item.price, sale.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
             console.log(total);
             console.log(item.returned_quantity);
-
-
             return total
         })
-
         const temp = overall.reduce((prev: number, current: number) => prev + current, initial);
         console.log(temp);
-
         const taxValue = sale.taxType ? (sale.taxType?.match(/\d+/g)!.map(Number)[0] * sale.otherCharges / 100) : 0
-        console.log(sale.discount);
-
         const discount = sale.discountType && (sale.discountType).toLowerCase() === "Percentage".toLowerCase() ? Math.floor(((sale.discount / 100) * (temp + taxValue)) * 10) / 10 : sale.discount;
-        console.log(discount);
-
-        console.log(taxValue);
-
-
         return temp + taxValue - discount;
     }
 
@@ -93,7 +81,7 @@ export const PUT = async (req: Request) => {
                         { status: "Return Raised" }
 
                     ]
-                }).sort({ 'createdAt': -1 }).limit(1).lean();
+                }).sort({ 'createdAt': -1 }).lean();
                 console.log(data);
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
