@@ -14,8 +14,6 @@ export const PUT = async (req: Request) => {
             const { total } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
             console.log(total);
             console.log(item.returned_quantity);
-
-
             return total
         })
 

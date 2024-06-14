@@ -35,6 +35,7 @@ const page = () => {
 
   const [inputItem, setInputItem] = useState<any>("");
   console.log(Items);
+
   useEffect(() => {
     setProduct(Items ? Items.filter((item: any) => {
       return inputItem === "" ? true : item.itemName.toLowerCase().includes(inputItem.toLowerCase())
@@ -82,7 +83,7 @@ const page = () => {
   const handleClick = async () => {
     console.log(purchaseData);
     console.log(itemList);
-
+    //sending data to purchase backend
     try {
       const { data } = await axios.post("/api/purchase", {
         header: "purchase",
@@ -106,16 +107,16 @@ const page = () => {
       <h1 className="px-10 pt-5 ">New Purchase</h1>
 
       <NewPurchase
-        isSales={false}
-        placeholder="Search Customer"
-        data={purchaseData}
+        isSales={false}  //false parameter used to behave as purchase
+        placeholder="Search supplier" 
+        data={purchaseData} 
         setData={setPurchaseData}
-        inputItem={inputItem}
+        inputItem={inputItem} //input field value
         setInputItem={setInputItem}
-        Items={product}
-        customerData={cus}
-        itemList={itemList}
-        setItemList={setItemList}
+        Items={product} //all products
+        customerData={cus} //all customer data
+        itemList={itemList}  //item cart data
+        setItemList={setItemList} 
       />
       <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>

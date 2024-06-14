@@ -29,7 +29,7 @@ const sample = [
     subtotal: 10,
   }
 ]
-const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList, searchPlaceholder }: any) => {
+const NewSales = ({ data /*  */, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList, searchPlaceholder }: any) => {
 
   console.log(itemList);
 
