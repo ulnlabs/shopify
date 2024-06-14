@@ -126,15 +126,15 @@ export const PUT = async (req: Request) => {
                 return NextResponse.json(modified);
             }
             else {
-                console.log(fromDate,endDate);
-                
+                console.log(fromDate, endDate);
+
                 const data = await Purchase.find({
                     date: {
                         $gte: fromDate,
                         $lte: endDate,
                     },
                     $or: [
-                        { status: "Sold" },
+                        { status: "Purchased" },
                         { status: "Return Raised" }
 
                     ]
@@ -142,7 +142,7 @@ export const PUT = async (req: Request) => {
                 }).sort({ 'createdAt': -1 }).lean();
 
                 console.log(data);
-                
+
 
                 const modified = data.map((purchase: any) => {
 
@@ -172,6 +172,8 @@ export const PUT = async (req: Request) => {
             }
         }
         else if (header === "getReturn") {
+            console.log("done");
+
             const { from, end } = data.data
             const fromDate = new Date(from);
             fromDate.setHours(fromDate.getHours() + 5)
@@ -209,8 +211,8 @@ export const PUT = async (req: Request) => {
                 return NextResponse.json(modified);
             }
             else {
-                console.log(fromDate,endDate);
-                
+                console.log(fromDate, endDate);
+
                 const data = await Purchase.find({
                     date: {
                         $gte: fromDate,
@@ -288,10 +290,10 @@ export async function POST(req: any) {
         date.setHours(date.getHours() + 5);
         date.setMinutes(date.getMinutes() + 30);
         console.log(date);
-        
+
         date.setUTCHours(0, 0, 0, 0)
         console.log(date);
-        
+
 
         const itemData = data.items.map(({ itemName, tax, taxType, quantity, price, discount, itemCode, discountType }: any) => {
             const renamedQuantity = header === "purchase" ? "Purchase_quantity" : header ===

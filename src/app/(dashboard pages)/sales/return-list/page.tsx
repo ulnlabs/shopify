@@ -31,7 +31,7 @@ const page = () => {
   return (
     <div className='w-full px-10'>
       <h1>Sales Return List</h1>
-      <List list={returnList}  path='new-sales' page="Sales" setFrom={setFrom} setEnd={setEnd} from={from} end={end} isSales={true} />
+      <List list={returnList}  path='new-sales' page="Sales" setFrom={setFrom} setEnd={setEnd} from={from} end={end} isReturn={true} isSales={true} />
 
     </div>
   )

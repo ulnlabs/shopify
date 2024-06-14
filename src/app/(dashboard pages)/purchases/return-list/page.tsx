@@ -28,7 +28,7 @@ const page = () => {
 
     fetchPurchase();
   }, [from, end])
-  return (
+  return (  
     <div className='w-full px-10'>
       <h1>Purchase Return List</h1>
       <List list={returnList} path='new-purchase' page="Purchase" setFrom={setFrom} setEnd={setEnd} from={from} end={end} />

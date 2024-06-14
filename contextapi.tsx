@@ -1,6 +1,8 @@
 "use client";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { customerAdd } from "./global";
+import axios from "axios";
+import useSWR from "swr";
 //if some types are not seen here they are mentioned in the global.d.ts file
 
 export const ContextData = createContext<any>({});
@@ -17,6 +19,35 @@ const ContextContent = ({ children }: children) => {
     id: 0
   });
   const [selectedRow, setSelectedRow] = useState<string[]>([]);
+
+
+  const [salesStocks, setSalesStocks] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchItem = async () => {
+
+      const response = await axios.put("/api/sales",
+        {
+          data: { header: "getItems" }
+        },);
+      setSalesStocks(response.data)
+      console.log(response.data);
+    }
+    fetchItem();
+  }, []);
+
+  const getItems = async () => {
+    const res = await axios.put("/api/purchase", {
+      data: { header: "getItems" }
+    },);
+    const data = await res.data;
+    console.log(data);
+    return data;
+  }
+
+  const { data: purchaseStocks, error: itemError } = useSWR("/api/purchase", getItems)
+
+
 
   const [supplierData, setSupplierData] = useState({
     name: "",
@@ -36,7 +67,7 @@ const ContextContent = ({ children }: children) => {
 
   return (
     <>
-      <ContextData.Provider value={{ selectedRow, setSelectedRow, purhcaseRecord, setPurchaseRecord, customerData, setCustomerData, supplierData, setSupplierData, salesRecord, setSalesRecord }}>
+      <ContextData.Provider value={{ selectedRow, setSelectedRow, purchaseStocks, purhcaseRecord, salesStocks, setPurchaseRecord, customerData, setCustomerData, supplierData, setSupplierData, salesRecord, setSalesRecord }}>
         {children}
       </ContextData.Provider>
     </>

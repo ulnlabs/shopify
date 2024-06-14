@@ -2,7 +2,7 @@
 import { AiOutlineLine, AiOutlineMore } from "react-icons/ai";
 import { RxReload } from "react-icons/rx";
 import { BsFillHandbagFill } from "react-icons/bs";
-import React, { SetStateAction, useContext, useState } from 'react'
+import React, { SetStateAction, useContext, useEffect, useState } from 'react'
 import Link from "next/link";
 import CalenSelect from "./calselect";
 import DataTable from "../datatable/DataTable";
@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import axios from "axios";
 
+
 interface propType {
     page: string,
     isSales?: boolean,
@@ -31,9 +32,30 @@ interface propType {
     end: Date,
     setFrom: Dispatch<SetStateAction<Date>>,
     setEnd: Dispatch<SetStateAction<Date>>,
-    isReturn?: string,
+    isReturn?: boolean,
 }
 const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn }: propType) => {
+
+    console.log(isReturn);
+
+    const [invoice, setInvoice] = useState<number>(0);
+    const [total, setTotal] = useState<number>(0);
+
+    useEffect(() => {
+
+        const todayList = list.filter((item: any) => item.date === format(new Date, "dd-MM-yy"))
+        setTotal(list.reduce((a, b) => a + b.total, 0));
+        setInvoice(todayList.length);
+        setTotal(todayList.reduce((a, b) => a + b.total, 0));
+
+
+
+
+    }, [list])
+
+    console.log(invoice);
+    console.log(total);
+
 
     const router = useRouter()
     const { setSalesRecord, setPurchaseRecord } = useContext(ContextData);
@@ -73,6 +95,10 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
         accessorKey: "action",
         header: "ACTION",
         cell: (({ row }: any) => {
+
+
+            console.log(isReturn);
+
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -92,7 +118,8 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
                             View Sales
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        {isReturn && <DropdownMenuItem
+
+                        {isReturn === false && <DropdownMenuItem
                             className="cursor-pointer" onClick={() => {
                                 setSalesRecord(row.original);
                                 router.push("/sales/new-return")
@@ -103,17 +130,11 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
                         }
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                            className="cursor-pointer"
-                        /* onClick={() => handleUpdate(row.original)} */>
+                            className="cursor-pointer">
                             Print
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            className="cursor-pointer"
-                        /* onClick={() => handleUpdate(row.original)} */>
-                            PDF
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+
                         <DropdownMenuItem
                             className="cursor-pointer"
                             onClick={async () => {
@@ -259,8 +280,8 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
             <section className="grid gap-5 ">
                 <div className="grid grid-cols-12 grid-rows-3 gap-8 md:gap-0 my-5">
                     <div className="bg-primary-gray px-2 pt-1 grid rounded-sm  gap-3 row-span-4 col-start-1 col-span-full md:col-span-5  outline outline-offset-4 outline-1 outline-primary-gray  ">
-                        <h2 className="col-start-1 col-span-2 row-start-1">Total Invoice</h2>
-                        <p className="col-start-1 col-span-3 text-2xl">10000000</p>
+                        <h2 className="col-start-1 col-span-2 row-start-1">Today's Invoice</h2>
+                        <p className="col-start-1 col-span-3 text-2xl">{invoice}</p>
                         <span className="col-start-5 col-span-1  bg-white mx-auto p-3 row-start-2 rounded-sm shadow-sm">
                             <BsFillHandbagFill />
                         </span>
@@ -269,8 +290,8 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
                         </Link>
                     </div>
                     <div className="bg-primary-gray px-2 py-1 grid gap-3 row-span-4 md:col-end-13 col-span-full md:col-span-5 rounded-sm  outline outline-offset-4 outline-1 outline-primary-gray  ">
-                        <h2 className="col-start-1 col-span-2 row-start-1">Total Amount Recieved</h2>
-                        <p className="col-start-1 col-span-3 text-2xl">10000000</p>
+                        <h2 className="col-start-1 col-span-2 row-start-1">Today's Amount</h2>
+                        <p className="col-start-1 col-span-3 text-2xl">{total}</p>
                         <span className="col-start-5 col-span-1 bg-white mx-auto p-3 row-start-2 shadow-sm rounded-sm">
                             <RxReload />
                         </span>
