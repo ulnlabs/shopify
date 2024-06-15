@@ -1,14 +1,15 @@
 import { MdOutlineDelete } from "react-icons/md"; 
 
 import { ColumnDef } from "@tanstack/react-table";
+import { columnHeader_dataTable } from "../../../../global";
 
- const DATE: columnHeader_dataTable = {
+const DATE: columnHeader_dataTable = {
     accessorKey: "date",
     header: "DATE",
 };
 
 const c_NAME: columnHeader_dataTable = {
-    accessorKey: "name",
+    accessorKey: "c_name",
     header: "CUSTOMER NAME",
 };
 
@@ -22,9 +23,10 @@ const USER: columnHeader_dataTable = {
     header: "CREATED BY",
 };
 
-const ACTION: columnHeader_dataTable = {
+const ACTION: any = {
     accessorKey: "action",
     header: "ACTION",
+    
 };
 
 const s_NAME: columnHeader_dataTable = {

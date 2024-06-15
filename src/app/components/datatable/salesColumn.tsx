@@ -1,3 +1,5 @@
+import { AiOutlinePlus } from "react-icons/ai"; 
+import { AiOutlineMinus } from "react-icons/ai"; 
 import { MdOutlineDelete } from "react-icons/md"; 
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -7,9 +9,18 @@ import { ColumnDef } from "@tanstack/react-table";
     header: "Item Name",
 };
 
-const i_QUANTITY: columnHeader_dataTable = {
+let quantity = 1
+
+const i_QUANTITY:columnHeader_dataTable  = {
     accessorKey: "quantity",
-    header: "Quantity",
+    header:"QUANTITY",
+   /*  cell: ({ row }: any) => (
+        <span className="flex gap-1 items-center">
+            <AiOutlineMinus />
+            {quantity}
+            <AiOutlinePlus />
+        </span>
+    )  */
 };
 
 const i_PRICE: columnHeader_dataTable = {
@@ -32,7 +43,8 @@ const i_SUBTOTAL: columnHeader_dataTable = {
 };
 
 const i_REMOVE = {
-    accessorKey: "remove",
+    accessorKey: "REMOVE",
+
     cell: ({ row }: any) => (
        <MdOutlineDelete />
 
