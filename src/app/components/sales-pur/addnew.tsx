@@ -19,17 +19,7 @@ import { columnHeader_dataTable } from "../../../../global";
 import { useSession } from "next-auth/react";
 
 
-const sample = [
-  {
-    name: "Deepath",
-    quantity: 2,
-    price: 200000000,
-    discount: 10,
-    tax: 1,
-    subtotal: 10,
-  }
-]
-const NewSales = ({ data /*  */, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList, searchPlaceholder }: any) => {
+const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList, searchPlaceholder }: any) => {
 
   console.log(itemList);
 

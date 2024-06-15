@@ -14,6 +14,10 @@ const BrandSchema: Schema = new Schema(
     desc: {
       type: String,
     },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     versionKey: false,

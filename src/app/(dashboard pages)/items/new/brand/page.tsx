@@ -27,7 +27,7 @@ export default function page() {
             <input name='name' id='name' type="text" placeholder='' className='p-2 border outline-none rounded w-full' />
           </div>
           <div className="items-start flex flex-col gap-2 md:w-1/2 w-full">
-            <label htmlFor="desc">Category Name<span className='text-red-400 col-start-1 col-span-3 '>*</span></label>
+            <label htmlFor="desc">Description<span className='text-red-400 col-start-1 col-span-3 '>*</span></label>
             <textarea name="desc" id="desc" cols={30} rows={10} className='p-2 border outline-none h-32 resize-none rounded  w-full'></textarea>
           </div>
           <div className="w-full py-2 items-center justify-center gap-4 pt-4 grid grid-cols-2">

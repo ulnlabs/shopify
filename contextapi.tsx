@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useEffect, useState } from "react";
-import { customerAdd } from "./global";
+import { customerAdd, children } from "./global";
 import axios from "axios";
 import useSWR from "swr";
 //if some types are not seen here they are mentioned in the global.d.ts file
