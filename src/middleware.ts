@@ -4,7 +4,6 @@ import type { NextRequest } from 'next/server'
 export function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl
     const session = req.cookies.get('next-auth.session-token')
-    console.log(req.url);
     const protectedPaths = ['/dashboard', '/settings', '/sales', '/customers', '/purchases', '/suppliers', '/reports', '/users']; if (session) {
         if (pathname == '/') {
             return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
