@@ -16,7 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { columnHeader_dataTable,customerList } from '../../../../../global';
 import { ColumnDef } from "@tanstack/react-table";
 import { AnimatePresence } from 'framer-motion';
 
