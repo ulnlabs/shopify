@@ -1,42 +1,73 @@
 "use client";
 import React, { FormEvent, useContext } from "react";
 import { ContextData } from "../../../../contextapi";
-export default function AddSupplier() {
+import DashboardHeader from "../dashboard/DashboardHeader";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
+function AddCustomer() {
   const { supplierData, setSupplierData } = useContext(ContextData);
+
+  const { toast } = useToast();
 
   const handleReset = (): void => {
     setSupplierData({
       name: "",
       mobile: "",
       email: "",
-      gst: "",
-      tax: "",
-      openingbalance: "",
+
       state: "",
       city: "",
       pincode: "",
       address: "",
     });
   };
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    const lengthDoc = await axios.get(`/api/suppliers`, {
+      headers: {
+        data: "doc-count",
+      },
+    });
+    let length = lengthDoc.data.id;
+    console.log(length);
+
+    const customerDbData = {
+      name: supplierData.name,
+      mobile: supplierData.mobile,
+      email: supplierData.email,
+
+      state: supplierData.state,
+      city: supplierData.city,
+      pincode: supplierData.pincode,
+      address: supplierData.address,
+      id: length,
+    };
+    const response = await axios.post(`/api/suppliers`, customerDbData, {
+      headers: { data: "addcust" },
+    });
+    console.log(response);
 
     setSupplierData({
       name: "",
       mobile: "",
       email: "",
-      gst: "",
-      tax: "",
-      openingbalance: "",
+
       state: "",
       city: "",
       pincode: "",
       address: "",
     });
+    toast({
+      title: "New PopUp !",
+      description: "New Customer is added",
+    });
   };
   return (
     <>
-    
+      {/*     <header className="w-[90%] h-[80px] mt-4 text-xl font-semibold text-gray-400 flex px-10 rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] ml-[5%] items-center  ">
+        Add/Update Customers
+      </header> */}
+      <DashboardHeader title="Customers" subtitle={"new"} />
       <main>
         <section className=" min-h-[700px]  mt-10 w-[90%] ml-[5%] rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] ">
           <form
@@ -52,9 +83,9 @@ export default function AddSupplier() {
                 Name <span className="text-red-400">*</span>
               </label>
               <input
-                onChange={(e) =>
-                  setSupplierData({ ...supplierData, name: e.target.value })
-                }
+                onChange={(e) => {
+                  setSupplierData({ ...supplierData, name: e.target.value });
+                }}
                 value={supplierData.name}
                 required
                 type="text"
@@ -67,18 +98,20 @@ export default function AddSupplier() {
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="mobile"
+
               >
-                Mobile
+                Mobile <span className="text-red-400">*</span>
               </label>
               <input
-                onChange={(e) =>
-                  setSupplierData({ ...supplierData, mobile: e.target.value })
-                }
+                required
+                onChange={(e) => {
+                  setSupplierData({ ...supplierData, mobile: e.target.value });
+                }}
                 value={supplierData.mobile}
                 className="h-10  bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="mobile"
                 id="mobile"
-                type="text"
+                type="tel"
               />
             </div>
             <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
@@ -99,7 +132,7 @@ export default function AddSupplier() {
                 type="email"
               />
             </div>
-            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
+            {/*   <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="gst"
@@ -116,8 +149,8 @@ export default function AddSupplier() {
                 id="gst"
                 type="text"
               />
-            </div>
-            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
+            </div> */}
+            {/*  <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="tax"
@@ -134,27 +167,27 @@ export default function AddSupplier() {
                 name="tax"
                 type="text"
               />
-            </div>
+            </div> */}
             {/* second column */}
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-1">
+            {/*   <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-1">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
-                htmlFor="openingbalance"
+                htmlFor="due"
               >
-                Opening balance
+                PreviousDue
               </label>
               <input
                 onChange={(e) =>
-                  setSupplierData({ ...supplierData, openingbalance: e.target.value })
+                  setSupplierData({ ...supplierData, due: e.target.value })
                 }
-                value={supplierData.openingbalance}
+                value={supplierData.due}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 type="text"
-                name="openingbalance"
-                id="openingbalance"
+                name="due"
+                id="due"
               />
-            </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-3">
+            </div> */}
+            <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="state"
@@ -172,7 +205,7 @@ export default function AddSupplier() {
                 id="state"
               />
             </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-5">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-1">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="city"
@@ -190,7 +223,7 @@ export default function AddSupplier() {
                 id="city"
               />
             </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-7">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-3">
               <label
                 className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="pincode"
@@ -208,9 +241,9 @@ export default function AddSupplier() {
                 id="pincode"
               />
             </div>
-            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-9">
+            <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-4 grid grid-cols-5 col-span-12 grid-rows-5    md:row-start-5">
               <label
-                className="mt-2 text-start pr-4 col-start-2 md:col-start-1 col-span-5  cursor-pointer"
+                className="mt-2 text-start pr-4 col-start-2 row-span-1  md:col-start-1 col-span-5  cursor-pointer"
                 htmlFor="address"
               >
                 Address
@@ -220,7 +253,7 @@ export default function AddSupplier() {
                   setSupplierData({ ...supplierData, address: e.target.value })
                 }
                 value={supplierData.address}
-                className="h-20 resize-none bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
+                className=" resize-none bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md row-span-4 "
                 id="address"
                 name="address"
               />
@@ -244,3 +277,4 @@ export default function AddSupplier() {
   );
 }
 
+export default AddCustomer;

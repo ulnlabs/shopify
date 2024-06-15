@@ -39,6 +39,7 @@ interface DataTableProps<TData, TValue> {
   filter?: boolean;
   rows?: boolean;
   paginater?: boolean;
+  route?: string;
 }
 import { useContext } from "react";
 import { ContextData } from "../../../../contextapi";
@@ -55,6 +56,7 @@ export default function DataTable<TData, TValue>({
   filter,
   rows,
   paginater,
+  route
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const { selectedRow, setSelectedRow } = useContext(ContextData);
@@ -94,7 +96,7 @@ export default function DataTable<TData, TValue>({
   const deleteCustomer = async (param: string) => {
     if (param == "rows") {
       try {
-        const response = await axios.delete("/api/customers", {
+        const response = await axios.delete(route || '/api/', {
           headers: { data: "deleterow" },
           data: selectedRow,
         });
@@ -102,7 +104,7 @@ export default function DataTable<TData, TValue>({
           setIsChanged(!isChanged);
           toast({
             title: "New Message !",
-            description: " Customer(s) is Deleted successfully",
+            description: "  Deleted successfully",
           });
           setSelectedRow([]);
         }
@@ -110,15 +112,26 @@ export default function DataTable<TData, TValue>({
     }
   };
   const exportCsv = async () => {
-    const custData = data.filter((item: any) => {
+    let custData = data.filter((item: any) => {
       return selectedRow.includes(item._id);
     });
-    const firstIndex = custData[0];
-    const header = Object.keys(firstIndex as string[]);
+    let exportable=custData.map((i:any)=>{
+return {
+  name:i.name,
+  email:i.email,
+  phone:i.phone,
+  address:i.address,
+  city:i.city,
+  state:i.state,
+  pincode:i.pincode
+}
+    }) 
+    const firstIndex = exportable[0];
+    const header = Object.keys(firstIndex );
     console.log(header);
 
     const dataToConvert = {
-      data: custData,
+      data: exportable,
       filename: "customer-list",
       delimiter: ",",
       headers: header,
@@ -129,7 +142,7 @@ export default function DataTable<TData, TValue>({
   /* here a small tip i like to filter email in the first div you can add your own filter make  your own logic by replace email by your ancestorkey */
   return (
     <>
-      <div className="flex items-center py-4">
+      <motion.div  className="flex items-center py-4">
         {veiw.filter && (
           <Input
             placeholder="Search..."
@@ -169,7 +182,7 @@ export default function DataTable<TData, TValue>({
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-      </div>
+      </motion.div>
       <AnimatePresence mode="wait">
         {selectedRow.length > 0 && (
           <motion.div
@@ -188,7 +201,10 @@ export default function DataTable<TData, TValue>({
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="rounded-md border">
+      <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }} className="rounded-md border ">
         <Table className="">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -235,7 +251,7 @@ export default function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-      </div>
+      </motion.div>
       {veiw.rows && (
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
