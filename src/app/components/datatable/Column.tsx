@@ -16,7 +16,7 @@ import { useContext } from "react";
 import { UserContext } from "@/UserContext";
 import { ColumnDef } from "@tanstack/react-table";
 import axios from "axios";
-
+import { customerList ,columnHeader_dataTable} from "../../../../global";
 const { setIsDeleted, isDeleted } = useContext(UserContext)
 
 

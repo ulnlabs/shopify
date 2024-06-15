@@ -3,7 +3,7 @@ import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
 import { Checkbox } from "@/components/ui/checkbox";
 import DataTable from "@/app/components/datatable/DataTable";
 
-
+import { columnHeader_dataTable } from "../../../../../global";
 import { ColumnDef } from "@tanstack/react-table";
 export default function Page() {
   const EXP_SELECT = {

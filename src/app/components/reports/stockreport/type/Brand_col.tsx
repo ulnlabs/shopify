@@ -1,5 +1,5 @@
 "use client";
-
+import { columnHeader_dataTable } from "../../../../../../global";
 import { ColumnDef } from "@tanstack/react-table";
 
 const Brand: columnHeader_dataTable = {

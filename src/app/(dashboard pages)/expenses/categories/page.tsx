@@ -3,6 +3,7 @@ import React from "react";
 import DataTable from "@/app/components/datatable/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
+import { columnHeader_dataTable } from "../../../../../global";
 function List() {
   return (
     
