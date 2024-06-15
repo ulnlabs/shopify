@@ -160,7 +160,7 @@ export default function page() {
         console.log(data);
 
         alert("Item Added")
-        const form =  event.target as any ;
+        const form = event.target as any;
         form.reset();
         setFormDetails({
             itemCode: "",
@@ -181,14 +181,12 @@ export default function page() {
             discount: 0,
             currentstock: 0,
         })
-
         setBrand("");
         setCategory("");
         setTaxValue("");
         setTaxType("");
         setDiscountType("");
         setUnit("");
-
         return
     }
     const { data: taxData, error: taxError } = useSWR(
@@ -201,7 +199,6 @@ export default function page() {
             const price = (formDetails?.price + taxValues);
             const profit = ((formDetails?.profitmargin * formDetails.price) / 100);
             const salePrice = profit ? profit + formDetails.price : formDetails.price;
-
             setFormDetails({
                 ...formDetails,
                 purchaseprice: price,
@@ -380,24 +377,6 @@ export default function page() {
                         </div>
                     </div>
                 </form>
-                <div className='w-full overflow-x-scroll  p-4 mt-4 rounded-lg shadow-md'>
-                    <h1 className='text-2xl font-bold'>Opening Stock Adjustment Records</h1>
-                    <table className='w-full mt-4 table-auto'>
-                        <thead>
-                            <tr className='border-b border-gray-100 rounded-lg'>
-                                <th className='border px-4 py-2'>Date</th>
-                                <th className='border px-4 py-2'>Opening Stock</th>
-                                <th className='border px-4 py-2'>Adjustment</th>
-                                <th className='border px-4 py-2'>Current Stock</th>
-                                <th className='border px-4 py-2'>Note</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/* Render records here */}
-                        </tbody>
-                    </table>
-                </div>
-
             </div>
         </div>
     )

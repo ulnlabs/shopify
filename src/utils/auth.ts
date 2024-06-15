@@ -10,17 +10,16 @@ export const authConfig: NextAuthOptions = {
       name: "Sign In",
       credentials: {},
       async authorize(credentials) {
-        const { email, password } = (await credentials) as {
-          email: string;
+        const { username, password } = (await credentials) as {
+          username: string;
           password: string;
         };
         
-        if (!credentials || !email || !password) return null;
+        if (!credentials || !username || !password) return null;
         await connectDB();
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ username });
         if (!user) return null;
         const verifypassword = await bcrypt.compare(password, user.password);
-        
         console.log(await bcrypt.compare(password,user.password));
         
         if (!verifypassword) return null;

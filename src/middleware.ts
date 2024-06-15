@@ -4,20 +4,23 @@ import type { NextRequest } from 'next/server'
 export function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl
     const session = req.cookies.get('next-auth.session-token')
-    if (pathname == '/') {
-        if (session) {
-            return NextResponse.redirect(new URL('/dashboard', req.url))
+    console.log(req.url);
+    const protectedPaths = ['/dashboard', '/settings', '/sales', '/customers', '/purchases', '/suppliers', '/reports', '/users']; if (session) {
+        if (pathname == '/') {
+            return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
         }
     }
-    // Redirect to sign-in page if trying to access a protected route without being authenticated
-    if (pathname.startsWith('/dashboard')) {
-        if (!session) {
-            return NextResponse.redirect(new URL('/', req.url))
+    if (protectedPaths.includes(pathname)) {
+        if (!session) { // Replace `isAuthenticated` with your actual authentication function
+            return NextResponse.redirect(new URL('/', req.url)); // Assuming '/login' is your login URL
         }
+        return NextResponse.next();
     }
     return NextResponse.next()
 }
 // Middleware configuration
 export const config = {
-    matcher: ['/', '/dashboard/:path*'],
+    matcher: ['/', '/dashboard', '/settings', '/sales', '/customers', '/purchases', '/suppliers', '/reports', '/users',
+        '/dashboard/:path*', '/settings/:path*', '/sales/:path*', '/customers/:path*', '/purchases/:path*', '/suppliers/:path*', '/reports/:path*', '/users/:path*'
+    ],
 }

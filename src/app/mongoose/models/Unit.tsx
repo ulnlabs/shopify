@@ -10,7 +10,7 @@ const UnitSchema = new mongoose.Schema({
         default: ""
     }
 })
-const Unit = mongoose.models.Unit || mongoose.model<unitType>("Unit", Unitmodel)
+const Unit = mongoose.models.Unit || mongoose.model<unitType>("Unit", UnitSchema)
 export default Unit
 
  interface unitType{
