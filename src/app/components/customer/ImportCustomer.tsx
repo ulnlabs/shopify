@@ -3,7 +3,7 @@ import { BsFiletypeCsv } from "react-icons/bs";
 import React, { ChangeEvent, useState, useRef } from "react";
 import papa from "papaparse";
 import { useToast } from "@/components/ui/use-toast";
-
+import { customerFileFormat } from "../../../../global";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import axios from "axios";

@@ -12,6 +12,48 @@ interface invoiceType {
   itemList: [any]
 }
 function invoice({ date, customer, invoiceId, discountAll, otherCharges, itemList }: invoiceType) {
+  const sampleData = [
+    {
+      s_no: 1,
+      item_name: "Item 1",
+      unit_price: 100,
+      quantity: 2,
+      net_cost: 200,
+      tax: 10,
+      tax_amount: 20,
+      discount: 5,
+      discount_amount: 10,
+      unit_cost: 50,
+      total_amount: 3747,
+    },
+    {
+      s_no: 2,
+      item_name: "Item 2",
+      unit_price: 500,
+      quantity: 1,
+      net_cost: 800,
+      tax: 10,
+      tax_amount: 60,
+      discount: 5,
+      discount_amount: 10,
+      unit_cost: 90,
+      total_amount: 4500,
+    },
+    {
+      s_no: 2,
+      item_name: "Item 3",
+      unit_price: 500,
+      quantity: 1,
+      net_cost: 800,
+      tax: 10,
+      tax_amount: 60,
+      discount: 5,
+      discount_amount: 10,
+      unit_cost: 90,
+      total_amount: 450,
+    },
+
+  ]
   const S_NO: columnHeader_dataTable = {
     accessorKey: "s_no",
     header: "S.No",

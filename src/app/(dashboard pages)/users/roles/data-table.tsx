@@ -31,7 +31,7 @@ import {
   TableRow,
   
 } from "@/components/ui/table";
-import { tableVeiw } from "../../../../../global";
+import { AiOutlineDownload } from "react-icons/ai";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -87,10 +87,10 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4">
         {veiw.filter && (
           <Input
-            placeholder="Filter userName..."
-            value={(table.getColumn("username" )?.getFilterValue() as string) ?? ""}
+            placeholder="Filter roleName..."
+            value={(table.getColumn("roleName" )?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("username")?.setFilterValue(event.target.value)
+              table.getColumn("roleName")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
@@ -123,6 +123,9 @@ export function DataTable<TData, TValue>({
             </DropdownMenuContent>
           </DropdownMenu>
         )}
+        <div className="p-3 border rounded">
+          <AiOutlineDownload/>
+        </div>
       </div>
 
       <div className="rounded-md border">
@@ -203,3 +206,4 @@ export function DataTable<TData, TValue>({
   );
 }
 /* at all you have your own data table to use your data table call this component like this on your code exam : page.tsx    <DataTable columns={c_columns} data={customerData} /> the c_colums is your column replace it with your and data also  for reference how i share my data see dashboard/customers/list/page.tsx ,i hope u got it  */
+

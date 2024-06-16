@@ -40,7 +40,7 @@ const page = () => {
   return (
     <div className='w-full px-10'>
       <h1>Purchase List</h1>
-      <List list={purchaseList} Customer={Customer} path='new-purchase' page="Purchase" setFrom={setFrom} setEnd={setEnd} from={from} end={end}  />
+      <List list={purchaseList} path='new-purchase' page="Purchase" setFrom={setFrom} setEnd={setEnd} from={from} end={end}  />
     </div>
   )
 }
