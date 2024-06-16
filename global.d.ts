@@ -1,4 +1,10 @@
+import { Dispatch,SetStateAction } from "react";
+
+
+
 type customerAdd = {
+
+
   name: string;
   mobile: string;
   email: string;

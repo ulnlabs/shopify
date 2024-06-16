@@ -1,7 +1,7 @@
 
 import { MdOutlineDelete } from "react-icons/md"; 
 
-
+import { columnHeader_dataTable } from "../../../../global";
 import { ColumnDef } from "@tanstack/react-table";
 
  const i_NAME: columnHeader_dataTable = {

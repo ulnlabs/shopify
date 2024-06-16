@@ -1,9 +1,16 @@
 "use client";
+<<<<<<< HEAD
 import { createContext, useEffect, useState } from "react";
 import { customerAdd, children } from "./global";
+=======
+import React, { createContext, useEffect, useState } from "react";
+import { customerAdd } from "./global";
+>>>>>>> c9c0f606267dd4461ef61011dc3d2656b1a482d5
 import axios from "axios";
 import useSWR from "swr";
+import { children } from "./global";
 //if some types are not seen here they are mentioned in the global.d.ts file
+
 
 export const ContextData = createContext<any>({});
 const ContextContent = ({ children }: children) => {

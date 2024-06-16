@@ -18,6 +18,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { tableVeiw } from "../../../../../global";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

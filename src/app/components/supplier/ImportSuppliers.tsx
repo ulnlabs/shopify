@@ -8,6 +8,7 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { customerFileFormat } from "../../../../global";
 
 export default function ImportCustomer() {
   const fileRef: React.RefObject<HTMLInputElement> = useRef(null);

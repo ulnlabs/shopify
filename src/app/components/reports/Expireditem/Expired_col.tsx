@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-
+import { columnHeader_dataTable } from "../../../../../global";
 const Item_Code: columnHeader_dataTable = {
   accessorKey: "Code",
   header: "Item Code",
