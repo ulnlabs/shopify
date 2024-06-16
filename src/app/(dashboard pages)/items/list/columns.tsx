@@ -19,7 +19,7 @@ export interface InventoryItem {
 }
 
 export const COLUMNS_DATA: ColumnDef<InventoryItem>[] = [
-  {
+ /*  {
     id: "select",
     header: ({ table }: any) => (
       <Checkbox
@@ -38,62 +38,47 @@ export const COLUMNS_DATA: ColumnDef<InventoryItem>[] = [
         aria-label="Select row"
       />
     ),
-  },
+  }, */
   {
     accessorKey: "itemCode",
     header: "Item Code",
-    cell: ({ row }) => <div>{row.getValue("itemCode")}</div>,
   },
   {
     accessorKey: "itemName",
     header: "Item Name",
-    cell: ({ row }) => <div>{row.getValue("itemName")}</div>,
   },
   {
     accessorKey: "brand",
     header: "Brand",
-    cell: ({ row }) => <div>{row.getValue("brand")}</div>,
   },
   {
     accessorKey: "category",
     header: "Category",
-    cell: ({ row }) => <div>{row.getValue("category")}</div>,
   },
   {
     accessorKey: "unit",
     header: "Unit",
-    cell: ({ row }) => <div>{row.getValue("unit")}</div>,
   },
   {
-    accessorKey: "stockQty",
+    accessorKey: "quantity",
     header: "Stock Quantity",
-    cell: ({ row }) => <div>{row.getValue("stockQty")}</div>,
   },
+  
   {
-    accessorKey: "minQty",
-    header: "Minimum Quantity",
-    cell: ({ row }) => <div>{row.getValue("minQty")}</div>,
-  },
-  {
-    accessorKey: "purchaseprice",
+    accessorKey: "Purchaseprice",
     header: "Purchase Price",
-    cell: ({ row }) => <div>${parseFloat(row.getValue("purchaseprice"))} </div>,
   },
   {
-    accessorKey: "finalsalesprice",
+    accessorKey: "salesPrice",
     header: "Final Sales Price",
-    cell: ({ row }) => (
-      <div>${parseFloat(row.getValue("finalsalesprice"))} </div>
-    ),
+   
   },
   {
     accessorKey: "tax",
     header: "Tax (%)",
-    cell: ({ row }) => <div>{row.getValue("tax")}</div>,
   },
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => <div>{row.getValue("status")}</div>,
   },
 ];

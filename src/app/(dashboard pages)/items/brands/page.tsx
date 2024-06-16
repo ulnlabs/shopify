@@ -9,6 +9,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { AiOutlineMore } from "react-icons/ai";
 
 
 
@@ -45,22 +46,29 @@ function page() {
     const [description, setDescription] = useState<string>(row?.desc || "")
     const editBrand = async (e: React.FormEvent) => {
       e.preventDefault()
-      try {
-        await axios.put("/api/brand", {
-          data: {
-            id: row?._id,
-            name: name,
-            description: description,
-            header: "update",
-          }
-        })
+      if (name.trim()) {
+        try {
+          await axios.put("/api/brand", {
+            data: {
+              id: row?._id,
+              name: name,
+              description: description,
+              header: "update",
+            }
+          })
+        }
+        catch (error) {
+          mutate();
+          console.log(error);
+          setIsopen(false);
+        }
+        finally {
+          mutate();
+          setIsopen(false);
+        }
       }
-      catch (error) {
-        console.log(error);
-        setIsopen(false);
-      }
-      finally {
-        setIsopen(false);
+      else {
+        alert("Please Enter a brand Name")
       }
     }
     return (
@@ -72,7 +80,7 @@ function page() {
             className='bg-white p-4 rounded-lg shadow-lg'>
             <form method="post" onSubmit={editBrand} className='w-fit flex flex-col gap-4'>
               <h1 className='text-xl font-semibold'>Edit Brand</h1>
-              <input type="text" name='name' id='name' value={name} onChange={(e: any) => setName(e.target.value)} placeholder='Category Name' className='border p-2 outline-none text-gray-800' />
+              <input type="text" required name='name' id='name' value={name} onChange={(e: any) => setName(e.target.value)} placeholder='Category Name' className='border p-2 outline-none text-gray-800' />
               <input type="text" name='description' value={description} onChange={(e: any) => setDescription(e.target.value)} id='description' placeholder='Description' className='border p-2 outline-none text-gray-800' />
               <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
               <button type='reset' onClick={() => setIsopen(false)} className='bg-red-400 w-full px-4 py-2 rounded-lg text-white'>Close</button>
@@ -129,9 +137,7 @@ function page() {
 
         return (
           <button className={`  ${active ? "bg-green-500 p-2 rounded-md text-white" : "bg-red-500 p-2 rounded-md text-white"}`} onClick={async () => {
-            console.log("done");
-
-            axios.put("/api/brand", {
+            await axios.put("/api/brand", {
               data: {
                 id: row.original._id,
                 status: !active,
@@ -156,7 +162,7 @@ function page() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-fit px-4 p-0">
                 <span className="sr-only">Open menu</span>
-                <p>action</p>
+                <AiOutlineMore className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -173,7 +179,9 @@ function page() {
                   await axios.delete("/api/brand", {
                     data: { id: row.original._id },
                   })
-                }}
+                  mutate();
+                }
+                }
               >Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu >

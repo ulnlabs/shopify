@@ -12,6 +12,7 @@ import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { ArrowUpDown } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table"
 import { motion } from 'framer-motion';
+import { AiOutlineMore } from 'react-icons/ai';
 export interface InventoryItem {
   _id?: number,
   select?: boolean;
@@ -33,7 +34,7 @@ function page() {
     console.log(response.data);
     return response.data;
   }
-  const { data } = useSWR("api/category", fetchCategory);
+  const { data, mutate } = useSWR("api/category", fetchCategory);
 
   const [isOpen, setIsopen] = useState<boolean>(false);
   const [row, setRow] = useState<InventoryItem>()
@@ -42,22 +43,29 @@ function page() {
     const [description, setDescription] = useState<string>(row?.description || "")
     const editCategory = async (e: React.FormEvent) => {
       e.preventDefault()
-      try {
-        await axios.put("/api/category", {
-          data: {
-            id: row?._id,
-            name: name,
-            description: description,
-            header: "update",
-          }
-        })
+      if (name.trim()) {
+        try {
+          await axios.put("/api/category", {
+            data: {
+              id: row?._id,
+              name: name,
+              description: description,
+              header: "update",
+            }
+          })
+        }
+        catch (error) {
+          mutate();
+          console.log(error);
+          setIsopen(false);
+        }
+        finally {
+          mutate();
+          setIsopen(false);
+        }
       }
-      catch (error) {
-        console.log(error);
-        setIsopen(false);
-      }
-      finally {
-        setIsopen(false);
+      else {
+        alert("Please Enter a category Name")
       }
     }
     return (
@@ -135,14 +143,14 @@ function page() {
 
         return (
           <button className={`  ${active ? "bg-green-500 p-2 rounded-md text-white" : "bg-red-500 p-2 rounded-md text-white"}`} onClick={async () => {
-            axios.put("/api/category", {
+            await axios.put("/api/category", {
               data: {
                 id: row.original._id,
                 status: !active,
                 header: "updateStatus",
               }
             })
-
+            mutate();
           }
           } >
             {active ? "Active" : "Inactive"}
@@ -160,7 +168,7 @@ function page() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-fit px-4 p-0">
                 <span className="sr-only">Open menu</span>
-                <p>action</p>
+                <AiOutlineMore className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -177,6 +185,7 @@ function page() {
                   await axios.delete("/api/category", {
                     data: { id: row.original._id },
                   })
+                  mutate();
                 }}
               >Delete</DropdownMenuItem>
             </DropdownMenuContent>
