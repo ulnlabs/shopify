@@ -231,9 +231,6 @@ export const navItems: NavBarItem[] = [
             {
                 label: 'Users List',
                 key: "/users/list"
-            }, {
-                label: 'role list',
-                key: "/users/roles"
             }
         ]
     }, {
