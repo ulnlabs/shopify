@@ -37,7 +37,7 @@ export default function Update({ close } ) {
 
 
     return (
-        <motion.div {...animi(wapperanime)} className="absolute flex justify-center items-center h-fit top-0 left-0 mt-4  w-full z-10 ">
+        <motion.div {...animi(wapperanime)} className="absolute flex justify-center items-center h-fit top-0 left-0   w-full z-10 ">
            
             <div className='flex gap-3 items-center justify-center rounded-md  p-5 bg-green-300'>
           <div className="">

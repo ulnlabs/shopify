@@ -22,19 +22,29 @@ import Update from "@/app/components/settings/popup/Update"
 function Companyprofile() {
 
 
-  const [formdata, setformdata] = useState<any>({})
-  
+  const [formdata, setformdata] = useState<any>({
+    companyName: "",
+    mobile: "",
+    address: "",
+    state: "",
+    postalcode: "",
+    city: "",
+    country: "",
+    panNo: "",
+    bankdetails: "",
+    vatNo: "",
+    gstNo: "",
+    email: ""
+
+  })
+
   const [edit, setEdit] = useState(false)
   const [alert, setAlert] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("fetching data");
-      
       const response = await axios.put("/api/companyDetail");
       const fetchData = response.data[0];
-      console.log("fetched data ", fetchData);
-      
       if (fetchData) {
         setformdata(fetchData)
       }
@@ -47,16 +57,20 @@ function Companyprofile() {
   function handlesubmit(e: any) {
     e.preventDefault();
     setEdit(false)
+    console.log(formdata);
+    
+  
+    
     const handuler = async () => {
 
       const { data } = await axios.post("/api/companyDetail",
         {
-          data: formdata,
+          formdata:formdata
         }
       )
       setAlert(data.alert)
- 
-      
+
+
     }
     handuler()
 
@@ -69,8 +83,8 @@ function Companyprofile() {
   }
 
   return (
-    <div className=" flex justify-center relative py-4  ">
-      <div className=" border w-[97%] rounded-md">
+    <div className=" flex justify-center py-4  ">
+      <div className=" border w-[97%] rounded-md relative">
         <AnimatePresence>
           {
             alert && <Update close={setAlert} />
@@ -182,7 +196,7 @@ function Companyprofile() {
             <label htmlFor="address" className='mr-2 md:col-span-5 col-span-12 '>
               Address <span className=' text-red-600'> *</span>
             </label>
-            <textarea value={formdata.address} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} disabled={!edit}   name="address" id="address" className=' border p-2 rounded-md resize-none md:col-span-6 h-[80px] col-span-12  ' />
+            <textarea value={formdata.address} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} disabled={!edit} name="address" id="address" className=' border p-2 rounded-md resize-none md:col-span-6 h-[80px] col-span-12  ' />
 
           </div>
           {

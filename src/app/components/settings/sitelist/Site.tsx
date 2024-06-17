@@ -5,7 +5,6 @@ import Update from "../popup/Update";
 import { AnimatePresence } from "framer-motion";
 
 
-
 function Site() {
   const dateFormat = ["DD/MM/YYYY", "YYYY/MM/DD"]
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -31,11 +30,14 @@ function Site() {
 
   // useEffect(() => {
   //   const fetchData = async () => {
-  //     const response = await axios.put("/api/sitelist");
-  //     const fetchData = response.data[0];
-  //     if (fetchData) {
-  //       setformdata(fetchData)
+  //     const response=await axios.put("/api/sitelist")
+  //     if(response){
+  //       console.log(response.data[0]);
+        
   //     }
+      
+  
+    
   //   }
   //   fetchData()
   // }, []);
@@ -45,17 +47,15 @@ function Site() {
   function handlesubmit(e: any) {
     e.preventDefault();
     setEdit(false)
+    
     const handuler = async () => {
       
-
       const { data } = await axios.post("/api/sitelist",
         {
           data: formdata
 
         }
       )
-
-      setAlert(data.alert)
     }
     handuler()
 
@@ -112,7 +112,7 @@ function Site() {
             <label htmlFor="currency" className='mr-2 md:col-span-5 col-span-12 '>
               Currency  <span className=' text-red-600'> *</span>
             </label>
-            <input disabled={!edit} onChange={handleChange} type="text" value={formdata.currency as any} name="currency" className=' border pl-3 rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input disabled={!edit} onChange={handleChange} type="text" name="currency" className=' border pl-3 rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
           <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">

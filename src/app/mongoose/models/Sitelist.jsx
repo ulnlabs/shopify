@@ -1,39 +1,34 @@
-
 import mongoose from "mongoose";
-
-const siteData = new mongoose.Schema({
-
-    siteName :{
+const siteData=new mongoose.Schema({
+    siteName:{
         type:String,
-        required:true
+        require:true
     },
-    dateFormat :{
-        type:Date,
-        required:true
-        
+   
+    dateFormat:{
+        type:String,
+        require:true
     },
     currency:{
         type:String,
-        required:true,
-       
+        require:true
     },
-    roundOf:{
-        type:Boolean,
-       
-    },
-    disableTax :{
-        type:Boolean,
-       
-    
-    },
-    language :{
+    enableRoundOff:{
         type:String,
-        required:true
+        require:true
+    },
+    disableTax:{
+        type:String,
+        require:true
+    },
+    language:{
+        type:String,
+        require:true
     }
-}
+  
     
-   
-    
-)
-const siteList=mongoose.models.siteList || mongoose.model("siteList",siteData)
-export default siteList;
+
+
+})
+const sitelist= mongoose.models.sitelist||mongoose.model("sitelist",siteData)
+export default sitelist;
