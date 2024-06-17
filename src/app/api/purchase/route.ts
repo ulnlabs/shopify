@@ -2,8 +2,8 @@ import { connectDB } from "@/app/mongoose/db";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { Purchase } from "@/app/mongoose/models/purchases"
-import { items as stocks } from "@/app/mongoose/models/item";
 import { format } from "date-fns";
+import Item from "@/app/mongoose/models/Items";
 
 export const PUT = async (req: Request) => {
 
@@ -62,11 +62,16 @@ export const PUT = async (req: Request) => {
         console.log("test");
 
         if (header === "getItems") {
-            const data = await stocks.find().lean();
+            const data = await Item.find().lean();
             const modified = data.map((item: any) => {
-                const { total, taxValue, discountValue } = findTotal(item.price, 1, item.tax, item.discountType, item.discount, item.taxType)
+                const profitMargin = item.profitMargin ? item.profitMargin * item.price / 100 : 0
+                console.log(profitMargin);
+
+                console.log(profitMargin);
+                const { total, taxValue, discountValue } = findTotal(item.price + profitMargin, 1, item.tax, item.discountType, item.discount, item.taxType)
                 return ({
                     ...item,
+                    price: item.price + profitMargin,
                     taxAmount: taxValue,
                     subtotal: total,
                     discount: discountValue
@@ -258,14 +263,6 @@ export async function POST(req: any) {
 
     console.log(header);
     console.log(data);
-
-    const { purchaseCode: code } = data
-
-    console.log(code);
-
-
-
-
     await connectDB();
     const session = await mongoose.startSession();
     try {
@@ -274,31 +271,20 @@ export async function POST(req: any) {
         const counter = temp[0]?.purchaseCode.match(/\d+/g)!.map(Number)[0];
         const codeValue = counter > 0 ? String(counter + 1) : "1"
         const purchaseCode = "pu" + codeValue.padStart(4, '0');
-
         const { customerName: s_name, billDiscountType: discountType, billDiscount: discount, billCharges: otherCharges, customerId: s_id, billDate, billPaymentType: paymentType/* , billStatus: status */, billTaxType: taxType, billNote: note } = data.purchase;
-
         console.log();
-
-
         const { status } = data
         console.log(status);
-
-
         const date = new Date(billDate);
         date.setHours(date.getHours() + 5);
         date.setMinutes(date.getMinutes() + 30);
         console.log(date);
-
         date.setUTCHours(0, 0, 0, 0)
         console.log(date);
-
-
         const itemData = data.items.map(({ itemName, tax, taxType, quantity, price, discount, itemCode, discountType }: any) => {
             const renamedQuantity = header === "purchase" ? "Purchase_quantity" : header ===
                 "return" ? "returned_quantity" : " quantity";
-
             const discountValue = (discount / quantity) / price * 100
-
             return {
                 itemName,
                 tax,
@@ -310,12 +296,8 @@ export async function POST(req: any) {
                 itemCode
             };
         });
-
         console.log(itemData[0].Purchase_quantity);
-
         if (header === "purchase") {
-
-
             const newPurchase = await Purchase.create([{
                 s_id,
                 s_name,
@@ -330,21 +312,22 @@ export async function POST(req: any) {
                 status,
                 note
             }], { session });
-
             console.log("purchases", newPurchase);
-
-
             for (const { itemCode, Purchase_quantity } of itemData) {
-                const updated = await stocks.updateOne({ itemCode: itemCode }, { $inc: { quantity: +Purchase_quantity } }, { session });
+                console.log(Purchase_quantity, itemCode);
+
+                const updated = await Item.updateOne({ itemCode: itemCode }, { $inc: { quantity: +Purchase_quantity } }, { session });
                 console.log(updated);
             }
             console.log('Purchase created successfully:', newPurchase);
         }
         else if (header === "return") {
+            const { purchaseCode: code } = data
+            console.log(code);
             const getPurchase = await Purchase.find({ purchaseCode: code })
             console.log(getPurchase);
             for (const { itemCode, returned_quantity } of itemData) {
-                const updated = await stocks.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity }, $set: { status: "returned" } }, { session });
+                const updated = await Item.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity }, $set: { status: "returned" } }, { session });
                 console.log(updated);
                 console.log(returned_quantity);
                 const changePurchase = await Purchase.updateOne(

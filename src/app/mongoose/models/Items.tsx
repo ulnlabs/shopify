@@ -25,8 +25,10 @@ const ShopifyItemSchema: Schema = new Schema({
     type: Number,
     required: true
   }, */
-  expireDate: {
-    type: Date
+  quantity: {
+    type: Number,
+    required: true,
+    default: 0
   },
   barcode: {
     type: String
@@ -43,25 +45,25 @@ const ShopifyItemSchema: Schema = new Schema({
     type: String,
     required: true
   },
- /*  purchasePrice: {
-    type: Number,
-    required: true
-  }, */
+  /*  purchasePrice: {
+     type: Number,
+     required: true
+   }, */
   taxType: {
-    type: String
+    type: String,
   },
   profitMargin: {
     type: Number,
     required: true
   },
-/*   salesPrice: {
-    type: Number,
-    required: true
-  },
-  finalPrice: {
-    type: Number,
-    required: true
-  }, */
+  /*   salesPrice: {
+      type: Number,
+      required: true
+    },
+    finalPrice: {
+      type: Number,
+      required: true
+    }, */
   discountType: {
     type: String,
     required: true
@@ -70,6 +72,12 @@ const ShopifyItemSchema: Schema = new Schema({
     type: Number,
     required: true
   },
+  status: {
+    type: Boolean,
+    default: true,
+    required: true
+
+  }
   /*  currentOpeningStock: {
      type: Number,
      required: true

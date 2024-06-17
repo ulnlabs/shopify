@@ -224,9 +224,11 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     useEffect(() => {
         const updateOnChange = () => {
             const taxPer = (data.billTaxType) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
-            const newOtherCharge = (data.billCharges * taxPer) / 100;
+            const newOtherCharge = ((data.billCharges * taxPer) / 100) + Number(data.billCharges);
             const subTotal = Math.floor((newOtherCharge + data.billSubtotal) * 10) / 10;
             const newDiscount = Math.floor(((data.billDiscountType).toLowerCase() === "Fixed".toLowerCase() ? data.billDiscount : (data.billDiscountType).toLowerCase() === "Percentage".toLowerCase() ? ((data.billDiscount * subTotal) / 100) : 0) * 10) / 10;
+            console.log(newOtherCharge);
+
             setData({
                 ...data,
                 billOtherCharge: newOtherCharge,
@@ -240,29 +242,47 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
     const handleItemClick = (value: any) => {
         let exist = itemList.find((item: any) => item.itemName === value.itemName)
-        setItemList({ ...itemList, value })
-        if (value.quantity > 0 || !value.quantity) {
+        console.log(value.sold_quantity);
+
+        if (value.sold_quantity > 0 || !isSales) {
+            /*          setItemList({ ...itemList, value }) */
+            console.log("entered");
+
             if (!exist) {
                 const newItem = { ...value, quantity: 1 }
                 setItemList([...itemList, newItem])
+                setInputItem("");
+                console.log("done");
             }
+
             else {
+                console.log("done");
+
                 const updatedQuantity = exist.quantity + 1
-                if ((exist.quantity + 1) <= value.quantity || !isSales) {
+                console.log(updatedQuantity, value.quantity);
+
+                if ((updatedQuantity) <= value.sold_quantity || !isSales) {
+                    console.log("done");
+
                     console.log(value.discount);
+                    console.log(value.subtotal, exist.quantity, updatedQuantity);
+
+                    console.log((value.subtotal / exist.quantity) * updatedQuantity);
+
+
                     const updatedItem = {
                         ...exist,
                         quantity: exist.quantity + 1,
                         discount: Math.floor(exist.discount / exist.quantity * 10) / 10 * updatedQuantity,
                         taxAmount: Math.floor(value.taxAmount * 10) / 10 * updatedQuantity,
-                        subtotal: Math.floor(value.subtotal * 10) / 10 * updatedQuantity
+                        subtotal: Math.floor(((value.subtotal / value.sold_quantity) * updatedQuantity) * 10) / 10
                     };
                     const updatedList = itemList.map((item: any) => item.itemName === value.itemName ? updatedItem : item);
                     setItemList(updatedList);
                 }
+                setInputItem("");
             }
         }
-        setInputItem("");
     }
     const taxex = [
         {

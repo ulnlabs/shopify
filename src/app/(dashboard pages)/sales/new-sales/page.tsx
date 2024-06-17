@@ -11,8 +11,9 @@ import { ContextData } from "../../../../../contextapi";
 const page = () => {
 
 
-  const { salesStocks: item } = useContext(ContextData)
+  const { salesStocks: item, customerDetails } = useContext(ContextData)
 
+  console.log(customerDetails);
 
 
 
@@ -22,9 +23,9 @@ const page = () => {
 
   useEffect(() => {
     setProduct(item?.filter((item: any) => {
-     
 
-      return inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase())
+
+      return (inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase()) || inputItem === "" ? true : item.itemCode?.toLowerCase().includes(inputItem.toLowerCase()))
     }
     ))
   }, [inputItem])
@@ -110,15 +111,23 @@ const page = () => {
 
   const [cus, setCus] = useState<any>("");
   useEffect(() => {
-    setCus(customerName.filter((item: any) => {
-      return item.value.toLowerCase().includes(salesData.customerName.toLowerCase())
-    })
-    )
+    console.log(item.name);
+    customerDetails &&
+      setCus(customerDetails?.filter((item: any) => {
+        console.log(customerDetails);
+        console.log(item.name, item.id, item.mobile);
+
+
+        return (item.name.toLowerCase().includes(salesData.customerName.toLowerCase()) || item.id.toString().includes(salesData.customerName) || item.mobile.toLowerCase().includes(salesData.customerName.toLowerCase()))
+      })
+      )
   }, [salesData.customerName])
+  console.log(cus);
 
 
 
   const [itemList, setItemList] = useState<any>([]);
+  console.log(salesData.customerId);
 
 
   return (

@@ -280,7 +280,8 @@ export default function DataTable<TData, TValue>({
               final && (
                 <TableRow>
                   <TableCell
-                    colSpan={2}
+
+                    colSpan={1}
                     rowSpan={1}
                     className=" text-center text-base "
                   >Total :
@@ -302,7 +303,9 @@ export default function DataTable<TData, TValue>({
                     rowSpan={1}
                     className=""
                   >
-                  </TableCell> <TableCell
+                    {totalQuantity && totalPrice && (totalQuantity * totalPrice)}
+                  </TableCell>
+                  <TableCell
                     colSpan={1}
                     rowSpan={1}
                     className=""
@@ -325,12 +328,8 @@ export default function DataTable<TData, TValue>({
                     className=""
                   >{totalDisAmount}
                   </TableCell>
-                  <TableCell
-                    colSpan={1}
-                    rowSpan={1}
-                    className=""
-                  >
-                  </TableCell>
+
+
                   <TableCell
                     colSpan={1}
                     rowSpan={1}

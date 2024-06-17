@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { connectDB } from "@/app/mongoose/db";
 import Sales from "@/app/mongoose/models/Sales";
 import { format } from "date-fns";
-import { items as stocks } from "@/app/mongoose/models/item";
+import Item from "@/app/mongoose/models/Items";
 
 
 
@@ -20,13 +20,16 @@ export const PUT = async (req: Request) => {
         })
         const temp = overall.reduce((prev: number, current: number) => prev + current, initial);
         console.log(temp);
-        const taxValue = sale.taxType ? (sale.taxType?.match(/\d+/g)!.map(Number)[0] * sale.otherCharges / 100) : 0
+        const taxValue = (sale.taxType ? (sale.taxType?.match(/\d+/g)!.map(Number)[0] * sale.otherCharges / 100) : 0) + sale.otherCharges
         const discount = sale.discountType && (sale.discountType).toLowerCase() === "Percentage".toLowerCase() ? Math.floor(((sale.discount / 100) * (temp + taxValue)) * 10) / 10 : sale.discount;
         return temp + taxValue - discount;
     }
 
     const findTotal = (price: number, quantity: number = 0, tax: string, discountType: string, discount: number, taxType: string,) => {
         console.log(quantity);
+
+        console.log(price);
+
 
         const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
         console.log(taxValue);
@@ -53,11 +56,17 @@ export const PUT = async (req: Request) => {
     const { header } = data.data
     try {
         if (header === "getItems") {
-            const data = await stocks.find().lean();
+            const data = await Item.find().lean();
             const modified = data.map((item: any) => {
-                const { total, taxValue, discountValue } = findTotal(item.price, 1, item.tax, item.discountType, item.discount, item.taxType)
+                const profitMargin = item.profitMargin ? item.profitMargin * item.price / 100 : 0
+                console.log(profitMargin);
+                console.log(profitMargin);
+                const { total, taxValue, discountValue } = findTotal(item.price + profitMargin, 1, item.tax, item.discountType, item.discount, item.taxType)
+                console.log(total);
+                console.log(item.quantity, item.itemCode);
                 return ({
                     ...item,
+                    price: item.price + profitMargin,
                     taxAmount: taxValue,
                     subtotal: total,
                     discount: discountValue
@@ -306,7 +315,7 @@ export async function POST(req: any) {
 
 
             for (const { itemCode, sold_quantity } of items) {
-                const updated = await stocks.updateOne({ itemCode: itemCode }, { $inc: { quantity: -sold_quantity } }, { session });
+                const updated = await Item.updateOne({ itemCode: itemCode }, { $inc: { quantity: -sold_quantity } }, { session });
                 console.log(updated);
             }
             console.log('Sales created successfully:', newSales);
@@ -315,7 +324,7 @@ export async function POST(req: any) {
             const getSales = await Sales.find({ salesCode: code })
             console.log(getSales);
             for (const { itemCode, returned_quantity } of items) {
-                const updated = await stocks.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity }, $set: { status: "returned" } }, { session });
+                const updated = await Item.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity }, $set: { status: "returned" } }, { session });
                 console.log(updated);
                 console.log(returned_quantity);
                 const changeSales = await Sales.updateOne(

@@ -1,7 +1,15 @@
 import { connectDB } from "@/app/mongoose/db";
 import Item from "@/app/mongoose/models/Items";
-import { items } from "@/app/mongoose/models/item";
 import { NextResponse } from "next/server";
+
+export const DELETE = async (req: Request, res: Response) => {
+    await connectDB()
+    const { id } = await req.json();
+    console.log(id);
+    const response = await Item.deleteOne({ _id: id })
+    console.log(response);
+    return NextResponse.json(response, { status: 200 })
+}
 
 export const PUT = async (req: Request) => {
     const { data } = await req.json();
@@ -15,35 +23,46 @@ export const PUT = async (req: Request) => {
         const response = await Item.updateOne({ _id: id }, { status: status })
         return NextResponse.json(response, { status: 200 })
     }
-    else if (header === "update") { }
+    else if (header === "update") {
+        console.log(data);
+        const { id } = data
+        const { itemName, itemCode, brand, category, unit, barcode, description, price, tax, taxType, profitMargin, discountType, discount } = data.data
+        console.log(id, itemName);
+        const updated = { itemName, itemCode, brand, category, unit, barcode, description, price, tax, taxType, profitMargin, discountType, discount }
+        const response = await Item.updateOne({ _id: id }, updated)
+        console.log(response);
+        const find = await Item.find({ _id: id })
+        console.log(find);
+
+        console.log();
+        return NextResponse.json("done", { status: 200 })
+    }
 
     else {
         console.log("enterd");
         const item = await Item.find().lean();
-
+        /*  const stocks = await stocks.find(); */
+        console.log(item);
         const modified = item.map((item: any) => {
             console.log(item);
-
-            console.log(item.taxType);
+            console.log(item?.taxType);
             const taxPer = item.tax ? item.tax.match(/\d+/g)!.map(Number)[0] : 0
-
             const taxValue = taxPer * item.price / 100;
-            const discount = item?.discountType.toLowerCase() === "fixed" ? item.discount : item.discount * item.price / 100
-
-            const purchasePrice = item.taxType.toLowerCase() === "inclusive" ? item.purchasePrice : item.purchasePrice + taxValue - discount
-
+            const purchasePrice = item.taxType.toLowerCase() === "inclusive" ? item.price : item.price + taxValue
+            /*             const discount = item?.discountType.toLowerCase() === "fixed" ? item.discount : item.discount * purchasePrice / 100 */
+            const profitMargin = item.profitMargin ? item.profitMargin * purchasePrice / 100 : 0
+            console.log(item.profitMargin);
+            console.log(purchasePrice, profitMargin, taxValue, item.quantity);
             return (
                 {
                     ...item,
-                    purchasePrice: purchasePrice
+                    purchasePrice: Math.floor(purchasePrice * 10) / 10,
+                    salesPrice: Math.floor((purchasePrice + profitMargin) * 10) / 10
                 }
             )
         })
         console.log(modified);
-
-
-        console.log(item);
-        return NextResponse.json(item, { status: 200 })
+        return NextResponse.json(modified, { status: 200 })
     }
 
 
@@ -53,9 +72,10 @@ export const PUT = async (req: Request) => {
 export const POST = async (req: Request) => {
     let data = await req.json();
     console.log(data.data);
-    const { itemCode, itemName, brand, category, unit, expdate, barcode, description, price, tax, taxtype: taxType, profitmargin: profitMargin, discount, discountType, saleprice } = data.data;
+    const { itemCode, itemName, brand, category, unit, barcode, description, price, tax, taxtype: taxType, profitmargin: profitMargin, discount, discountType, saleprice } = data.data;
     console.log(taxType);
 
+    console.log(price);
 
 
     await connectDB();
@@ -63,7 +83,7 @@ export const POST = async (req: Request) => {
     try {
 
         const addItem = await Item.create({
-            itemCode, itemName, brand, category, unit, expdate, barcode, description, price, tax, taxType, profitMargin, discount, discountType
+            itemCode, itemName, brand, category, unit, barcode, description, price, tax, taxType, profitMargin, discount, discountType
         })
 
         console.log("add", addItem);
@@ -71,11 +91,11 @@ export const POST = async (req: Request) => {
 
 
 
-        const addStocks = await items.create({
-            itemCode, itemName, barcode, price: saleprice, tax, taxType, discount, discountType, quantity: 0
-        })
-        console.log(addStocks);
-
+        /*  const addStocks = await items.create({
+             itemCode, itemName, barcode, price: saleprice, tax, taxType, discount, discountType, quantity: 0
+         })
+         console.log(addStocks);
+  */
         return NextResponse.json(addItem)
     }
     catch (err) {

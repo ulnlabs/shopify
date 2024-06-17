@@ -104,10 +104,10 @@ export function DataTable<TData, TValue>({
     setSelectedCategory(e.target.value);
   };
   useEffect(() => {
-    const handleClickOutsideBrand = (event:any) => {
+    const handleClickOutsideBrand = (event: any) => {
       if (inputBrandRef.current && !inputBrandRef.current.contains(event.target as Node) &&
-      dropdownBrandRef.current &&
-      !dropdownBrandRef.current.contains(event.target as Node)) {
+        dropdownBrandRef.current &&
+        !dropdownBrandRef.current.contains(event.target as Node)) {
         setIsBrandOpen(false);
       }
     };
@@ -119,10 +119,10 @@ export function DataTable<TData, TValue>({
     };
   }, [inputBrandRef, dropdownBrandRef]);
   useEffect(() => {
-    const handleClickOutsideCategory = (event:any) => {
+    const handleClickOutsideCategory = (event: any) => {
       if (inputCategoryRef.current && !inputCategoryRef.current.contains(event.target as Node) &&
-      dropdownCategoryRef.current &&
-      !dropdownCategoryRef.current.contains(event.target as Node)) {
+        dropdownCategoryRef.current &&
+        !dropdownCategoryRef.current.contains(event.target as Node)) {
         setIsBrandOpen(false);
       }
     };
@@ -138,34 +138,33 @@ export function DataTable<TData, TValue>({
     <>
       <div className="flex items-center py-4" >
         {veiw.filter && (
-          <Input style={selectedBrand?{width:"50%"}:{}}
-            placeholder="Filter ItemName..."
-            value={(table.getColumn("itemName")?.getFilterValue() as string) ?? ""}
+          <Input style={selectedBrand ? { width: "50%" } : {}}
+            placeholder="Search..."
             onChange={(event) =>
-              table.getColumn("itemName")?.setFilterValue(event.target.value)
-
+              table.setGlobalFilter(event.target.value)
             }
             className="max-w-sm"
           />
         )}
-        {
+       {/*  {
           selectedBrand ?
-            <div style={selectedBrand?{width:"50%"}:{}} className="max-w-sm ml-2  h-[40px] border rounded-lg flex justify-between px-4 items-center text-gray-700">
+            <div style={selectedBrand ? { width: "50%" } : {}} className="max-w-sm ml-2  h-[40px] border rounded-lg flex justify-between px-4 items-center text-gray-700">
               <p>{selectedBrand}</p>
-              <AiFillCloseCircle onClick={() => {setSelectedBrand("");
-                table.setColumnFilters([]); 
+              <AiFillCloseCircle onClick={() => {
+                setSelectedBrand("");
+                table.setColumnFilters([]);
               }} className="cursor-pointer" />
             </div> :
             <Command className="ml-3">
               <input placeholder="Filter by Brand..." value={selectedBrand} onChange={handleChangeBrand} readOnly onClick={() => setIsBrandOpen(!isBrandOpen)} ref={inputBrandRef}
-              className="max-w-sm relative border px-[0.75rem] py-[0.42rem] border-gray-300 focus:outline-none rounded-md " />
+                className="max-w-sm relative border px-[0.75rem] py-[0.42rem] border-gray-300 focus:outline-none rounded-md " />
               {isBrandOpen &&
                 <CommandList className="absolute max-w-sm mt-9 w-fulltext-left  bg-white rounded-md border z-10 " ref={dropdownBrandRef}>
                   {data!.map((item: any, index: any) => (
                     <CommandItem key={index} className="px-4 py-2 hover:bg-gray-100 border-b" value={item.brand} onSelect={() => {
                       setSelectedBrand(item.brand);
                       setIsBrandOpen(!isBrandOpen);
-                      
+
                       table.setColumnFilters([{ id: "brand", value: item.brand }])
                     }}>{item.brand}</CommandItem>
                   ))}
@@ -174,28 +173,29 @@ export function DataTable<TData, TValue>({
         }
         {
           selectedCategory ?
-            <div style={selectedCategory?{width:"50%"}:{}} className="max-w-sm ml-2  h-[40px] border rounded-lg flex justify-between px-4 items-center text-gray-700">
+            <div style={selectedCategory ? { width: "50%" } : {}} className="max-w-sm ml-2  h-[40px] border rounded-lg flex justify-between px-4 items-center text-gray-700">
               <p>{selectedCategory}</p>
-              <AiFillCloseCircle onClick={() => {setSelectedCategory("");
-                table.setColumnFilters([]); 
+              <AiFillCloseCircle onClick={() => {
+                setSelectedCategory("");
+                table.setColumnFilters([]);
               }} className="cursor-pointer" />
             </div> :
             <Command className="ml-3">
-              <input placeholder="Filter by Category..." value={selectedCategory} onChange={handleChangeCategory} readOnly onClick={() => setIsCategoryOpen(!isCategoryOpen)} ref = {inputCategoryRef}
-              className="max-w-sm relative border px-[0.75rem] py-[0.42rem] border-gray-300 focus:outline-none rounded-md " />
+              <input placeholder="Filter by Category..." value={selectedCategory} onChange={handleChangeCategory} readOnly onClick={() => setIsCategoryOpen(!isCategoryOpen)} ref={inputCategoryRef}
+                className="max-w-sm relative border px-[0.75rem] py-[0.42rem] border-gray-300 focus:outline-none rounded-md " />
               {isCategoryOpen &&
                 <CommandList className="absolute max-w-sm mt-9 w-fulltext-left  bg-white rounded-md border z-10 " ref={dropdownCategoryRef}>
                   {data!.map((item: any, index: any) => (
                     <CommandItem key={index} className="px-4 py-2 hover:bg-gray-100 border-b" value={item.category} onSelect={() => {
                       setSelectedCategory(item.category);
                       setIsCategoryOpen(!isCategoryOpen);
-                      
+
                       table.setColumnFilters([{ id: "category", value: item.category }])
                     }}>{item.category}</CommandItem>
                   ))}
                 </CommandList>}
             </Command>
-        }
+        } */}
         {veiw.column && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

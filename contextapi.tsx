@@ -1,11 +1,6 @@
 "use client";
-<<<<<<< HEAD
-import { createContext, useEffect, useState } from "react";
-import { customerAdd, children } from "./global";
-=======
 import React, { createContext, useEffect, useState } from "react";
 import { customerAdd } from "./global";
->>>>>>> c9c0f606267dd4461ef61011dc3d2656b1a482d5
 import axios from "axios";
 import useSWR from "swr";
 import { children } from "./global";
@@ -71,10 +66,17 @@ const ContextContent = ({ children }: children) => {
 
   const [salesRecord, setSalesRecord] = useState<any>([]);
   const [purhcaseRecord, setPurchaseRecord] = useState<any>([])
+  const [editItem, setEditItem] = useState<any>([]);
+
+  const [customerDetails, setCustomerDetails] = useState<any>([]);
+  const [supplierDetails, setSupplierDetails] = useState<any>([]);
+
 
   return (
     <>
-      <ContextData.Provider value={{ selectedRow, setSelectedRow, purchaseStocks, purhcaseRecord, salesStocks, setPurchaseRecord, customerData, setCustomerData, supplierData, setSupplierData, salesRecord, setSalesRecord }}>
+      <ContextData.Provider value={{
+        selectedRow, customerDetails, setCustomerDetails, supplierDetails, setSupplierDetails, editItem, setEditItem, setSelectedRow, purchaseStocks, purhcaseRecord, salesStocks, setPurchaseRecord, customerData, setCustomerData, supplierData, setSupplierData, salesRecord, setSalesRecord
+      }}>
         {children}
       </ContextData.Provider>
     </>

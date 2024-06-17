@@ -1,12 +1,14 @@
 'use client'
 import { Selector } from '@/app/components/Custom-shadcn-components/Selector'
 import DashboardHeader from '@/app/components/dashboard/DashboardHeader'
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState, useContext } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import useSWR from 'swr'
 import { AnimatePresence, motion } from 'framer-motion'
 import axios from 'axios'
+import { ContextData } from '../../../../../contextapi'
 import { useRouter } from 'next/navigation'
+
 
 const taxFetch = async () => {
     const res = await fetch('/api/tax', {
@@ -22,17 +24,24 @@ const taxFetch = async () => {
 
 
 export default function page() {
-    const router = useRouter();
-    const [brand, setBrand] = useState<string>("")
-    const [category, setCategory] = useState<string>("")
-    const [unit, setUnit] = useState<string>("")
-    const [taxValue, setTaxValue] = useState<string>("")
-    const [discountType, setDiscountType] = useState<string>("")
+    const { editItem } = useContext(ContextData)
+    const router = useRouter()
+    const { _id, itemCode, itemName, brand: editBrand, category: editCategory, unit: editUnit, barcode, description, price, tax, purchasePrice,
+        taxType: editTaxType, profitMargin, saleprice, discountType: editDiscountType, discount
+    } = editItem;
+    console.log(_id);
+
+    const [brand, setBrand] = useState<string>(editBrand || "")
+    const [category, setCategory] = useState<string>(editCategory || "")
+    const [unit, setUnit] = useState<string>(editUnit || "")
+    const [taxValue, setTaxValue] = useState<string>(tax || "")
+    const [discountType, setDiscountType] = useState<string>(editDiscountType || "")
     const [CategoryPopupState, setCategoryPopupState] = useState<boolean>(false)
     const [UnitPopupState, setUnitPopupState] = useState<boolean>(false)
     const [TaxPopupState, setTaxPopupState] = useState<boolean>(false)
-    const [taxType, setTaxType] = useState<string>("");
-
+    const [taxType, setTaxType] = useState<string>(editTaxType || "");
+    console.log(taxType);
+    console.log(editItem);
     type InventoryItem = {
         itemCode?: string
         itemName?: string
@@ -52,23 +61,24 @@ export default function page() {
         currentstock?: number
     }
     const [formDetails, setFormDetails] = useState<InventoryItem>({
-        itemCode: "",
-        itemName: "",
-        brand: "",
-        category: "",
-        unit: "",
-        barcode: "",
-        description: "",
-        price: 0,
-        tax: "",
-        purchaseprice: 0,
-        taxtype: "Exclusive",
-        profitmargin: 0,
-        saleprice: 0,
-        discountType: "Percentage",
-        discount: 0,
+        itemCode: itemCode || "",
+        itemName: itemName || "",
+        brand: editBrand || "",
+        category: editCategory || "",
+        unit: editUnit || "",
+        barcode: barcode || "",
+        description: description || "",
+        price: price || 0,
+        tax: tax || "",
+        purchaseprice: purchasePrice || 0,
+        taxtype: editTaxType || "Exclusive",
+        profitmargin: profitMargin || 0,
+        saleprice: saleprice || 0,
+        discountType: editDiscountType || "Percentage",
+        discount: discount || 0,
         currentstock: 0,
     })
+    console.log(formDetails.profitmargin);
 
     useEffect(() => {
         setFormDetails({
@@ -119,7 +129,6 @@ export default function page() {
     const { data: brandData, error: brandError } = useSWR(
         '/api/brand', brandRoute
     )
-
     const categoryFetch = async () => {
         const response = await axios.put("/api/category",
             { data: { header: "category", } }
@@ -157,16 +166,22 @@ export default function page() {
     const addItemEvent = async (event: React.FormEvent) => {
         event.preventDefault();
         console.log(formDetails.taxtype);
-
-        if (formDetails.itemCode === "" || formDetails.itemName === "" || formDetails.category === "" || formDetails.unit === "" || formDetails.price === 0 || formDetails.tax === "" || formDetails.taxtype === "") {
+        if (formDetails.itemCode === "" || formDetails.itemName === "" || formDetails.category === "" || formDetails.unit === "" || formDetails.price === 0 || formDetails.tax === "") {
             alert("Please Fill All The Filed");
             return
         }
-        const data = await axios.post("/api/items", { data: formDetails });
+        const data = await axios.put("/api/items", {
+            data: {
+                id: _id,
+                data: formDetails,
+                header: "update"
+            }
+        });
         console.log(data);
 
-        alert("Item Added")
+        alert("Item Edited");
         router.push("/items/list")
+
         return
     }
     const { data: taxData, error: taxError } = useSWR(
@@ -221,11 +236,11 @@ export default function page() {
                         <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-min border-b gap-6 py-4 ">
                             <div className=" grid-cols-1 lg:col-start-1 auto-rows-min  lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="itemcode">Item Code <span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Code' id='itemcode' onChange={(e: any) => setFormDetails({ ...formDetails, itemCode: e.target.value })} className='border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Code' value={formDetails.itemCode} id='itemcode' onChange={(e: any) => setFormDetails({ ...formDetails, itemCode: e.target.value })} className='border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="itemname">Item Name<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Name' onChange={(e: any) => setFormDetails({ ...formDetails, itemName: e.target.value })} id='itemname' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" placeholder='Name' value={formDetails.itemName} onChange={(e: any) => setFormDetails({ ...formDetails, itemName: e.target.value })} id='itemname' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-5 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="brand">Brand</label>
@@ -260,21 +275,21 @@ export default function page() {
                             </div> */}
                             {/* <div className=" grid-cols-1 lg:col-start-5 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="expireDate">Expire Date</label>
-                                <input type="date" id='expireDate' onChange={(e: any) => setFormDetails({ ...formDetails, expdate: e.target.value })} className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
-                        </div> */}
-                            <div className="grid-cols-1 lg:col-start-5 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
+                                <input type="date" id='expireDate' value={expdate} onChange={(e: any) => setFormDetails({ ...formDetails, expdate: e.target.value })} className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                            </div> */}
+                            <div className=" grid-cols-1 lg:col-start-5 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="barcode">Barcode</label>
-                                <input type="text" onChange={(e: any) => setFormDetails({ ...formDetails, barcode: e.target.value })} placeholder='Barcode' id='barcode' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                <input type="text" value={formDetails.barcode} onChange={(e: any) => setFormDetails({ ...formDetails, barcode: e.target.value })} placeholder='Barcode' id='barcode' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
-                            <div className="grid-cols-1   lg:col-start-9 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
+                            <div className="  grid-cols-1   lg:col-start-9 auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2">
                                 <label htmlFor="description">Description</label>
-                                <textarea id='description' onChange={(e: any) => setFormDetails({ ...formDetails, description: e.target.value })} placeholder='Description' className='border resize-none rounded-lg py-2 px-2 outline-none text-gray-800' ></textarea>
+                                <textarea id='description' value={formDetails.description} onChange={(e: any) => setFormDetails({ ...formDetails, description: e.target.value })} placeholder='Description' className='border resize-none rounded-lg py-2 px-2 outline-none text-gray-800' ></textarea>
                             </div>
                         </div>
                         <div className="grid lg:grid-cols-12 grid-cols-1 grid-rows-2 border-b gap-6 py-4 ">
                             <div className=" grid-cols-1 lg:col-start-1  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="price">Price<span className='text-red-400'>*</span></label>
-                                <input type="text" /* value={formDetails.price || ""}  */ placeholder='Price' onChange={e => {
+                                <input type="text" value={formDetails.price || ""} placeholder='Price' onChange={e => {
                                     setFormDetails({
                                         ...formDetails,
                                         price: Number(e.target.value)
@@ -305,7 +320,7 @@ export default function page() {
                                     if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== ".") {
                                         e.preventDefault();
                                     }
-                                }} placeholder='Profit Margin(%)' value={Math.floor(formDetails.profitmargin * 10) / 10 || ""} onChange={(e: any) => setFormDetails({ ...formDetails, profitmargin: e.target.value })} id='profitMargin' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                }} placeholder='Profit Margin(%)' value={profitMargin} onChange={(e: any) => setFormDetails({ ...formDetails, profitmargin: e.target.value })} id='profitMargin' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="salesPrice">Sales Price<span className='text-red-400'>*</span></label>
@@ -347,7 +362,7 @@ export default function page() {
                         </div>
                     </div>
                 </form>
-                {/* <div className='w-full overflow-x-scroll  p-4 mt-4 rounded-lg shadow-md'>
+                {/*  <div className='w-full overflow-x-scroll  p-4 mt-4 rounded-lg shadow-md'>
                     <h1 className='text-2xl font-bold'>Opening Stock Adjustment Records</h1>
                     <table className='w-full mt-4 table-auto'>
                         <thead>
@@ -360,7 +375,7 @@ export default function page() {
                             </tr>
                         </thead>
                         <tbody>
-                          
+                            
                         </tbody>
                     </table>
                 </div> */}

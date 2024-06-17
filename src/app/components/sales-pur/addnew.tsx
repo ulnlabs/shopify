@@ -58,8 +58,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
               taxAmount: Math.floor(row.original.quantity * updateTax * 10) / 10,
               subtotal: Math.floor(row.original.quantity * subTotal * 10) / 10
             }
-            console.log(row.original.quantity);
-
             const upQuantity = itemList.map((item: any) => item.itemName === row.original.itemName ? uplist : item)
             setItemList(upQuantity)
           }
@@ -209,13 +207,15 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   let updateDiscount = 0;
   let newTotal = 0;
   useEffect(() => {
+    console.log(itemList);
+
     itemList.map((item: any) => (
-      newSubTotal += item.subtotal,
-      quantity += item.quantity
+      newSubTotal += item?.subtotal,
+      quantity += item?.quantity
     ))
-    const taxPer = (data.billTaxType && data.billTaxType.match) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
-    updateCharge = (taxPer * data.billCharges) / 100
-    updateDiscount = (data.billDiscountType).toLowerCase() === "Fixed".toLowerCase() ? data.billDiscount : (data.billDiscountType).toLowerCase() === "Percentage".toLowerCase() ? ((newSubTotal + updateCharge) * data.billDiscount) / 100 : 0
+    const taxPer = (data?.billTaxType && data?.billTaxType.match) ? data?.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
+    updateCharge = (taxPer * data?.billCharges) / 100
+    updateDiscount = (data?.billDiscountType).toLowerCase() === "Fixed".toLowerCase() ? data?.billDiscount : (data?.billDiscountType).toLowerCase() === "Percentage".toLowerCase() ? ((newSubTotal + updateCharge) * data.billDiscount) / 100 : 0
     newTotal = newSubTotal + updateCharge - updateDiscount;
     console.log(quantity);
     setData((prevData: any) => ({
@@ -230,9 +230,11 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   useEffect(() => {
     const updateOnChange = () => {
       const taxPer = (data.billTaxType) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
-      const newOtherCharge = (data.billCharges * taxPer) / 100;
+      const newOtherCharge = ((data.billCharges * taxPer) / 100) + Number(data.billCharges);
       const subTotal = Math.floor((newOtherCharge + data.billSubtotal) * 10) / 10;
       const newDiscount = Math.floor(((data.billDiscountType).toLowerCase() === "Fixed".toLowerCase() ? data.billDiscount : (data.billDiscountType).toLowerCase() === "Percentage".toLowerCase() ? ((data.billDiscount * subTotal) / 100) : 0) * 10) / 10;
+      console.log(data.billCharges);
+
       setData({
         ...data,
         billOtherCharge: newOtherCharge,
@@ -246,11 +248,17 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
   const handleItemClick = (value: any) => {
     let exist = itemList.find((item: any) => item.itemName === value.itemName)
-    setItemList({ ...itemList, value })
-    if (value.quantity > 0 || !value.quantity) {
+    console.log(value.quantity);
+    console.log(isSales);
+
+    if (value.quantity > 0 || !isSales) {
+     /*  setItemList({ ...itemList, value }) */
+      console.log("done");
+
       if (!exist) {
         const newItem = { ...value, quantity: 1 }
         setItemList([...itemList, newItem])
+        setInputItem("");
       }
       else {
         const updatedQuantity = exist.quantity + 1
@@ -265,10 +273,11 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           };
           const updatedList = itemList.map((item: any) => item.itemName === value.itemName ? updatedItem : item);
           setItemList(updatedList);
+          setInputItem("");
         }
       }
     }
-    setInputItem("");
+
   }
   const taxex = [
     {
@@ -360,22 +369,24 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                 <div className="mt-2 z-10 border rounded-lg bg-white absolute w-full">
                   {
                     customerData.map((item: any, index: any) => {
+                      console.log(item);
+
                       return (
                         <div className="">
                           <p key={index}
                             className="px-3 py-1 cursor-pointer"
                             onClick={() => {
-                              setData({ ...data, customerName: item.value, customerId: item.id });
+                              setData({ ...data, customerName: item.name, customerId: item.id });
                               setCustomerOpen(false);
                             }}>
-                            {item.label}
+                            {item.name}
                           </p>
                         </div>
                       )
                     })
                   }
                   {customerData.filter((item: any) => {
-                    return data.customerName === "" ? true : item.value.toLowerCase().includes(data.customerName.toLowerCase())
+                    return (item.name.toLowerCase().includes(data.customerName.toLowerCase()) || item.id.toString().includes(data.customerName) || item.mobile.toLowerCase().includes(data.customerName.toLowerCase()))
                   }).length === 0 && (
                       <div className="">
                         <p className="px-3 py-1 text-center">
