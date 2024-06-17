@@ -4,7 +4,7 @@ import { connectDB } from "@/app/mongoose/db";
 import companyDetail from "@/app/mongoose/models/companyProfile";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function PUT(req: Request) {
     try {
         await connectDB();
         const companydetails = await companyDetail.find();
@@ -15,55 +15,32 @@ export async function GET() {
     }
 }
 
-export async function PUT(req:Request) {
+export async function POST(req: Request) {
     try {
         await connectDB();
-        const { data } = await req.json();
-        const updatedCompany = await companyDetail.findOneAndUpdate(
-            { _id: data.id },
-            {
-                companyName: data.companyName,
-                mobile: data.mobile,
-                address: data.address,
-                state: data.state,
-                postalcode: data.postalcode,
-                city: data.city,
-                country: data.country,
-                panNo: data.panNo,
-                bankdetails: data.bankdetails,
-                vatNo: data.vatNo,
-                gstNo: data.gstNo,
-                email: data.email
-            },
-            { new: true }
-        );
+        const {formData} = await req.json();
 
-        return NextResponse.json({ message: "Data updated successfully", data: updatedCompany }, { status: 200 });
-    } catch (error) {
-        console.log(error);
-        return NextResponse.json({ message: "Error updating data" }, { status: 500 });
-    }
-}
-
-export async function POST(req:Request) {
-    await connectDB();
-    try {
-        const { data } = await req.json();
-        const company = new companyDetail({
-            companyName: data.companyName,
-            mobile: data.mobile,
-            address: data.address,
-            state: data.state,
-            postalcode: data.postalcode,
-            city: data.city,
-            country: data.country,
-            panNo: data.panNo,
-            bankdetails: data.bankdetails,
-            vatNo: data.vatNo,
-            gstNo: data.gstNo,
-            email: data.email
-        });
-        const save = await company.save();
+        const existingCompany = await companyDetail.findOne();
+        
+        if (existingCompany) {
+            existingCompany.companyName = formData.companyName;
+            existingCompany.mobile = formData.mobile;
+            existingCompany.address = formData.address;
+            existingCompany.state = formData.state;
+            existingCompany.postalcode = formData.postalcode;
+            existingCompany.city = formData.city;
+            existingCompany.country = formData.country;
+            existingCompany.panNo = formData.panNo;
+            existingCompany.bankdetails = formData.bankdetails;
+            existingCompany.vatNo = formData.vatNo;
+            existingCompany.gstNo = formData.gstNo;
+            existingCompany.email = formData.email;
+            
+            await existingCompany.save();
+        } else {
+      
+            const companydetails = await companyDetail.insertMany(formData)
+        }
 
         return NextResponse.json({ message: "Data saved successfully", alert: true }, { status: 200 });
     } catch (error) {
