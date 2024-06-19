@@ -30,5 +30,5 @@ const salesData=new mongoose.Schema({
 
 
 })
-const sitelist_Sales= mongoose.models.v||mongoose.model("sitelist_Sales",salesData)
-export default sitelist_Sales;
+const sitelist_sales= mongoose.models.sitelist_sales||mongoose.model("sitelist_sales",salesData)
+export default sitelist_sales;

@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import sitelist_sales from "@/app/mongoose/models/sitelist_Sales"; 
 import { connectDB } from "@/app/mongoose/db";
 import { NextResponse } from "next/server";
@@ -7,15 +6,16 @@ export async function POST(req: any) {
     try {
         await connectDB();
         const {formdata} = await req.json();
-        const existingsitelist = await sitelist_sales.findOne();
-        if (existingsitelist) {
-            existingsitelist.defaultDiscount = formdata.defaultDiscount;
-            existingsitelist.showPaidAmount=formdata.showPaidAmount;
-            existingsitelist.showUpiCode=formdata.showUpiCode;
-            existingsitelist.invoiceFormat=formdata.invoiceFormat;
-            existingsitelist.footerText=formdata.footerText;
-            existingsitelist.termsAndcondition=formdata.termsAndcondition;
-            await existingsitelist.save();
+        
+        const existingsitelist_sales = await sitelist_sales.findOne();
+        if (existingsitelist_sales) {
+            existingsitelist_sales.defaultDiscount = formdata.defaultDiscount;
+            existingsitelist_sales.showPaidAmount=formdata.showPaidAmount;
+            existingsitelist_sales.showUpiCode=formdata.showUpiCode;
+            existingsitelist_sales.invoiceFormat=formdata.invoiceFormat;
+            existingsitelist_sales.footerText=formdata.footerText;
+            existingsitelist_sales.termsAndcondition=formdata.termsAndcondition;
+            await existingsitelist_sales.save();
         }
         else{
 
