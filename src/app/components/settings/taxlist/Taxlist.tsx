@@ -1,5 +1,5 @@
 "use client"
-import React, { use } from 'react'
+import React, { use, useEffect } from 'react'
 import { useState } from 'react';
 import DataTable from "../datatableforsettings/DataTable"
 import { RiEdit2Fill } from "react-icons/ri";
@@ -19,40 +19,44 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import Edit from "@/app/components/settings/popup/Edit"
- interface initial{
-  id:number|null,
-  taxname:string,
-  taxpercentage:string
+import axios from 'axios';
+ interface TaxType{
+  taxId:String,
+  taxName:string,
+  taxPercentage:string,
+  taxStatus:boolean
     
 }
-export const data  =
-  [
-    {
-      id: 1,
-      taxname: "SGST 9%",
-      taxpercentage: "9.00"
-    },
-    {
-      id: 2,
-      taxname: "IGST 9%",
-      taxpercentage: "9.00"
-    },
-    {
-      id: 3,
-      taxname: "SGST 4.5%",
-      taxpercentage: "4.50"
-    },
-  ]
 
 
 function Taxlist() {
+  const [Tax, setTax] = useState<TaxType[]>([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.put("/api/taxList");
+        console.log("retuernData",response.data);
+        if (response.data) {
+          setTax(response.data.data);
+          console.log(Tax);
+          
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const Tax_percentage: columnHeader_dataTable = {
-    accessorKey: "taxpercentage",
+    accessorKey: "taxPercentage",
     header: "Tax(%)",
   };
   const Tax_name: columnHeader_dataTable = {
-    accessorKey: "taxname",
+    accessorKey: "taxName",
     header: "Tax Name",
   };
 
@@ -77,7 +81,7 @@ function Taxlist() {
     ),
   };
   const status = {
-    accessorKey: "status",
+    accessorKey: "taxStatus",
     cell: ({ row }: any) => {
       const [active, Deactive] = useState(true);
       var status: string;
@@ -126,7 +130,7 @@ function Taxlist() {
 
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex justify-between" onClick={() => {
-              handleDelete(row.original);
+              // handleDelete(row.original);
             }}>
               <h1>
 
@@ -150,26 +154,24 @@ function Taxlist() {
     C_ACTION,
   ];
 
-  const user=(NewTax:any)=>{
-    NewTax.id=Tax.length+1;
-    setTax([...Tax,NewTax])
+  const user=(NewTax:TaxType)=>{
+   setTax([...Tax,NewTax as TaxType]);
+   console.log("Tax data :",Tax);
    
-  }
-  const [Tax, setTax] = useState(data);
-  function handleDelete(row: any): void {
-    setTax(Tax.filter((item) => item.id !== row.id));
-
+   
+    
+   
   }
   const [popup, setpopup] = useState<boolean | null>(false)
   const [edit, setEdit] = useState<boolean | null>(false)
-  const [initial,setinitial]=useState<initial>({id:null,taxname:"",taxpercentage:""})
+
   
   return (
     <div className="relative ">
       <div className=" h-screen ">
         <AnimatePresence mode='wait'>
           {
-            popup && <AddTax close={setpopup} dataset={user}  />||edit&&<Edit close={setpopup} setinitial={setinitial} />
+            popup && <AddTax close={setpopup} dataset={user}  />||edit&&<Edit close={setpopup}  />
           }
         </AnimatePresence>
         <div className="mx-auto w-[95%]   mt-3">
