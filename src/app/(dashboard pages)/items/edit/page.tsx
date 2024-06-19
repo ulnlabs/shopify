@@ -192,7 +192,7 @@ export default function page() {
             const taxes = taxValue ? taxValue.match(/\d+/g)!.map(Number)[0] : 0
             const taxValues = (taxType.toLowerCase() === "Exclusive".toLowerCase() || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
             const price = (formDetails?.price + taxValues);
-            const profit = Math.floor(((formDetails?.profitmargin * price) / 100) * 10) / 10;
+            const profit = Math.floor(((formDetails?.profitmargin * price) / 100) * 100) / 100;
             const salePrice = profit ? profit + price : price;
             setFormDetails({
                 ...formDetails,
@@ -324,14 +324,14 @@ export default function page() {
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="salesPrice">Sales Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Sales Price' value={Math.floor(formDetails.saleprice * 10) / 10}
+                                <input type="text" placeholder='Sales Price' value={Math.floor(formDetails.saleprice * 100) / 100}
                                     onChange={e => setFormDetails({
                                         ...formDetails,
                                         saleprice: Number(e.target.value)
 
                                     })}
                                     onBlur={(e: any) => {
-                                        const profit = Math.floor((((e.target.value - formDetails.purchaseprice) * 100) / formDetails.purchaseprice) * 10) / 10;
+                                        const profit = Math.floor((((e.target.value - formDetails.purchaseprice) * 100) / formDetails.purchaseprice) * 100) / 100;
                                         console.log(profit);
                                         setFormDetails({
                                             ...formDetails,

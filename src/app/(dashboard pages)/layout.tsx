@@ -22,17 +22,27 @@ export default function RootLayout
 
   const { setCustomerDetails } = useContext(ContextData);
 
+  const { setSupplierDetails } = useContext(ContextData);
+
   useEffect(() => {
     async function getData(): Promise<void> {
-      const response = await axios.get(`/api/customers`, {
+      const responseCustomer = await axios.get(`/api/customers`, {
         headers: {
           data: "get-data",
         },
       });
-      const data = response.data;
+      const data = responseCustomer.data;
 
       setCustomerDetails(data);
       console.log(data);
+      const responseSupplier = await axios.get(`/api/suppliers`, {
+        headers: {
+          data: "get-data",
+        },
+      });
+      console.log(responseSupplier.data);
+
+      setSupplierDetails(responseSupplier.data)
     }
     getData();
   }, []);

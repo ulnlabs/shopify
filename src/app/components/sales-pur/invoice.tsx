@@ -1,10 +1,7 @@
 'use client'
 import React from 'react'
 import DataTable from '../datatable/DataTable'
-import totalAmount from "../datatable/DataTable"
 import { columnHeader_dataTable } from '../../../../global'
-import { useContext } from 'react'
-import { ContextData } from "../../../../contextapi";
 import { useRouter } from 'next/navigation'
 interface invoiceType {
   date: Date | any
@@ -19,12 +16,49 @@ interface invoiceType {
   discountType: string | any
   total: number | any
   isSales?: boolean | any
+  status?: string | any
 }
-function invoice({ date, customerName, invoiceId, discountAll, discountType, otherCharges, itemList, paymentType, note, taxType, total, isSales }: invoiceType) {
+function invoice({ date, customerName, invoiceId, discountAll, discountType, otherCharges, itemList, paymentType, note, taxType, total, isSales, status }: invoiceType) {
 
   const router = useRouter()
 
-  const { setSalesRecord, setPurchaseRecord } = useContext(ContextData);
+  const R_QUANTITY: columnHeader_dataTable = {
+    accessorKey: "returned_quantity",
+    header: "Quantity"
+  }
+  const R_NET_COST: any = {
+    accessorKey: "net_cost",
+    header: "Net Cost",
+    cell: (({ row }: any) => <p>{row.original.price * row.original.returned_quantity}</p>)
+  };
+  const R_TAX: columnHeader_dataTable = {
+    accessorKey: "tax",
+    header: "Tax",
+  };
+  const R_TAX_AMOUNT: any = {
+    accessorKey: "taxAmount",
+    header: "Tax Amount",
+    cell: (({ row }: any) => <p>{row.original.taxAmount / row.original.quantity * row.original.returned_quantity}</p>)
+  };
+  const R_DISCOUNT_AMOUNT: any = {
+    accessorKey: "discount",
+    header: "Discount Amount",
+    cell: (({ row }: any) => <p>{row.original.discount / row.original.quantity * row.original.returned_quantity}</p>)
+  };
+  const R_DISCOUNT: any = {
+    accessorKey: "discountPer",
+    header: "Discount",
+    /*     cell: (({ row }: any) => {
+          console.log(row.original.discount * 100 / row.original.subtotal);
+          return <p>{row.original.discount * 100 / row.original.subtotal}</p>
+        }) */
+  };
+  const R_SUBTOTAL: any = {
+    accessorKey: "subtotal",
+    header: "Sub Total ",
+    cell: (({ row }: any) => <p>{row.original.subtotal / row.original.quantity * row.original.returned_quantity}</p>)
+  };
+
 
   const ITEM_NAME: columnHeader_dataTable = {
     accessorKey: "itemName",
@@ -38,6 +72,7 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
     accessorKey: "quantity",
     header: "Quantity",
   };
+
   const NET_COST: any = {
     accessorKey: "net_cost",
     header: "Net Cost",
@@ -56,12 +91,12 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
     header: "Discount Amount",
   };
   const DISCOUNT: any = {
-    accessorKey: "discountAmount",
+    accessorKey: "discountPer",
     header: "Discount",
-    cell: (({ row }: any) => {
-      console.log(row.original.discount * 100 / row.original.subtotal);
-      return <p>{row.original.discount * 100 / row.original.subtotal}</p>
-    })
+    /*     cell: (({ row }: any) => {
+          console.log(row.original.discount * 100 / row.original.subtotal);
+          return <p>{row.original.discount * 100 / row.original.subtotal}</p>
+        }) */
   };
   const subTotal: columnHeader_dataTable = {
     accessorKey: "subtotal",
@@ -91,6 +126,8 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
     const year = currentDate.getFullYear();
     console.log(year); */
 
+
+
   console.log(taxType);
   const taxValue = (taxType && taxType.match) ? taxType?.match(/\d+/g)!.map(Number)[0] : 0
 
@@ -107,7 +144,12 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
   const totalAmount = itemList?.reduce((total, Item: any) => total + Item.subtotal, 0)
   const discountValue = discountType ? (discountType.toLowerCase() === "fixed" ? discountAll : discountAll * (totalAmount + overallCharges) / 100) : 0
   console.log(discountValue);
+  const rTotalQuantity = itemList?.reduce((total, Item: any) => total + Item.returned_quantity, 0)
+  const rTotalTaxAmount = itemList?.reduce((total, Item: any) => total + (Item.taxAmount / Item.quantity) * Item.returned_quantity, 0)
+  const rTotalDisAmount = itemList?.reduce((total, Item: any) => total + (Item.discount / Item.quantity) * Item.returned_quantity, 0)
+  const rTotalAmount = itemList?.reduce((total, Item: any) => total + (Item.subtotal / Item.quantity) * Item.returned_quantity, 0)
 
+  console.log(status);
 
   const paymentInformation = [
     {
@@ -131,7 +173,7 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
         <div className="w-[95%]">
 
           <div className='border-b-2 w-[100%] p-3 flex  justify-between'>
-            <h1>Sales Invoice</h1>
+            {isSales ? <h1>Sales Invoice</h1> : <h1>Purchase Invoice</h1>}
             <p>Date:{date}</p>
           </div>
           <div className="flex w-[100%] p-4 flex-col">
@@ -188,6 +230,19 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
           </div>
         </div>
       </div>
+      {
+        status?.toLocaleLowerCase() === "Return Raised".toLowerCase() && (
+          <div className='flex justify-center mt-3 mb-10'>
+
+
+            <div className="w-[95%]">
+              <h2>Returned Items:</h2>
+              <DataTable final totalPrice={totalPrice} totalDisAmount={rTotalDisAmount} totalAmount={rTotalAmount} totalQuantity={rTotalQuantity} totalTaxAmount={rTotalTaxAmount} columns={[ITEM_NAME, UNIT_PRICE, R_QUANTITY, R_NET_COST, R_TAX, R_TAX_AMOUNT, R_DISCOUNT, R_DISCOUNT_AMOUNT, R_SUBTOTAL]} data={itemList} />
+            </div>
+          </div>
+        )
+
+      }
     </div>
   )
 }

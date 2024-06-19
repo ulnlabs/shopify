@@ -172,9 +172,10 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
                     <DropdownMenuContent align="end" className="bg-white z-10 border px-3 rounded-md gap-1 grid">
                         <DropdownMenuItem
                             className="cursor-pointer"
-                        /*  onClick={() => {
-                             handleDelete(row.original);
-                         }} */
+                            onClick={() => {
+                                setPurchaseRecord(row.original);
+                                router.push("/purchases/invoice")
+                            }}
                         >
                             View Purchase
                         </DropdownMenuItem>

@@ -47,16 +47,16 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
              console.log(update.quantity); */
           console.log(row.original.quantity);
           if (row.original.quantity > 1) {
-            const updateTax = Math.floor(((row.original.taxAmount / row.original.quantity)) * 10) / 10;
-            const updateDis = Math.floor(((row.original.discountType).toLowerCase() === "Fixed".toLowerCase() ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
-            const subTotal = Math.floor(((row.original.taxType).toLowerCase() === "Exclusive".toLowerCase() ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 10) / 10;
+            const updateTax = Math.floor(((row.original.tax?.match(/\d+/g)?.map(Number)[0]) / 100 * row.original.price) * 100) / 100;
+            const updateDis = Math.floor((row.original.discountPer / 100 * row.original.price) * 100) / 100;
+            const subTotal = Math.floor(((row.original.taxType).toLowerCase() === "Exclusive".toLowerCase() ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 100) / 100;
 
             const uplist = {
               ...row.original,
               quantity: --row.original.quantity,
-              discount: Math.floor(row.original.quantity * updateDis * 10) / 10,
-              taxAmount: Math.floor(row.original.quantity * updateTax * 10) / 10,
-              subtotal: Math.floor(row.original.quantity * subTotal * 10) / 10
+              discount: Math.floor(row.original.quantity * updateDis * 100) / 100,
+              taxAmount: Math.floor(row.original.quantity * updateTax * 100) / 100,
+              subtotal: Math.floor(row.original.quantity * subTotal * 100) / 100
             }
             const upQuantity = itemList.map((item: any) => item.itemName === row.original.itemName ? uplist : item)
             setItemList(upQuantity)
@@ -67,23 +67,23 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         {row.original.quantity}
         <button onClick={() => {
           const update = Items.find((item: any) => item.itemName === row.original.itemName)
-          console.log(update.quantity);
-          console.log(row.original.quantity);
+          console.log(row.original.discountPer);
 
-          console.log(row.original.quantity < update.quantity);
 
           if (row.original.quantity < update.quantity || !isSales) {
+            const updateTax = Math.floor(((row.original.tax?.match(/\d+/g)?.map(Number)[0]) / 100 * row.original.price) * 100) / 100;
+            const updateDis = Math.floor((row.original.discountPer / 100 * row.original.price) * 100) / 100;
+            console.log(updateDis);
 
-            const updateTax = Math.floor(((row.original.taxAmount / row.original.quantity)) * 10) / 10;
-            const updateDis = Math.floor(((row.original.discountType).toLowerCase() === "Fixed".toLowerCase() ? row.original.discount / row.original.quantity : row.original.discount / row.original.quantity) * 10) / 10;
-            const subTotal = Math.floor(((row.original.taxType).toLowerCase() === "Exclusive".toLowerCase() ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 10) / 10;
+            const subTotal = Math.floor(((row.original.taxType).toLowerCase() === "Exclusive".toLowerCase() ? row.original.price + updateTax - updateDis : row.original.price - updateDis) * 100) / 100;
+
             const uplist = {
               ...row.original,
               quantity: ++row.original.quantity,
 
-              discount: Math.floor(row.original.quantity * updateDis * 10) / 10,
-              taxAmount: Math.floor(row.original.quantity * updateTax * 10) / 10,
-              subtotal: Math.floor(row.original.quantity * subTotal * 10) / 10,
+              discount: Math.floor(row.original.quantity * updateDis * 100) / 100,
+              taxAmount: Math.floor(row.original.quantity * updateTax * 100) / 100,
+              subtotal: Math.floor(row.original.quantity * subTotal * 100) / 100,
             }
             const upQuantity = itemList.map((item: any) => item.itemName === row.original.itemName ? uplist : item)
             setItemList(upQuantity)
@@ -145,6 +145,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       </button>
     )
   };
+
   const sales_Column: ColumnDef<any>[] = [
     i_NAME,
     i_QUANTITY,
@@ -203,9 +204,6 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
   }, [payType]);
   let quantity = 0;
   let newSubTotal = 0;
-  let updateCharge = 0;
-  let updateDiscount = 0;
-  let newTotal = 0;
   useEffect(() => {
     console.log(itemList);
 
@@ -214,9 +212,9 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       quantity += item?.quantity
     ))
     const taxPer = (data?.billTaxType && data?.billTaxType.match) ? data?.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
-    updateCharge = (taxPer * data?.billCharges) / 100
-    updateDiscount = (data?.billDiscountType).toLowerCase() === "Fixed".toLowerCase() ? data?.billDiscount : (data?.billDiscountType).toLowerCase() === "Percentage".toLowerCase() ? ((newSubTotal + updateCharge) * data.billDiscount) / 100 : 0
-    newTotal = newSubTotal + updateCharge - updateDiscount;
+    const updateCharge = (taxPer * data?.billCharges) / 100 + Number(data?.billCharges)
+    const updateDiscount = (data?.billDiscountType).toLowerCase() === "Fixed".toLowerCase() ? data?.billDiscount : (data?.billDiscountType).toLowerCase() === "Percentage".toLowerCase() ? ((newSubTotal + updateCharge) * data.billDiscount) / 100 : 0
+    const newTotal = newSubTotal + updateCharge - updateDiscount;
     console.log(quantity);
     setData((prevData: any) => ({
       ...prevData,
@@ -224,22 +222,22 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       billSubtotal: newSubTotal,
       billOtherCharge: updateCharge || prevData.billOtherCharge,
       billOverallDis: updateDiscount || prevData.billOtherCharge,
-      billTotal: Math.floor(newTotal * 10) / 10,
+      billTotal: Math.floor(newTotal * 100) / 100,
     }));
   }, [itemList])
   useEffect(() => {
     const updateOnChange = () => {
       const taxPer = (data.billTaxType) ? data.billTaxType?.match(/\d+/g)!.map(Number)[0] : 0
       const newOtherCharge = ((data.billCharges * taxPer) / 100) + Number(data.billCharges);
-      const subTotal = Math.floor((newOtherCharge + data.billSubtotal) * 10) / 10;
-      const newDiscount = Math.floor(((data.billDiscountType).toLowerCase() === "Fixed".toLowerCase() ? data.billDiscount : (data.billDiscountType).toLowerCase() === "Percentage".toLowerCase() ? ((data.billDiscount * subTotal) / 100) : 0) * 10) / 10;
+      const subTotal = Math.floor((newOtherCharge + data.billSubtotal) * 100) / 100;
+      const newDiscount = Math.floor(((data.billDiscountType).toLowerCase() === "Fixed".toLowerCase() ? data.billDiscount : (data.billDiscountType).toLowerCase() === "Percentage".toLowerCase() ? ((data.billDiscount * subTotal) / 100) : 0) * 100) / 100;
       console.log(data.billCharges);
 
       setData({
         ...data,
         billOtherCharge: newOtherCharge,
         billOverallDis: newDiscount,
-        billTotal: data.billSubtotal + newOtherCharge - newDiscount,
+        billTotal: Math.floor((data.billSubtotal + newOtherCharge - newDiscount) * 100) / 100
       })
     }
     updateOnChange();
@@ -251,8 +249,10 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     console.log(value.quantity);
     console.log(isSales);
 
+
+
     if (value.quantity > 0 || !isSales) {
-     /*  setItemList({ ...itemList, value }) */
+      /*  setItemList({ ...itemList, value }) */
       console.log("done");
 
       if (!exist) {
@@ -263,13 +263,14 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       else {
         const updatedQuantity = exist.quantity + 1
         if ((exist.quantity + 1) <= value.quantity || !isSales) {
-          console.log(value.discount);
+          const tax = (exist?.tax?.match(/\d+/g)?.map(Number)[0]) / 100 * exist?.price
+          console.log(exist.discount);
           const updatedItem = {
             ...exist,
             quantity: exist.quantity + 1,
-            discount: Math.floor(exist.discount / exist.quantity * 10) / 10 * updatedQuantity,
-            taxAmount: Math.floor(value.taxAmount * 10) / 10 * updatedQuantity,
-            subtotal: Math.floor(value.subtotal * 10) / 10 * updatedQuantity
+            discount: Math.floor(((exist.discountPer / 100 * exist.price) * updatedQuantity) * 100) / 100,
+            taxAmount: Math.floor(tax * 100) / 100 * updatedQuantity,
+            subtotal: Math.floor(value.subtotal * 100) / 100 * updatedQuantity
           };
           const updatedList = itemList.map((item: any) => item.itemName === value.itemName ? updatedItem : item);
           setItemList(updatedList);
@@ -489,7 +490,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         <div className="grid  items-center grid-cols-subgrid grid-rows-subgrid gap-2 col-start-1 px-1 bg-primary-gray col-span-12 md:col-span-6 rounded-lg ">
           <div className="col-start-1 pl-2 col-end-7 md:col-end-4">
             <input id="overall discount"
-              onChange={(e) => { setData({ ...data, billDiscount: e.target.value }) }}
+              onChange={(e) => { setData({ ...data, billDiscount: Number(e.target.value) }) }}
               value={data?.billDiscount || ""}
               className={` w-full border rounded-md px-2 h-10 outline-none  ${data.billDiscountType ? "" : "pointer-events-none"} `}
               onKeyDown={(e) => {
@@ -539,7 +540,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         <div className="md:col-end-13 md:col-span-4 rounded-lg h-auto col-span-full grid items-center bg-primary-gray">
           <div className="grid grid-cols-4 justify-start lg:grid-cols-3 py-2 gap-4 px-5  ">
             <p className="col-start-1 md:text-end  col-end-3">Grand Total</p>
-            <p className="col-span-2 col-start-3 md-pr-2 ">${data.billTotal} </p>
+            <p className="col-span-2 col-start-3 md-pr-2 ">${Math.floor(data.billTotal * 100) / 100} </p>
           </div>
         </div>
       </div>
@@ -561,7 +562,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             placeholder="Amount"
             className="w-full px-2 appearance-none "
             readOnly
-            value={data.billTotal}
+            value={Math.floor(data.billTotal * 100) / 100}
           />
         </div>
       </section >

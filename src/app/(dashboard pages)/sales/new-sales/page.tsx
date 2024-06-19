@@ -86,28 +86,6 @@ const page = () => {
     }
   }
 
-  const customerName = [
-    {
-      value: "Fire10",
-      label: "Fire10",
-      id: 1,
-    },
-    {
-      value: "deepath",
-      label: "Deepath",
-      id: 2,
-    },
-    {
-      value: "deepak",
-      label: "Deepak",
-      id: 3,
-    },
-    {
-      value: "999",
-      label: "Dhilip",
-      id: 4,
-    },
-  ]
 
   const [cus, setCus] = useState<any>("");
   useEffect(() => {

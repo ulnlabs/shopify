@@ -63,13 +63,14 @@ export const PUT = async (req: Request) => {
                 console.log(profitMargin);
                 const { total, taxValue, discountValue } = findTotal(item.price + profitMargin, 1, item.tax, item.discountType, item.discount, item.taxType)
                 console.log(total);
-                console.log(item.quantity, item.itemCode);
+                console.log(item.quantity, item.itemCode, item.discount);
                 return ({
                     ...item,
                     price: item.price + profitMargin,
                     taxAmount: taxValue,
                     subtotal: total,
-                    discount: discountValue
+                    discount: discountValue,
+                    discountPer: item.discount
                 })
             })
             return NextResponse.json(modified);
@@ -97,10 +98,11 @@ export const PUT = async (req: Request) => {
                         const { total, taxValue, discountValue } = findTotal(item.price, sale.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
-                            taxAmount: taxValue,
+                            taxAmount: Math.floor(taxValue * 100) / 100,
                             subtotal: total,
                             quantity: item.sold_quantity,
-                            discount: discountValue
+                            discount: Math.floor(discountValue * 100) / 100,
+                            discountPer: item.discount
                         })
                     })
                     return ({
@@ -135,12 +137,16 @@ export const PUT = async (req: Request) => {
 
                     const itemList = sale.items.map((item: any) => {
                         const { total, taxValue, discountValue } = findTotal(item.price, sale.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        console.log(item.discount);
+
                         return ({
                             ...item,
-                            taxAmount: taxValue,
+                            taxAmount: Math.floor(taxValue * 100) / 100,
                             subtotal: total,
                             quantity: item.sold_quantity,
-                            discount: discountValue
+                            discount: Math.floor(discountValue * 100) / 100,
+                            discountPer: item.discount
+
                         })
                     })
 
@@ -241,12 +247,10 @@ export const PUT = async (req: Request) => {
 export async function POST(req: any) {
     let { header, data } = await req.json();
 
-    console.log(header);
-    console.log(data);
+    console.log("header", header);
+    console.log("data", data);
 
-    const { salesCode: code } = data
 
-    console.log(code);
 
 
 
@@ -321,6 +325,9 @@ export async function POST(req: any) {
             console.log('Sales created successfully:', newSales);
         }
         else if (header === "return") {
+            const { salesCode: code } = data
+
+            console.log(code);
             const getSales = await Sales.find({ salesCode: code })
             console.log(getSales);
             for (const { itemCode, returned_quantity } of items) {

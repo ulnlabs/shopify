@@ -7,23 +7,19 @@ const PopUp = ({ modify, itemList, inputData, setItemList, setIsPopUp, Items, fr
     const [tax, setTax] = useState<string>(modify.original.tax);
     const [taxType, setTaxType] = useState<string>(modify.original.taxType)
     const [discountType, setDiscountType] = useState<string>(modify.original.discountType)
-    const [discount, setDiscount] = useState<any>(discountType.toLowerCase() === "Percentage".toLowerCase() ? modify.original.discount * 100 / modify.original.price / modify.original.quantity : modify.original.discount / modify.original.quantity)
-
-
+    const [discount, setDiscount] = useState<any>(modify.original.discountPer)
     const handlePopUp = () => {
-
         const taxPer = tax.match(/\d+/g)!.map(Number)[0]
         console.log(taxPer);
-
         const taxValue = taxPer * modify.original.price / 100;
-        const DiscountValue = discountType.toLowerCase() === "Fixed".toLowerCase() ? discount : (discount * modify.original.price) / 100;
+        const DiscountValue = discountType.toLowerCase() === "Fixed".toLowerCase() ? Math.round(discount) : (Math.round(discount) * modify.original.price) / 100;
         const subTotal = taxType.toLowerCase() === "Exclusive".toLowerCase() ? taxValue + modify.original.price - DiscountValue : modify.original.price - DiscountValue;
         const updateTax = {
             ...modify.original,
             taxType: taxType,
             tax: tax,
             taxAmount: modify.original.quantity * taxValue,
-            discount: discountType.toLowerCase() === "Percentage".toLowerCase() ? modify.original.quantity * DiscountValue : modify.original.quantity * DiscountValue,
+            discount: discountType.toLowerCase() === "Percentage".toLowerCase() ? modify.original.quantity * Math.round(DiscountValue) : modify.original.quantity * Math.round(DiscountValue),
             discountType: discountType,
             subtotal: modify.original.quantity * subTotal
         }
@@ -103,7 +99,7 @@ const PopUp = ({ modify, itemList, inputData, setItemList, setIsPopUp, Items, fr
                             <Input type="text" className='h-10 border-none '
                                 placeholder={discount.toString()}
                                 onChange={(e) => {
-                                    setDiscount(e.target.value)
+                                    setDiscount(Number(e.target.value))
                                 }}
                                 onKeyDown={(e) => {
                                     if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== ".") {

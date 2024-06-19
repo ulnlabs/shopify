@@ -20,10 +20,10 @@ export const PUT = async (req: Request) => {
         const temp = overall.reduce((prev: number, current: number) => prev + current, initial);
         console.log(temp);
 
-        const taxValue = purchase.taxType ? (purchase.taxType?.match(/\d+/g)!.map(Number)[0] * purchase.otherCharges / 100) : 0
+        const taxValue = (purchase.taxType ? (purchase.taxType?.match(/\d+/g)!.map(Number)[0] * purchase.otherCharges / 100) : 0) + purchase.otherCharges
         console.log(purchase.discount);
 
-        const discount = purchase.discountType && (purchase.discountType).toLowerCase() === "Percentage".toLowerCase() ? Math.floor(((purchase.discount / 100) * (temp + taxValue)) * 10) / 10 : purchase.discount;
+        const discount = purchase.discountType && (purchase.discountType).toLowerCase() === "Percentage".toLowerCase() ? Math.floor(((purchase.discount / 100) * (temp + taxValue)) * 100) / 100 : purchase.discount;
         console.log(discount);
 
         console.log(taxValue);
@@ -34,12 +34,18 @@ export const PUT = async (req: Request) => {
 
 
     const findTotal = (price: number, quantity: number = 0, tax: string, discountType: string, discount: number, taxType: string,) => {
+        console.log(quantity);
+
+        console.log(price);
+
+
         const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
         console.log(taxValue);
 
 
         const discountValue = discountType.toLowerCase() === "Fixed".toLowerCase() ? discount * quantity : discountType.toLowerCase() === "Percentage".toLowerCase() ? (discount * price / 100) * quantity : 0;
-        console.log(discountValue);
+        console.log(price, discountValue);
+
 
         const total = taxType.toLowerCase() === "Inclusive".toLowerCase() ? price * quantity - discountValue : taxValue + price * quantity - discountValue
         console.log(total);
@@ -68,13 +74,15 @@ export const PUT = async (req: Request) => {
                 console.log(profitMargin);
 
                 console.log(profitMargin);
-                const { total, taxValue, discountValue } = findTotal(item.price + profitMargin, 1, item.tax, item.discountType, item.discount, item.taxType)
+                const { total, taxValue, discountValue } = findTotal(item.price + profitMargin, 1, item.tax, item.discountType, item.discount, item.taxType);
+
                 return ({
                     ...item,
                     price: item.price + profitMargin,
                     taxAmount: taxValue,
                     subtotal: total,
-                    discount: discountValue
+                    discount: discountValue,
+                    discountPer: item.discount
                 })
             })
             return NextResponse.json(modified);
@@ -109,16 +117,17 @@ export const PUT = async (req: Request) => {
                         const { total, taxValue, discountValue } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
-                            taxAmount: taxValue,
+                            taxAmount: Math.floor(taxValue * 100) / 100,
                             subtotal: total,
                             quantity: item.Purchase_quantity,
-                            discount: discountValue
+                            discount: Math.floor(discountValue * 100) / 100,
+                            discountPer: item.discount
                         })
                     })
                     return ({
                         ...purchase,
                         date: format(purchase.date, "dd-MM-yy"),
-                        s_name: purchase.s_name,
+                        c_name: purchase.c_name,
                         purchaseCode: purchase.purchaseCode,
                         total: findOverall(purchase),
                         status: purchase.status,
@@ -153,10 +162,11 @@ export const PUT = async (req: Request) => {
                         const { total, taxValue, discountValue } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
-                            taxAmount: taxValue,
+                            taxAmount: Math.floor(taxValue * 100) / 100,
                             subtotal: total,
                             quantity: item.Purchase_quantity,
-                            discount: discountValue
+                            discount: Math.floor(discountValue * 100) / 100,
+                            discountPer: item.discount
                         })
                     })
 

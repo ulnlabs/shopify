@@ -177,7 +177,7 @@ export default function page() {
             const taxes = taxValue ? taxValue.match(/\d+/g)!.map(Number)[0] : 0
             const taxValues = (taxType.toLowerCase() === "Exclusive".toLowerCase() || taxType === "") ? (formDetails?.price * taxes) / 100 : 0
             const price = (formDetails?.price + taxValues);
-            const profit = Math.floor(((formDetails?.profitmargin * price) / 100) * 10) / 10;
+            const profit = Math.floor(((formDetails?.profitmargin * price) / 100) * 100) / 100;
             const salePrice = profit ? profit + price : price;
             setFormDetails({
                 ...formDetails,
@@ -305,18 +305,18 @@ export default function page() {
                                     if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== ".") {
                                         e.preventDefault();
                                     }
-                                }} placeholder='Profit Margin(%)' value={Math.floor(formDetails.profitmargin * 10) / 10 || ""} onChange={(e: any) => setFormDetails({ ...formDetails, profitmargin: e.target.value })} id='profitMargin' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
+                                }} placeholder='Profit Margin(%)' value={Math.floor(formDetails.profitmargin * 100) / 100 || ""} onChange={(e: any) => setFormDetails({ ...formDetails, profitmargin: e.target.value })} id='profitMargin' className=' border  rounded-lg py-2 px-2 outline-none text-gray-800' />
                             </div>
                             <div className=" grid-cols-1 lg:col-start-9  auto-rows-min lg:col-span-3 row-span-1 flex flex-col gap-2 ">
                                 <label htmlFor="salesPrice">Sales Price<span className='text-red-400'>*</span></label>
-                                <input type="text" placeholder='Sales Price' value={Math.floor(formDetails.saleprice * 10) / 10}
+                                <input type="text" placeholder='Sales Price' value={Math.floor(formDetails.saleprice * 100) / 100}
                                     onChange={e => setFormDetails({
                                         ...formDetails,
                                         saleprice: Number(e.target.value)
 
                                     })}
                                     onBlur={(e: any) => {
-                                        const profit = Math.floor((((e.target.value - formDetails.purchaseprice) * 100) / formDetails.purchaseprice) * 10) / 10;
+                                        const profit = Math.floor((((e.target.value - formDetails.purchaseprice) * 100) / formDetails.purchaseprice) * 100) / 100;
                                         console.log(profit);
                                         setFormDetails({
                                             ...formDetails,

@@ -31,7 +31,9 @@ const page = () => {
     billUserName: "",
   })
 
-  const { purchaseStocks: Items } = useContext(ContextData)
+  const { purchaseStocks: Items, supplierDetails } = useContext(ContextData)
+  console.log(supplierDetails);
+
 
   const [inputItem, setInputItem] = useState<any>("");
   console.log(Items);
@@ -43,34 +45,13 @@ const page = () => {
       : [])
   }, [inputItem])
   const [product, setProduct] = useState<any>();
-  const customerName = [
-    {
-      value: "Fire10",
-      label: "Fire10",
-      id: 4,
-    },
-    {
-      value: "deepath",
-      label: "Deepath",
-      id: 1,
-    },
-    {
-      value: "deepak",
-      label: "Deepak",
-      id: 2,
-    },
-    {
-      value: "999",
-      label: "Dhilip",
-      id: 3,
-    },
-  ]
+
 
   const [cus, setCus] = useState<any>("");
 
   useEffect(() => {
-    setCus(customerName.filter((item: any) => {
-      return purchaseData.customerName === "" ? true : item.value.toLowerCase().includes(purchaseData.customerName.toLowerCase())
+    setCus(supplierDetails.filter((item: any) => {
+      return (item.name.toLowerCase().includes(purchaseData.customerName.toLowerCase()) || item.id.toString().includes(purchaseData.customerName) || item.mobile.toLowerCase().includes(purchaseData.customerName.toLowerCase()))
     })
     )
 
@@ -108,15 +89,15 @@ const page = () => {
 
       <NewPurchase
         isSales={false}  //false parameter used to behave as purchase
-        placeholder="Search supplier" 
-        data={purchaseData} 
+        placeholder="Search supplier"
+        data={purchaseData}
         setData={setPurchaseData}
         inputItem={inputItem} //input field value
         setInputItem={setInputItem}
         Items={product} //all products
         customerData={cus} //all customer data
         itemList={itemList}  //item cart data
-        setItemList={setItemList} 
+        setItemList={setItemList}
       />
       <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>

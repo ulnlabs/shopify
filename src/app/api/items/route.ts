@@ -56,8 +56,8 @@ export const PUT = async (req: Request) => {
             return (
                 {
                     ...item,
-                    purchasePrice: Math.floor(purchasePrice * 10) / 10,
-                    salesPrice: Math.floor((purchasePrice + profitMargin) * 10) / 10
+                    purchasePrice: Math.floor(purchasePrice * 100) / 100,
+                    salesPrice: Math.floor((purchasePrice + profitMargin) * 100) / 100
                 }
             )
         })
