@@ -197,7 +197,7 @@ function Companyprofile() {
             <label htmlFor="address" className='mr-2 md:col-span-5 col-span-12 '>
               Address <span className=' text-red-600'> *</span>
             </label>
-            <textarea value={formdata.address} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} disabled={!edit} name="address" id="address" className=' border p-2 p-2 rounded-md resize-none md:col-span-6 h-[80px] col-span-12  ' />
+            <textarea value={formdata.address} style={edit ? {} : { cursor: "not-allowed" }} onChange={handleChange} disabled={!edit} name="address" id="address" className=' border p-2  rounded-md resize-none md:col-span-6 h-[80px] col-span-12  ' />
 
           </div>
           {

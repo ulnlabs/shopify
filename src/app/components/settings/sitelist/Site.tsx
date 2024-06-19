@@ -5,6 +5,7 @@ import Update from "../popup/Update";
 import { AnimatePresence } from "framer-motion";
 
 
+
 function Site() {
   const dateFormat = ["DD/MM/YYYY", "YYYY/MM/DD"]
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -23,39 +24,53 @@ function Site() {
     }
   }
 
-  const [formdata, setformdata] = useState<any>({})
+  const [formdata, setformdata] = useState<any>({
+    currency: "",
+    dateFormat: "",
+    disableTax: false,
+    enableRoundOff: false,
+    language: "",
+    siteName: ""
+
+  })
 
   const [edit, setEdit] = useState(false)
   const [alert, setAlert] = useState(false)
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response=await axios.put("/api/sitelist")
-  //     if(response){
-  //       console.log(response.data[0]);
-        
-  //     }
-      
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+        const response = await axios.put("/api/sitelist_Site")
+        if (response.data) {
+          setformdata(response.data.data[0])
+         
+         
+        }
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+
+      }
+    };
+    fetchData()
     
-  //   }
-  //   fetchData()
-  // }, []);
+  }, []);
 
 
-
+  
   function handlesubmit(e: any) {
     e.preventDefault();
     setEdit(false)
-    
     const handuler = async () => {
-      
-      const { data } = await axios.post("/api/sitelist",
+
+      const { data } = await axios.post("/api/sitelist_Site",
         {
-          data: formdata
+          formdata: formdata
 
         }
       )
+      setAlert(data.alert)
     }
     handuler()
 
@@ -64,7 +79,9 @@ function Site() {
     }, 3000)
   }
   function handleChange(e: any) {
-    setformdata({ ...formdata, [e.target.name]: e.target.value })
+    let {name ,value,checked,type}=e.target;
+    setformdata({ ...formdata, [name]: type=== "checkbox" ?checked: value })
+
   }
 
 
@@ -73,7 +90,7 @@ function Site() {
       <div className="">
         <AnimatePresence>
           {
-            alert && <Update close={setAlert} />
+            alert &&   <Update close={setAlert} />
           }
         </AnimatePresence>
         <div className="">
@@ -92,7 +109,7 @@ function Site() {
             <label htmlFor="siteName" className='mr-2 md:col-span-5 col-span-12 '>
               Site Name <span className=' text-red-600'> *</span>
             </label>
-            <input disabled={!edit} onChange={handleChange} type="text" id="siteName" name="siteName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input value={formdata.siteName} disabled={!edit} onChange={handleChange} type="text" id="siteName" name="siteName" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
 
@@ -100,7 +117,7 @@ function Site() {
             <label htmlFor="dateFormat" className='mr-2 md:col-span-5 col-span-12 '>
               Date Format  <span className=' text-red-600'> *</span>
             </label>
-            <select name="dateFormat" id="dateFormat" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleChange}>
+            <select value={formdata.dateFormat} name="dateFormat" id="dateFormat" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleChange}>
               <option value=""></option>
               <option value="DD/MM/YYYY">DD/MM/YYYY</option>
               <option value="YYYY/MM/DD">YYYY/MM/DD</option>
@@ -112,21 +129,21 @@ function Site() {
             <label htmlFor="currency" className='mr-2 md:col-span-5 col-span-12 '>
               Currency  <span className=' text-red-600'> *</span>
             </label>
-            <input disabled={!edit} onChange={handleChange} type="text" name="currency" className=' border pl-3 rounded-md h-8 md:col-span-6 col-span-12 ' />
+            <input value={formdata.currency} disabled={!edit} onChange={handleChange} type="text" name="currency" className=' border pl-3 rounded-md h-8 md:col-span-6 col-span-12 ' />
 
           </div>
           <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
             <label htmlFor="enableRoundOff" className=' md:col-span-5 col-span-1 basis-1/4 sm:text-stat md:text-end md:mr-[10%] '>
               Enable Round Off
             </label>
-            <input disabled={!edit} onChange={handleChange} type="checkbox" name="enableRoundOff" className=' cursor-pointer md:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
+            <input  checked={formdata.enableRoundOff}  disabled={!edit} onChange={handleChange} type="checkbox" name="enableRoundOff" className=' cursor-pointer md:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
 
           </div>
           <div className=" md:grid md:grid-cols-12 md:text-center   flex  p-2  lg:text-end   ">
             <label htmlFor="disableTax" className=' md:col-span-5 col-span-1 basis-1/4 sm:text-stat md:text-end md:mr-[10%] '>
               Disable Tax
             </label>
-            <input disabled={!edit} onChange={handleChange} type="checkbox" name="disableTax" className=' cursor-pointer md:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
+            <input checked={formdata.disableTax}  disabled={!edit} onChange={handleChange} type="checkbox" name="disableTax" className=' cursor-pointer md:translate-x-[-10%] md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] ' />
 
           </div>
           <div className=" md:grid md:grid-cols-12  grid  p-2 md:text-end  md:gap-x-5 ">
@@ -134,7 +151,7 @@ function Site() {
               Language <span className=' text-red-600'> *</span>
             </label>
 
-            <select name="language" id="language" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleChange}>
+            <select value={formdata.language} name="language" id="language" className=' border rounded-md h-8 md:col-span-6 col-span-12 ' disabled={!edit} onChange={handleChange}>
               <option value=""></option>
               <option value="English">English</option>
 

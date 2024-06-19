@@ -19,11 +19,11 @@ function Sitesettings() {
     }
     return (
         <>
-            <div className="  h-screen ">
+            <div className="  h-screen mt-5 ">
 
                 <div className=" flex justify-center flex-col items-center ">
 
-                    <div className=" border w-[95%] bg-white rounded-xl ">
+                    <div className=" border w-[95%] bg-white rounded-xl relative ">
                         <div className="">
                             <nav className=' flex  '>
                                 <ul className=' flex  text-sm gap-4 p-2 '>

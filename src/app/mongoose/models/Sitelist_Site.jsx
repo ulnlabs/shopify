@@ -14,11 +14,11 @@ const siteData=new mongoose.Schema({
         require:true
     },
     enableRoundOff:{
-        type:String,
+        type:Boolean,
         require:true
     },
     disableTax:{
-        type:String,
+        type:Boolean,
         require:true
     },
     language:{
@@ -30,5 +30,5 @@ const siteData=new mongoose.Schema({
 
 
 })
-const sitelist= mongoose.models.sitelist||mongoose.model("sitelist",siteData)
-export default sitelist;
+const sitelist_Site= mongoose.models.sitelist_Site||mongoose.model("sitelist_Site",siteData)
+export default sitelist_Site;

@@ -1,20 +1,14 @@
 import React, { DetailedHTMLProps, TextareaHTMLAttributes } from 'react'
-import { useState } from 'react'
-interface Siteinformation {
+import { useState, useEffect } from 'react'
+import Update from "../popup/Update";
+import { AnimatePresence } from "framer-motion";
+import axios from "axios";
 
-  defaultDiscount: String,
-  showPaidAmount: String,
-  showUpiCode: String,
-  invoiceFormat: String,
-  footerText: String,
-  termsAndcondition: String
-}
-
-function Sales({ edit }: any) {
-  const [formData, setformdata] = useState<Siteinformation>({
+function Sales() {
+  const [formdata, setformdata] = useState({
     defaultDiscount: "",
-    showPaidAmount: "",
-    showUpiCode: "",
+    showPaidAmount: false,
+    showUpiCode: false,
     invoiceFormat: "",
     footerText: "",
     termsAndcondition: `
@@ -27,57 +21,104 @@ function Sales({ edit }: any) {
     8)we recommend our customer&#039;s to use legal softwares, we don&#039;t support pirated software in any way.`
   })
 
+  const [edit, setEdit] = useState(false)
+  const [alert, setAlert] = useState(false)
 
-  function handleData(event: any) {
-    const { name, value } = event.target
-    setformdata(previous => ({ ...previous, [name]: value }))
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+
+  //       const response = await axios.put("/api/sitelist_sales")
+  //       if (response.data) {
+  //         setformdata(response.data.data[0])
 
 
+  //       }
+
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+
+  //     }
+  //   };
+  //   fetchData()
+
+  // }, []);
+
+  function handlesubmit(e: any) {
+    e.preventDefault();
+    setEdit(false)
+
+    const handuler = async () => {
+
+      const { data } = await axios.post("/api/sitelist_sales",{
+
+        formdata: formdata
+      })
+      setAlert(data.alert)
+    }
+    handuler()
+
+    setTimeout(() => {
+      setAlert(false)
+    }, 3000)
   }
-  function hanndleSubmit(event: any) {
-    event.preventDefault();
-    console.log(formData);
-
+  function handleChange(e: any) {
+    let { name, value, checked, type } = e.target;
+    setformdata({ ...formdata, [name]: type === "checkbox" ? checked : value })
 
   }
 
 
   return (
     <div className="">
-      <form action="" onSubmit={hanndleSubmit} className=' relative md:flex md:flex-col  gap-y-3  p-10'>
+      <AnimatePresence>
+        {
+          alert && <Update close={setAlert} />
+        }
+      </AnimatePresence>
+      <div className="flex justify-between p-5">
+        <div className=""></div>
+        <div className="">
+
+          <button onClick={() => { setEdit(!edit) }} className='px-5 border rounded-md  font-medium '>Edit </button>
+        </div>
+      </div>
+
+
+      <form action="" onSubmit={handlesubmit} className=' relative md:flex md:flex-col  gap-y-3  p-10'>
         <div className=" md:grid md:grid-cols-12 md:text-center grid  p-2 lg:text-end  lg:gap-x-10  ">
           <label htmlFor="defaultDiscount" className='mr-2 md:col-span-5 col-span-12 '>
             Default Sales Discount(%)  <span className=' text-red-600'> *</span>
           </label>
-          <input onChange={handleData} disabled={!edit} name='defaultDiscount' type="text" className=' border rounded-md h-8 md:col-span-5 col-span-12 ' />
+          <input onChange={handleChange} disabled={!edit} name='defaultDiscount' type="text" className=' border rounded-md h-8 md:col-span-5 col-span-12 ' />
 
         </div>
         <div className=" md:grid md:grid-cols-12 md:text-center  flex  p-2  lg:text-end  lg:gap-x-10 ">
           <label htmlFor="showPaidAmount" className='mr-2 md:col-span-5 col-span-1  basis-3/4 '>
             Show Paid Amount and Change Return (in POS)
           </label>
-          <input onChange={handleData} disabled={!edit} name='showPaidAmount' type="checkbox" className=' cursor-pointer md:col-span-1 col-span-10 lg:h-[2.0rem] lg:w-[4.5rem] lg:-ml-5' />
+          <input onChange={handleChange} disabled={!edit} name='showPaidAmount' type="checkbox" className=' cursor-pointer md:col-span-1 col-span-10 lg:h-[2.0rem] lg:w-[4.5rem] lg:-ml-5' />
 
         </div>
         <div className=" md:grid md:grid-cols-12 md:text-center  flex  p-2  lg:text-end  lg:gap-x-10 ">
           <label htmlFor="showUpiCode" className='mr-2 md:col-span-5 col-span-1 basis-3/4 '>
             Show UPI Code On Invoice
           </label>
-          <input onChange={handleData} disabled={!edit} name='showUpiCode' type="checkbox" className='   cursor-pointer md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] lg:-ml-5 ' />
+          <input onChange={handleChange} disabled={!edit} name='showUpiCode' type="checkbox" className='   cursor-pointer md:col-span-1 col-span-10 h-[2.0rem] w-[4.5rem] lg:-ml-5 ' />
 
         </div>
         <div className=" md:grid md:grid-cols-12 md:text-center grid  p-2 lg:gap-x-10   lg:text-end">
           <label htmlFor="invoiceFormat" className='mr-2 md:col-span-5 col-span-12 '>
             Sale Invoice Format   <span className=' text-red-600'> *</span>
           </label>
-          <input onChange={handleData} disabled={!edit} name='invoiceFormat' type="text" className=' border rounded-md h-8 md:col-span-5 col-span-12 ' />
+          <input onChange={handleChange} disabled={!edit} name='invoiceFormat' type="text" className=' border rounded-md h-8 md:col-span-5 col-span-12 ' />
 
         </div>
         <div className=" md:grid md:grid-cols-12 md:text-center grid  p-2 lg:gap-x-10 lg:text-end   ">
           <label htmlFor="footerText" className='mr-2 md:col-span-5 col-span-12 '>
             Sales Invoice Footer Text  <span className=' text-red-600'> *</span>
           </label>
-          <textarea onChange={handleData} disabled={!edit} rows={3}  name='footerText' className=' border px-2 resize-none rounded-md h-8 md:col-span-5 col-span-12 ' />
+          <textarea onChange={handleChange} disabled={!edit} rows={3} name='footerText' className=' border px-2 resize-none rounded-md h-8 md:col-span-5 col-span-12 ' />
 
         </div>
 
@@ -87,11 +128,11 @@ function Sales({ edit }: any) {
           </label>
           <div className=" md:col-span-5 col-span-12 ">
             <textarea
-              onChange={handleData}
+              onChange={handleChange}
               disabled={!edit}
               name="termsAndcondition"
               rows={2}
-              value={formData.termsAndcondition as any}
+              value={formdata.termsAndcondition as any}
               className="w-full border rounded-md items-center resize-none"
             />
           </div>
