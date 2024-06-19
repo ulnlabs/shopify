@@ -36,7 +36,7 @@ function Taxlist() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.put("/api/taxList");
+        const response = await axios.get("/api/taxList");
         console.log("retuernData",response.data);
         if (response.data) {
           setTax(response.data.data);
@@ -50,6 +50,43 @@ function Taxlist() {
 
     fetchData();
   }, []);
+  const updateTaxStatus = async (taxId: string, status: boolean) => {
+    console.log("working");
+    
+    try {
+      const response = await axios.put('/api/taxList', {
+        taxId,
+        taxStatus: status
+      });
+
+      if (response.status === 200) {
+        setTax(prevTax => 
+          prevTax.map(tax => 
+            tax.taxId === taxId ? { ...tax, taxStatus: status } : tax
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating tax status:", error);
+    }
+  };
+
+
+  const handleDelete = async (taxId: String) => {
+      try {
+          const response = await axios.delete('/api/taxList', {
+              data: { taxId }
+          });
+  
+          if (response.status === 200) {
+              setTax(prevTax => prevTax.filter(tax => tax.taxId !== taxId));
+              console.log("Tax deleted successfully:", response.data);
+          }
+      } catch (error) {
+          console.error("Error deleting tax:", error);
+      }
+  };
+  
 
   const Tax_percentage: columnHeader_dataTable = {
     accessorKey: "taxPercentage",
@@ -83,24 +120,16 @@ function Taxlist() {
   const status = {
     accessorKey: "taxStatus",
     cell: ({ row }: any) => {
-      const [active, Deactive] = useState(true);
-      var status: string;
-      if (active == true) {
-        status = "active";
-      }
-      else {
-        status = "Inactive";
-      }
       return (
-        <button className={`  ${active ? "bg-green-500 p-2 rounded-md text-white" : "bg-red-500 p-2 rounded-md text-white"}`} onClick={() => Deactive(!active)} >
-          {status}
+        <button
+          className={` ${row.original.taxStatus ? "bg-green-500 p-2 rounded-md text-white" : "bg-red-500 p-2 rounded-md text-white"}`}
+          onClick={() => updateTaxStatus(row.original.taxId, !row.original.taxStatus)}
+        >
+          {row.original.taxStatus ? "Active" : "Inactive"}
         </button>
       )
     }
-
-
-
-  }
+  };
   const C_ACTION = {
     accessorKey: "action",
     cell: ({ row }: any) => {
@@ -130,7 +159,7 @@ function Taxlist() {
 
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex justify-between" onClick={() => {
-              // handleDelete(row.original);
+              handleDelete(row.original.taxId);
             }}>
               <h1>
 
