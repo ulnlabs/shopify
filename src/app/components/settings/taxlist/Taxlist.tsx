@@ -5,7 +5,6 @@ import DataTable from "../datatableforsettings/DataTable"
 import { RiEdit2Fill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
 import { BiCaretDown } from "react-icons/bi";
-//for hint how do make your custom columns see line 137 or below to comment
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import AddTax from '../popup/AddTax';
@@ -20,28 +19,31 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import Edit from "@/app/components/settings/popup/Edit"
 import axios from 'axios';
- interface TaxType{
-  taxId:String,
-  taxName:string,
-  taxPercentage:string,
-  taxStatus:boolean
-    
+interface TaxType {
+  taxId: String,
+  taxName: String,
+  taxPercentage: String,
+  taxStatus: boolean
+
 }
 
 
 function Taxlist() {
   const [Tax, setTax] = useState<TaxType[]>([]);
+  const [popup, setpopup] = useState<boolean | null>(false)
+  const [edit, setEdit] = useState<boolean | null>(false)
+  const [selectedTax, setSelectedTax] = useState<TaxType|null>(null);
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("/api/taxList");
-        console.log("retuernData",response.data);
+        console.log("retuernData", response.data);
         if (response.data) {
           setTax(response.data.data);
           console.log(Tax);
-          
+
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -50,9 +52,10 @@ function Taxlist() {
 
     fetchData();
   }, []);
+
+
   const updateTaxStatus = async (taxId: string, status: boolean) => {
-    console.log("working");
-    
+
     try {
       const response = await axios.put('/api/taxList', {
         taxId,
@@ -60,8 +63,8 @@ function Taxlist() {
       });
 
       if (response.status === 200) {
-        setTax(prevTax => 
-          prevTax.map(tax => 
+        setTax(prevTax =>
+          prevTax.map(tax =>
             tax.taxId === taxId ? { ...tax, taxStatus: status } : tax
           )
         );
@@ -73,20 +76,46 @@ function Taxlist() {
 
 
   const handleDelete = async (taxId: String) => {
-      try {
-          const response = await axios.delete('/api/taxList', {
-              data: { taxId }
-          });
-  
-          if (response.status === 200) {
-              setTax(prevTax => prevTax.filter(tax => tax.taxId !== taxId));
-              console.log("Tax deleted successfully:", response.data);
-          }
-      } catch (error) {
-          console.error("Error deleting tax:", error);
+    try {
+      const response = await axios.delete('/api/taxList', {
+        data: { taxId }
+      });
+
+      if (response.status === 200) {
+        setTax(prevTax => prevTax.filter(tax => tax.taxId !== taxId));
+        console.log("Tax deleted successfully:", response.data);
       }
+    } catch (error) {
+      console.error("Error deleting tax:", error);
+    }
   };
-  
+
+
+  const handleEdit = async (taxId: string, taxName: string, taxPercentage: string,taxStatus:boolean) => {
+    const taxData = { taxId, taxName, taxPercentage, taxStatus };
+    setSelectedTax(taxData);
+    setEdit(true);
+  }
+  const updateTax = async (taxId: String, updatedData: any) => {
+    try {
+      console.log(taxId, updatedData);
+      
+      const response = await axios.put('/api/taxList', {
+        taxId,
+        ...updatedData
+      });
+
+      if (response.status === 200) {
+        setTax(prevTax =>
+          prevTax.map(tax =>
+            tax.taxId === taxId ? { ...tax, ...updatedData } : tax
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating tax:", error);
+    }
+  };
 
   const Tax_percentage: columnHeader_dataTable = {
     accessorKey: "taxPercentage",
@@ -144,8 +173,9 @@ function Taxlist() {
           <DropdownMenuContent align="end">
             <DropdownMenuItem className="flex justify-between" onClick={() => {
               setEdit(true);
-             
-              
+              handleEdit(row.original.taxId, row.original.taxName, row.original.taxPercentage, row.original.taxStatus)
+
+
             }}>
               <h1>
 
@@ -183,24 +213,23 @@ function Taxlist() {
     C_ACTION,
   ];
 
-  const user=(NewTax:TaxType)=>{
-   setTax([...Tax,NewTax as TaxType]);
-   console.log("Tax data :",Tax);
-   
-   
-    
-   
-  }
-  const [popup, setpopup] = useState<boolean | null>(false)
-  const [edit, setEdit] = useState<boolean | null>(false)
+  const user = (NewTax: TaxType) => {
+    setTax([...Tax, NewTax as TaxType]);
+    console.log("Tax data :", Tax);
 
-  
+
+
+
+  }
+
+
+
   return (
     <div className="relative ">
       <div className=" h-screen ">
         <AnimatePresence mode='wait'>
           {
-            popup && <AddTax close={setpopup} dataset={user}  />||edit&&<Edit close={setpopup}  />
+            popup && <AddTax close={setpopup} dataset={user} /> || edit && <Edit close={setEdit} selectedTax={selectedTax} updatedData={updateTax} />
           }
         </AnimatePresence>
         <div className="mx-auto w-[95%]   mt-3">
@@ -223,4 +252,5 @@ function Taxlist() {
 }
 
 export default Taxlist
+
 

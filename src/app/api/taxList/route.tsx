@@ -7,28 +7,35 @@ import { v4 as uuidv4 } from 'uuid';
 export async function PUT(req: Request) {
     try {
         await connectDB();
-        const { taxId, taxStatus } = await req.json();
-        console.log(taxId, taxStatus);
+        const { taxId, taxName, taxPercentage, taxStatus } = await req.json();
         
-
         if (!taxId) {
             return NextResponse.json({ error: "Tax ID is required" }, { status: 400 });
         }
 
+        const updateFields: any = {};
+        if (taxStatus !== undefined) updateFields.taxStatus = taxStatus;
+        if (taxName !== undefined) updateFields.taxName = taxName;
+        if (taxPercentage !== undefined) updateFields.taxPercentage = taxPercentage;
+
+        if (Object.keys(updateFields).length === 0) {
+            return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+        }
+
         const updatedTax = await TaxList.findOneAndUpdate(
             { taxId },
-            { $set: { taxStatus } },
-            { new: true } 
+            { $set: updateFields },
+            { new: true }
         );
 
         if (!updatedTax) {
             return NextResponse.json({ error: "Tax not found" }, { status: 404 });
         }
 
-        return NextResponse.json({ message: "Tax status updated successfully",  }, { status: 200 });
+        return NextResponse.json({ message: "Tax updated successfully", updatedTax }, { status: 200 });
     } catch (error) {
-        console.error("Error updating tax status:", error);
-        return NextResponse.json({ error: "Failed to update the tax status" }, { status: 500 });
+        console.error("Error updating tax:", error);
+        return NextResponse.json({ error: "Failed to update the tax" }, { status: 500 });
     }
 }
 
@@ -39,11 +46,8 @@ export async function POST(req: Request) {
         const taxId=uuidv4();
         data.taxId=taxId;
         
-
-        // Create a new tax record using the TaxList model
         const newTax=await TaxList.create(data);
 
-        // Return a successful response
         return NextResponse.json({ message: "done",taxListData:newTax }, { status: 201 });
     } catch (error) {
         console.error("Error saving tax data:", error);
