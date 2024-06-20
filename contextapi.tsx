@@ -46,6 +46,21 @@ const ContextContent = ({ children }: children) => {
     console.log(data);
     return data;
   }
+  const fetchItem = async () => {
+    console.log("entered");
+
+    const response = await axios.put("/api/items", {
+      data: {
+        header: "getItems"
+      }
+    })
+    console.log(response.data);
+    return response.data;
+
+  }
+
+  const { data } = useSWR("api/items", fetchItem);
+  console.log(data);
 
   const { data: purchaseStocks, error: itemError } = useSWR("/api/purchase", getItems)
 

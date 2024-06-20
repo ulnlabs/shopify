@@ -115,6 +115,8 @@ export const PUT = async (req: Request) => {
                 const modified = data.map((purchase: any) => {
                     const itemList = purchase.items.map((item: any) => {
                         const { total, taxValue, discountValue } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        console.log(item.discountPer);
+
                         return ({
                             ...item,
                             taxAmount: Math.floor(taxValue * 100) / 100,
@@ -160,6 +162,7 @@ export const PUT = async (req: Request) => {
 
                     const itemList = purchase.items.map((item: any) => {
                         const { total, taxValue, discountValue } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        console.log(item.discount);
                         return ({
                             ...item,
                             taxAmount: Math.floor(taxValue * 100) / 100,
@@ -202,11 +205,14 @@ export const PUT = async (req: Request) => {
                 console.log(data);
                 const modified = data.map((purchase: any) => {
                     const itemList = purchase.items.map((item: any) => {
-                        const { total, taxValue } = findTotal(item.price, item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        const { total, taxValue, discountValue } = findTotal(item.price, item.returned_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
-                            taxAmount: taxValue,
-                            subtotal: total
+                            taxAmount: Math.floor(taxValue * 100) / 100,
+                            subtotal: total,
+                            quantity: item.returned_quantity,
+                            discount: Math.floor(discountValue * 100) / 100,
+                            discountPer: item.discount
                         })
                     })
                     return ({
@@ -236,13 +242,25 @@ export const PUT = async (req: Request) => {
                 }).sort({ 'createdAt': -1 }).lean();
 
                 const modified = data.map((purchase: any) => {
+                    const itemList = purchase.items.map((item: any) => {
+                        const { total, taxValue, discountValue } = findTotal(item.price, item.returned_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        return ({
+                            ...item,
+                            taxAmount: Math.floor(taxValue * 100) / 100,
+                            subtotal: total,
+                            quantity: item.returned_quantity,
+                            discount: Math.floor(discountValue * 100) / 100,
+                            discountPer: item.discount
+                        })
+                    })
                     return ({
                         ...purchase,
                         date: format(purchase.date, "dd-MM-yy"),
                         s_name: purchase.s_name,
                         purchaseCode: purchase.purchaseCode,
                         total: findOverall(purchase),
-                        status: purchase.status
+                        status: purchase.status,
+                        items: itemList
                     })
                 })
                 console.log(modified);
@@ -337,11 +355,11 @@ export async function POST(req: any) {
             const getPurchase = await Purchase.find({ purchaseCode: code })
             console.log(getPurchase);
             for (const { itemCode, returned_quantity } of itemData) {
-                const updated = await Item.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity }, $set: { status: "returned" } }, { session });
+                const updated = await Item.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity } }, { session });
                 console.log(updated);
                 console.log(returned_quantity);
                 const changePurchase = await Purchase.updateOne(
-                    {
+                    {   
                         'items.itemCode': { $regex: new RegExp(itemCode, 'i') },
                         purchaseCode: code
                     }, // Using case-insensitive regex

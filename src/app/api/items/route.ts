@@ -16,6 +16,14 @@ export const PUT = async (req: Request) => {
     console.log(data);
     const { header } = data
     console.log(header);
+    /* const findTotal = (price: number, quantity: number = 0, tax: string, discountType: string, discount: number, taxType: string,) => {
+        const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
+        const discountValue = discountType.toLowerCase() === "Fixed".toLowerCase() ? discount * quantity : discountType.toLowerCase() === "Percentage".toLowerCase() ? (discount * price / 100) * quantity : 0;
+        const total = taxType.toLowerCase() === "Inclusive".toLowerCase() ? price * quantity - discountValue : taxValue + price * quantity - discountValue
+        console.log(total);
+
+        return { total, taxValue, discountValue };
+    } */
 
     await connectDB();
     if (header === "updateStatus") {
@@ -37,11 +45,29 @@ export const PUT = async (req: Request) => {
         console.log();
         return NextResponse.json("done", { status: 200 })
     }
-
+    /*  else if (header === "getItems") {
+         const data = await Item.find().lean();
+         const modified = data.map((item: any) => {
+             const profitMargin = item.profitMargin ? item.profitMargin * item.price / 100 : 0
+             console.log(profitMargin);
+             console.log(profitMargin);
+             const { total, taxValue, discountValue } = findTotal(item.price + profitMargin, 1, item.tax, item.discountType, item.discount, item.taxType)
+             console.log(total);
+             console.log(item.quantity, item.itemCode, item.discount);
+             return ({
+                 ...item,
+                 price: item.price + profitMargin,
+                 taxAmount: taxValue,
+                 subtotal: total,
+                 discount: discountValue,
+                 discountPer: item.discount
+             })
+         })
+         return NextResponse.json(modified);
+     } */
     else {
         console.log("enterd");
         const item = await Item.find().lean();
-        /*  const stocks = await stocks.find(); */
         console.log(item);
         const modified = item.map((item: any) => {
             console.log(item);
@@ -49,7 +75,6 @@ export const PUT = async (req: Request) => {
             const taxPer = item.tax ? item.tax.match(/\d+/g)!.map(Number)[0] : 0
             const taxValue = taxPer * item.price / 100;
             const purchasePrice = item.taxType.toLowerCase() === "inclusive" ? item.price : item.price + taxValue
-            /*             const discount = item?.discountType.toLowerCase() === "fixed" ? item.discount : item.discount * purchasePrice / 100 */
             const profitMargin = item.profitMargin ? item.profitMargin * purchasePrice / 100 : 0
             console.log(item.profitMargin);
             console.log(purchasePrice, profitMargin, taxValue, item.quantity);

@@ -1,8 +1,9 @@
 'use client'
-import React from 'react'
-import DataTable from '../datatable/DataTable'
+import React, { useRef } from 'react'
+import DataTable from './billDatable'
 import { columnHeader_dataTable } from '../../../../global'
 import { useRouter } from 'next/navigation'
+import { useReactToPrint } from 'react-to-print';
 interface invoiceType {
   date: Date | any
   customerName: string | any
@@ -38,12 +39,19 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
   const R_TAX_AMOUNT: any = {
     accessorKey: "taxAmount",
     header: "Tax Amount",
-    cell: (({ row }: any) => <p>{row.original.taxAmount / row.original.quantity * row.original.returned_quantity}</p>)
+    cell: (({ row }: any) => {
+      const tax = row.original.tax ? row.original.tax?.match(/\d+/g).map(Number)[0] : 0
+      const taxValue = tax / 100 * (row.original.price * row.original.returned_quantity)
+      return <p>{Math.floor(taxValue * 100) / 100}</p>
+    })
   };
   const R_DISCOUNT_AMOUNT: any = {
     accessorKey: "discount",
     header: "Discount Amount",
-    cell: (({ row }: any) => <p>{row.original.discount / row.original.quantity * row.original.returned_quantity}</p>)
+    cell: (({ row }: any) => {
+      const discountValue = row.original.discountPer / 100 * row.original.price
+      return <p>{Math.floor((discountValue * row.original.returned_quantity) * 100) / 100}</p>
+    })
   };
   const R_DISCOUNT: any = {
     accessorKey: "discountPer",
@@ -139,15 +147,15 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
 
   const totalPrice = itemList?.reduce((total, Item: any) => total + Item.price, 0)
   const totalQuantity = itemList?.reduce((total, Item: any) => total + Item.quantity, 0)
-  const totalTaxAmount = itemList?.reduce((total, Item: any) => total + Item.taxAmount, 0)
-  const totalDisAmount = itemList?.reduce((total, Item: any) => total + Item.discount, 0)
-  const totalAmount = itemList?.reduce((total, Item: any) => total + Item.subtotal, 0)
-  const discountValue = discountType ? (discountType.toLowerCase() === "fixed" ? discountAll : discountAll * (totalAmount + overallCharges) / 100) : 0
+  const totalTaxAmount = Math.floor(itemList?.reduce((total, Item: any) => total + Item.taxAmount, 0) * 100) / 100
+  const totalDisAmount = Math.floor(itemList?.reduce((total, Item: any) => total + Item.discount, 0) * 100) / 100
+  const totalAmount = Math.floor(itemList?.reduce((total, Item: any) => total + Item.subtotal, 0) * 100) / 100
+  const discountValue = Math.floor(discountType ? (discountType.toLowerCase() === "fixed" ? discountAll : discountAll * (totalAmount + overallCharges) / 100) : 0 * 100) / 100
   console.log(discountValue);
   const rTotalQuantity = itemList?.reduce((total, Item: any) => total + Item.returned_quantity, 0)
-  const rTotalTaxAmount = itemList?.reduce((total, Item: any) => total + (Item.taxAmount / Item.quantity) * Item.returned_quantity, 0)
-  const rTotalDisAmount = itemList?.reduce((total, Item: any) => total + (Item.discount / Item.quantity) * Item.returned_quantity, 0)
-  const rTotalAmount = itemList?.reduce((total, Item: any) => total + (Item.subtotal / Item.quantity) * Item.returned_quantity, 0)
+  const rTotalTaxAmount = Math.floor(itemList?.reduce((total, Item: any) => total + (Item.taxAmount / Item.quantity) * Item.returned_quantity, 0) * 100) / 100
+  const rTotalDisAmount = Math.floor(itemList?.reduce((total, Item: any) => total + (Item.discount / Item.quantity) * Item.returned_quantity, 0) * 100) / 100
+  const rTotalAmount = Math.floor(itemList?.reduce((total, Item: any) => total + (Item.subtotal / Item.quantity) * Item.returned_quantity, 0) * 100) / 100
 
   console.log(status);
 
@@ -160,6 +168,12 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
     },
   ]
 
+  const billRef = useRef<HTMLInputElement | null>(null)
+
+  const handlePrint = useReactToPrint({
+    content: () => billRef.current,
+    documentTitle: 'Invoice',
+  });
 
   return (
     <div className="">
@@ -168,16 +182,16 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
       </div>
 
 
-      <div className='flex justify-center mt-3'>
+      <div className='grid mt-3'>
 
-        <div className="w-[95%]">
+        <div className="w-full py-4 px-10 " ref={billRef} >
 
-          <div className='border-b-2 w-[100%] p-3 flex  justify-between'>
+          <div className='border-b-2 w-full py-3 flex  justify-between'>
             {isSales ? <h1>Sales Invoice</h1> : <h1>Purchase Invoice</h1>}
             <p>Date:{date}</p>
           </div>
-          <div className="flex w-[100%] p-4 flex-col">
-            <div className="w-full flex md:flex-row flex-col justify-between md:gap-0 gap-3">
+          <div className="flex w-[100%] py-3  flex-col">
+            <div className="w-full  flex md:flex-row flex-col justify-between md:gap-0 gap-3">
               <div>
                 <p>From</p>
                 {/*  <p>{customer.name}</p>
@@ -188,7 +202,9 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
                 <p>{customer.vatNumber}</p> */}
               </div>
               <div className="">
-                <p>Customer Details</p>
+                {isSales ? <p>Customer Details</p>
+                  : <p>Supplier Details</p>
+                }
                 <p>{customerName}</p>
               </div>
               <div>
@@ -208,26 +224,31 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
                 <h3 className="text-xl">Payment Information :</h3>
                 <DataTable columns={[DATE, PAYMENT_TYPE, PAYMENT_NOTE, PAYMENT]} data={paymentInformation} />
               </div>
-              <div className="pt-3">
-                <p>SubTotal : ₹{totalAmount}</p>
-                <p>Other Charges : ₹{overallCharges}</p>
-                <p>Discount on All :{discountValue}</p>
-                <p>Grand Total : ₹{total}</p>
-              </div>
-              <div className="w-full flex gap-3 flex-wrap mt-2 ">
-
-                <button className='bg-green-400  px-2 py-3 rounded-md'>Print</button>
-                {isSales ? <button className='bg-yellow-400  px-2 py-3 rounded-md'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    router.push("/sales/new-return")
-                  }}
-                >Sales Return</button>
-                  : <button className='bg-yellow-400  px-2 py-3 rounded-md'>Purchase Return</button>
-                }
+              <div className="pt-3 grid grid-cols-12">
+                <p className='col-span-2 col-end-13' >SubTotal : ₹{totalAmount}</p>
+                <p className='col-span-2 col-end-13' >Other Charges : ₹{overallCharges}</p>
+                <p className='col-span-2 col-end-13' >Discount on All :{discountValue}</p>
+                <p className='col-span-2 col-end-13' >Grand Total : ₹{total}</p>
               </div>
             </div>
           </div>
+        </div>
+        <div className="w-full px-10 flex gap-3 flex-wrap mt-2 ">
+
+          <button className='bg-green-400  px-2 py-3 rounded-md' onClick={handlePrint} >Print</button>
+          {isSales ? <button className='bg-yellow-400  px-2 py-3 rounded-md'
+            onClick={(e) => {
+              e.preventDefault();
+              router.push("/sales/new-return")
+            }}
+          >Sales Return</button>
+            : <button className='bg-yellow-400  px-2 py-3 rounded-md'
+              onClick={(e) => {
+                e.preventDefault();
+                router.push("/purchases/new-return")
+              }}
+            >Purchase Return</button>
+          }
         </div>
       </div>
       {
@@ -244,6 +265,7 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
 
       }
     </div>
+
   )
 }
 

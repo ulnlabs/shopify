@@ -73,7 +73,7 @@ const ShopifyItemSchema: Schema = new Schema({
     required: true
   },
   status: {
-    type: String,
+    type: Boolean,
     default: true,
     required: true
 

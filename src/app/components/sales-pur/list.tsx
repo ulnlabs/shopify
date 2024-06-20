@@ -16,9 +16,8 @@ import { useRouter } from "next/navigation";
 import { Command, CommandList, CommandItem } from "@/components/ui/command";
 import { useReturn } from "./returnContext";
 import { ContextData } from "../../../../contextapi";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
 import axios from "axios";
 
 
@@ -32,11 +31,9 @@ interface propType {
     setFrom: Dispatch<SetStateAction<Date>>,
     setEnd: Dispatch<SetStateAction<Date>>,
     isReturn?: boolean,
+    mutate?: any,
 }
-const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn }: propType) => {
-
-    console.log(isReturn);
-
+const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn, mutate }: propType) => {
     const [invoice, setInvoice] = useState<number>(0);
     const [total, setTotal] = useState<number>(0);
 
@@ -94,10 +91,6 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
         accessorKey: "action",
         header: "ACTION",
         cell: (({ row }: any) => {
-
-
-            console.log(isReturn);
-
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -106,7 +99,8 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
                             <AiOutlineMore className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-white z-10 border px-3 rounded-md gap-1 grid">
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
                             className="cursor-pointer"
                             onClick={() => {
@@ -118,16 +112,19 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
 
-                        {isReturn === false && <DropdownMenuItem
-                            className="cursor-pointer" onClick={() => {
-                                setSalesRecord(row.original);
-                                router.push("/sales/new-return")
-                            }
-                            }>
-                            Sales Return
-                        </DropdownMenuItem>
+                        {isReturn === false && <div>
+
+                            <DropdownMenuItem
+                                className="cursor-pointer" onClick={() => {
+                                    setSalesRecord(row.original);
+                                    router.push("/sales/new-return")
+                                }
+                                }>
+                                Sales Return
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </div>
                         }
-                        <DropdownMenuSeparator />
                         <DropdownMenuItem
                             className="cursor-pointer">
                             Print
@@ -169,7 +166,8 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
                             <AiOutlineMore className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-white z-10 border px-3 rounded-md gap-1 grid">
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
                             className="cursor-pointer"
                             onClick={() => {
@@ -180,27 +178,24 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
                             View Purchase
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="cursor-pointer" onClick={() => {
-                            setPurchaseRecord(row.original);
-                            router.push(`/purchases/new-return`)
-                        }
+                        {isReturn == false && <div>
+                            <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                                setPurchaseRecord(row.original);
+                                router.push(`/purchases/new-return`)
+                            }
 
-                        }>
-                            Purchase Return
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                            }>
+                                Purchase Return
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </div>}
                         <DropdownMenuItem
                             className="cursor-pointer"
                         /* onClick={() => handleUpdate(row.original)} */>
                             Print
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            className="cursor-pointer"
-                        >
-                            PDF
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+
                         <DropdownMenuItem
                             className="cursor-pointer"
                             onClick={async () => {
@@ -212,6 +207,7 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
                                         purchaseCode: row.original.purchaseCode
                                     }
                                 })
+                                mutate();
                                 console.log(remove);
 
                             }}
@@ -324,7 +320,7 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn 
 
                 <DataTable
                     columns={isSales ? s_LIST_Column : p_LIST_Column}
-                    data={list}
+                    data={list ? list : []}
                     rows={true}
                     paginater={true}
                     filter={true}

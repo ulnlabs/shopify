@@ -180,11 +180,14 @@ export const PUT = async (req: Request) => {
                 console.log(data);
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
-                        const { total, taxValue } = findTotal(item.price, item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        const { total, taxValue, discountValue } = findTotal(item.price, item.returned_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
                             ...item,
                             taxAmount: taxValue,
-                            subtotal: total
+                            subtotal: total,
+                            quantity: item.returned_quantity,
+                            discount: Math.floor(discountValue * 100) / 100,
+                            discountPer: item.discount
                         })
                     })
                     return ({
@@ -212,13 +215,25 @@ export const PUT = async (req: Request) => {
                 }).sort({ 'createdAt': -1 }).lean();
 
                 const modified = data.map((sale: any) => {
+                    const itemList = sale.items.map((item: any) => {
+                        const { total, taxValue, discountValue } = findTotal(item.price, item.returned_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                        return ({
+                            ...item,
+                            taxAmount: taxValue,
+                            subtotal: total,
+                            quantity: item.returned_quantity,
+                            discount: Math.floor(discountValue * 100) / 100,
+                            discountPer: item.discount
+                        })
+                    })
                     return ({
                         ...sale,
                         date: format(sale.date, "dd-MM-yy"),
                         c_name: sale.c_name,
                         salesCode: sale.salesCode,
                         total: findOverall(sale),
-                        status: sale.status
+                        status: sale.status,
+                        items: itemList
                     })
                 })
                 console.log(modified);
@@ -331,7 +346,7 @@ export async function POST(req: any) {
             const getSales = await Sales.find({ salesCode: code })
             console.log(getSales);
             for (const { itemCode, returned_quantity } of items) {
-                const updated = await Item.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity }, $set: { status: "returned" } }, { session });
+                const updated = await Item.updateMany({ itemCode: itemCode }, { $inc: { quantity: +returned_quantity } }, { session });
                 console.log(updated);
                 console.log(returned_quantity);
                 const changeSales = await Sales.updateOne(
