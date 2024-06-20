@@ -1,10 +1,9 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import DataTable from "../datatableforsettings/DataTable"
 import { RiEdit2Fill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
 import { BiCaretDown } from "react-icons/bi";
-//for hint how do make your custom columns see line 137 or below to comment
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,38 +13,123 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import { AnimatePresence } from 'framer-motion';
 import AddPayment from '../popup/AddPayment';
+import axios from 'axios';
+import Edit_Payment from "@/app/components/settings/popup/EDit_Payment"
 
 
+interface PaymentType {
+  paymentId: String,
+  paymentName: String,
+  paymentStatus: boolean
+
+}
 function PaymentType() {
+  const [payment, setpayment] = useState<PaymentType[]>([]);
+  const [popup, setpopup] = useState<boolean | null>(false)
+  const [edit, setEdit] = useState<boolean | null>(false)
+  const [selectedPayment, setSelectedPayment] = useState<PaymentType | null>(null);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/paymentList");
+        if (response.data) {
+          setpayment(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  const updatepaymentStatus = async (paymentId: string, status: boolean) => {
+
+    try {
+      const response = await axios.put('/api/paymentList', {
+        paymentId,
+        paymentStatus: status
+      });
+
+      if (response.status === 200) {
+        setpayment(prevpayment =>
+          prevpayment.map(payment =>
+            payment.paymentId === paymentId ? { ...payment, paymentStatus: status } : payment
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+    }
+  };
+
+
+  const handleDelete = async (paymentId: String) => {
+    try {
+      const response = await axios.delete('/api/paymentList', {
+        data: { paymentId }
+      });
+
+      if (response.status === 200) {
+        setpayment(prevpayment => prevpayment.filter(payment => payment.paymentId !== paymentId));
+      }
+    } catch (error) {
+      console.error("Error deleting payment:", error);
+    }
+  };
+
+
+  const handleEdit = async (paymentId: string, paymentName: string, paymentStatus: boolean) => {
+    const paymentData = { paymentId, paymentName, paymentStatus };
+    setSelectedPayment(paymentData);
+    setEdit(true);
+  }
+  const updatepayment = async (paymentId: String, updatedData: any) => {
+    try {
+      console.log(paymentId, updatedData);
+
+      const response = await axios.put('/api/paymentList', {
+        paymentId,
+        ...updatedData
+      });
+
+      if (response.status === 200) {
+        setpayment(prevpayment =>
+          prevpayment.map(payment =>
+            payment.paymentId === paymentId ? { ...payment, ...updatedData } : payment
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating payment:", error);
+    }
+  };
 
   const Payment_type: columnHeader_dataTable = {
-    accessorKey: "payment_type",
+    accessorKey: "paymentName",
     header: "Payment Type Name",
   };
 
   const status = {
-    accessorKey: "status",
+    accessorKey: "paymentStatus",
     cell: ({ row }: any) => {
-      const [active, Deactive] = useState(true);
-      var status: string;
-      if (active == true) {
-        status = "active";
-      }
-      else {
-        status = "Inactive";
-      }
       return (
-        <button className={`  ${active ? "bg-green-500 p-2 rounded-md text-white" : "bg-red-500 p-2 rounded-md text-white"}`} onClick={() => Deactive(!active)} >
-          {status}
+        <button
+          className={` ${row.original.paymentStatus ? "bg-green-500 p-2 rounded-md text-white" : "bg-red-500 p-2 rounded-md text-white"}`}
+          onClick={() => updatepaymentStatus(row.original.paymentId, !row.original.paymentStatus)}
+        >
+          {row.original.paymentStatus ? "Active" : "Inactive"}
         </button>
       )
     }
-  }
+  };
   const C_ACTION = {
     accessorKey: "action",
     cell: ({ row }: any) => {
@@ -59,7 +143,8 @@ function PaymentType() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem className="flex justify-between" onClick={() => {
-              handleDelete(row.original);
+              setEdit(true);
+              handleEdit(row.original.paymentId, row.original.paymentName, row.original.paymentStatus)
             }}>
               <h1>
 
@@ -73,7 +158,7 @@ function PaymentType() {
 
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex justify-between" onClick={() => {
-              handleDelete(row.original);
+              handleDelete(row.original.paymentId);
             }}>
               <h1>
 
@@ -89,51 +174,25 @@ function PaymentType() {
       );
     },
   };
-
-  const [payment, setPayment] = useState([{
-    id: 1,
-    payment_type: "Cash",
-    status: "active"
-  },
-  {
-    id: 2,
-    payment_type: "Card",
-    status: "active"
-  },
-  {
-    id: 3,
-    payment_type: "Paytm",
-    status: "active"
-  },
-
-  ]
-  );
-  function handleDelete(row: any): void {
-    setPayment(payment.filter((item) => item.id !== row.id))
-
-
+  const user = (Newpayment: PaymentType) => {
+    setpayment([...payment, Newpayment as PaymentType]);
+    console.log("payment data :", payment);
   }
 
-  const [Popup, setPopup] = useState(false);
 
-  const newPayment = (newType: any) => {
-    newType.id = payment.length + 1;
-    setPayment([...payment, newType])
-
-  }
 
   return (
     <div className="">
       <div className=" h-screen ">
         <AnimatePresence mode='wait'>
-          {Popup && <AddPayment setPopup={setPopup} data={newPayment} />}
+          {popup && <AddPayment close={setpopup} dataset={user} /> || edit && <Edit_Payment close={setEdit} selectedpayment={selectedPayment} updatedData={updatepayment} />}
         </AnimatePresence>
 
         <div className="mx-auto w-[98%] p-5 mt-3">
           <div className=" border p-2  rounded-md">
             <div className="flex justify-between items-center p-3">
               <h1 className='text-md tracking-[.2rem] font-extralight'>Payment Type List :-</h1>
-              <button type='button' onClick={() => { setPopup(true) }} className='px-1 font-normal rounded-md  text-black border  hover:bg-white text-sm' > <span className='text-lg'>+</span>New Payment</button>
+              <button type='button' onClick={() => { setpopup(true) }} className='px-1 font-normal rounded-md  text-black border  hover:bg-white text-sm' > <span className='text-lg'>+</span>New Payment</button>
             </div>
             <div className=" ">
               <DataTable columns={[Payment_type,

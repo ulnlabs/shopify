@@ -1,32 +1,38 @@
 "use client"
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 interface props {
     close: Dispatch<SetStateAction<boolean | null>>
 
 }
 
-export default function AddTax({ setPopup,data }: any) {
-    const [addData, setdata] = useState({ id: null, payment_type: "",status:true })
-    const handleTaxNameChange = (event: any) => {
+export default function Addpayment({ close, dataset }: any) {
+    const [addData, setdata] = useState({ paymentId: "", paymentName: "", paymentStatus: true })
+    const handlepaymentNameChange = (event: any) => {
 
         const { name, value } = event.target
         setdata({ ...addData, [name]: value })
         console.log(addData);
-        
+
 
     }
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        data(addData)
-        setPopup(false)
-       
-        
-        
-
-    }
+        try {
+            const response = await axios.post("/api/paymentList", { data: addData });
+            if (response.status === 201 || response.status === 200) {
+                dataset(response.data.PaymentListData);
+                close(false);
+            } else {
+                console.error('Failed to save the payment data');
+            }
+        } catch (error) {
+            console.error('Error saving the payment data:', error);
+        }
+    };
     const animi = (variants: any) => {
         return {
             initial: "initial",
@@ -79,14 +85,14 @@ export default function AddTax({ setPopup,data }: any) {
                     <h1 className="text-lg font-bold mb-4">Add Payment</h1>
                     <form onSubmit={handleSubmit} className="w-[400px] h-fit flex flex-col gap-3">
                         <div>
-                            <label htmlFor="payment_type" className="block text-sm font-medium text-gray-700">Payment Name</label>
-                            <input type="text" id="payment_type" name="payment_type" onChange={handleTaxNameChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                            <label htmlFor="paymentName" className="block text-sm font-medium text-gray-700">Payment Name</label>
+                            <input type="text" id="paymentName" name="paymentName" onChange={handlepaymentNameChange} className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                         </div>
-                       
+
                         <div className='w-full flex gap-3'>
                             <button type="submit" className="px-4 py-2 bg-[--primary] text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Submit</button>
                             <button
-                                onClick={() =>{setPopup(false)} } type='button'
+                                onClick={() => { close(false) }} type='button'
                                 className="px-4 py-2 bg-[--primary] text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Cancel</button>
                         </div>
                     </form>
