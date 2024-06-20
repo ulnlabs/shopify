@@ -23,7 +23,7 @@ export default function AddTax({ close, dataset }: Props) {
             if (response.status === 201 || response.status === 200) { 
                 // Check for successful response status
                 dataset(response.data.taxListData); // Update parent component state
-                close(false); // Close the form
+                close(false); 
             } else {
                 console.error('Failed to save the tax data');
             }
