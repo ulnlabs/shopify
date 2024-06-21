@@ -12,12 +12,18 @@ export async function POST(req: Request, res: Response) {
         password,
     } = await req.json();
     await connectDB()
-    if (username && profile && phoneno && email && role && password) {
-        const hashedpassword = await bcrypt.hash(password, 10);
-        const useradd = await User.create({ username, profile, phoneno, email, role, password: hashedpassword })
-        if (useradd) {
-            return NextResponse.json({ msg: 'User added Successfully' }, { status: 200 });
+    try {
+        if (username && profile && phoneno && email && role && password) {
+            const hashedpassword = await bcrypt.hash(password, 10);
+            const useradd = await User.create({ username, profile, phoneno, email, role , status:'active', password: hashedpassword })
+            if (useradd) {
+                return NextResponse.json({ msg: 'User added Successfully' }, { status: 200 });
+            }
+            return NextResponse.json({ msg: 'error in server-side' }, { status: 400 });
         }
+    } catch (err) {
+        console.log(err);
+        
         return NextResponse.json({ msg: 'error in server-side' }, { status: 400 });
     }
     return NextResponse.json({ msg: 'error in server-side' }, { status: 400 })

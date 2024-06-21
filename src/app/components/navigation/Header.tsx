@@ -26,14 +26,13 @@ const profileVarient = {
   }
 }
 
-
 function Header() {
   const { data: session } = useSession()
   const [toggleprofile, setToggleProfile] = useState<Boolean>(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const profileCardRef = useRef<HTMLDivElement>(null);
   const { toggleNav, setToggleNav } = useContext(UserContext)
-  
+
   useEffect(() => {
     try {
       let handler = (e: any) => {
@@ -48,26 +47,25 @@ function Header() {
   })
   const [profileimg, setProfileimg] = useState('')
   useEffect(() => {
-    const handler = async () => {
-      const profile = localStorage.getItem('profile')
-      if (profile) {
+    const localProfile = localStorage.getItem('profile')
+
+    const profileUpdater = async () => {
+      await fetch('/api/user/profile', {
+        method: 'PUT',
+        body: JSON.stringify({ email: session?.user?.email })
+      }).then((data) => data.json()).then((data) =>{
+        const {profile} = data;
+        console.log(profile.data.toString('base64'));
         
-        return 
-      }
-      if(!profile && session?.user?.email){
-        const profilefetch = await fetch('/api/user/profile',{
-          method:'PUT',
-          body:JSON.stringify({email:session?.user?.email})
-        })
-        if (profilefetch.status == 200){
-          const profilepic = profilefetch.json();
-          console.log(profilepic);
-        }
-        return
-      }
+        setProfileimg(`data:image/jpeg;base64,${profile.data.toString('base64')}`)
+      })
     }
-    handler()
-  }, [])
+    if (localProfile) {
+      setProfileimg(`data:image/jpeg;base64,${localProfile}`)
+    } else {
+      profileUpdater()
+    }
+  })
   return (
     <div className='w-full bg-white border-b flex items-center justify-between px-4 h-[60px]'>
       <div className=" flex items-center justify-center">
@@ -88,8 +86,8 @@ function Header() {
                     <div className="h-[50px] w-[50px] rounded-full border"></div>
                 }
                 <div className="flex flex-col items-end justify-center">
-                  <h1 className='w-fit text-gray-800'>{session?.user?.name}</h1>
-                  <p className='text-[12px] font-light text-gray-800'>{ }</p>
+                  <h1 className='w-fit text-gray-800'>{session?.user?.username}</h1>
+                  <p className='text-[12px] font-light text-gray-800'>{session?.user?.role}</p>
                   <button onClick={() => signOut({ callbackUrl: '/' })} className='border border-[--primary] rounded p-1 mt-1 text-sm text-[--primary] hover:text-white hover:bg-[--primary] transition-all duration-500 ease-In-Out'>SignOut</button>
                 </div>
               </motion.div>

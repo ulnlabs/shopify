@@ -38,12 +38,14 @@ export const authConfig: NextAuthOptions = {
     async jwt({ token, user }) {
       interface ExtendedUser {
         role?: string;
+        username?: string;
       }
-      const extendedUser = user as ExtendedUser;
+      const extendedUser = user as ExtendedUser;      
       if (extendedUser?.role) {
         return {
           ...token,
           role: extendedUser.role,
+          username:extendedUser.username,
         };
       }
       return token;
@@ -54,6 +56,7 @@ export const authConfig: NextAuthOptions = {
         user: {
           ...session.user,
           role: token.role,
+          username:token.username
         },
       };
     },
