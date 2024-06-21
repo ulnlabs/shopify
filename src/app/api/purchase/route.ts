@@ -4,54 +4,55 @@ import mongoose from "mongoose";
 import { Purchase } from "@/app/mongoose/models/purchases"
 import { format } from "date-fns";
 import Item from "@/app/mongoose/models/Items";
+const findOverall = (purchase: any) => {
+    const initial = 0;
+    const overall = purchase.items.map((item: any) => {
 
-export const PUT = async (req: Request) => {
-
-    const findOverall = (purchase: any) => {
-        const initial = 0;
-        const overall = purchase.items.map((item: any) => {
-
-            const { total } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
-            console.log(total);
-            console.log(item.returned_quantity);
-            return total
-        })
-
-        const temp = overall.reduce((prev: number, current: number) => prev + current, initial);
-        console.log(temp);
-
-        const taxValue = (purchase.taxType ? (purchase.taxType?.match(/\d+/g)!.map(Number)[0] * purchase.otherCharges / 100) : 0) + purchase.otherCharges
-        console.log(purchase.discount);
-
-        const discount = purchase.discountType && (purchase.discountType).toLowerCase() === "Percentage".toLowerCase() ? Math.floor(((purchase.discount / 100) * (temp + taxValue)) * 100) / 100 : purchase.discount;
-        console.log(discount);
-
-        console.log(taxValue);
-
-
-        return temp + taxValue - discount;
-    }
-
-
-    const findTotal = (price: number, quantity: number = 0, tax: string, discountType: string, discount: number, taxType: string,) => {
-        console.log(quantity);
-
-        console.log(price);
-
-
-        const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
-        console.log(taxValue);
-
-
-        const discountValue = discountType.toLowerCase() === "Fixed".toLowerCase() ? discount * quantity : discountType.toLowerCase() === "Percentage".toLowerCase() ? (discount * price / 100) * quantity : 0;
-        console.log(price, discountValue);
-
-
-        const total = taxType.toLowerCase() === "Inclusive".toLowerCase() ? price * quantity - discountValue : taxValue + price * quantity - discountValue
+        const { total } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
         console.log(total);
 
-        return { total, taxValue, discountValue };
-    }
+        return total
+    })
+
+    const temp = overall.reduce((prev: number, current: number) => prev + current, initial);
+    console.log(temp);
+
+    const taxValue = (purchase.taxType ? (purchase.taxType?.match(/\d+/g)!.map(Number)[0] * Number(purchase.otherCharges) / 100) : 0) + Number(purchase.otherCharges)
+    console.log(purchase.discount);
+
+    const discount = purchase.discountType && (purchase.discountType).toLowerCase() === "Percentage".toLowerCase() ? Math.floor(((purchase.discount / 100) * (temp + taxValue)) * 100) / 100 : purchase.discount;
+    console.log(discount);
+
+    console.log(taxValue);
+
+
+    return temp + taxValue - discount;
+}
+
+
+const findTotal = (price: number, quantity: number = 0, tax: string, discountType: string, discount: number, taxType: string,) => {
+    console.log(quantity);
+
+    console.log(price);
+
+
+    const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
+    console.log(taxValue);
+
+
+    const discountValue = discountType.toLowerCase() === "Fixed".toLowerCase() ? discount * quantity : discountType.toLowerCase() === "Percentage".toLowerCase() ? (discount * price / 100) * quantity : 0;
+    console.log(price, discountValue);
+
+
+    const total = taxType.toLowerCase() === "Inclusive".toLowerCase() ? price * quantity - discountValue : taxValue + price * quantity - discountValue
+    console.log(total);
+
+    return { total, taxValue, discountValue };
+}
+
+
+
+export const PUT = async (req: Request) => {
 
 
     try {
@@ -99,9 +100,6 @@ export const PUT = async (req: Request) => {
             endDate.setHours(endDate.getHours() + 5)
             endDate.setMinutes(endDate.getMinutes() + 30)
             console.log(endDate);
-
-
-
             if (fromDate.getDate() === endDate.getDate()) {
                 const data = await Purchase.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
@@ -184,7 +182,7 @@ export const PUT = async (req: Request) => {
                     })
                 })
                 console.log(modified);
-                return NextResponse.json(modified);
+                return NextResponse.json(modified, { status: 200 });
             }
         }
         else if (header === "getReturn") {
@@ -294,7 +292,6 @@ export async function POST(req: any) {
     await connectDB();
     const session = await mongoose.startSession();
     try {
-        await session.startTransaction();
         const temp = await Purchase.find().sort({ 'createdAt': -1 }).limit(1);
         const counter = temp[0]?.purchaseCode.match(/\d+/g)!.map(Number)[0];
         const codeValue = counter > 0 ? String(counter + 1) : "1"
@@ -326,6 +323,7 @@ export async function POST(req: any) {
         });
         console.log(itemData[0].Purchase_quantity);
         if (header === "purchase") {
+            session.startTransaction();
             const newPurchase = await Purchase.create([{
                 s_id,
                 s_name,
@@ -348,8 +346,52 @@ export async function POST(req: any) {
                 console.log(updated);
             }
             console.log('Purchase created successfully:', newPurchase);
+            console.log(purchaseCode);
+            await session.commitTransaction();
+            await session.endSession();
+
+            const data = [{
+                s_id,
+                s_name,
+                date,
+                purchaseCode,
+                taxType,
+                discountType,
+                discount,
+                otherCharges,
+                items: itemData,
+                paymentType,
+                status,
+                note
+            }]
+            console.log(data);
+            const modified = data.map((purchase: any) => {
+                const itemList = purchase.items.map((item: any) => {
+                    const { total, taxValue, discountValue } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                    console.log(item.discountPer);
+                    return ({
+                        ...item,
+                        taxAmount: Math.floor(taxValue * 100) / 100,
+                        subtotal: total,
+                        quantity: item.Purchase_quantity,
+                        discount: Math.floor(discountValue * 100) / 100,
+                        discountPer: item.discount
+                    })
+                })
+                return ({
+                    ...purchase,
+                    date: format(purchase.date, "dd-MM-yy"),
+                    c_name: purchase.c_name,
+                    purchaseCode: purchase.purchaseCode,
+                    total: findOverall(purchase),
+                    items: itemList
+                })
+            })
+
+            return NextResponse.json(modified[0], { status: 200 });
         }
         else if (header === "return") {
+            session.startTransaction();
             const { purchaseCode: code } = data
             console.log(code);
             const getPurchase = await Purchase.find({ purchaseCode: code })
@@ -359,7 +401,7 @@ export async function POST(req: any) {
                 console.log(updated);
                 console.log(returned_quantity);
                 const changePurchase = await Purchase.updateOne(
-                    {   
+                    {
                         'items.itemCode': { $regex: new RegExp(itemCode, 'i') },
                         purchaseCode: code
                     }, // Using case-insensitive regex
@@ -367,28 +409,14 @@ export async function POST(req: any) {
                 );
                 console.log(changePurchase);
 
-                /*  items.forEach(({ itemCode: tempCode, returned_quantity: tempQuantity, Purchase_quantity }: any) => {
- 
-                     if (tempCode === itemCode) {
-                         return {
-                             ...items,
-                             Purchase_quantity: Purchase_quantity - tempQuantity,
-                             returned_quantity: returned_quantity + tempQuantity
-                         }
-                     }
-                     else {
-                         return items;
-                     }
- 
-                 }) */
                 console.log(itemData);
             }
             const change = await Purchase.updateOne({ purchaseCode: code }, { $set: { status: status } });
             console.log(change);
+            await session.commitTransaction();
+            return NextResponse.json({ res: "data success" }, { status: 200 });
         }
-        await session.commitTransaction();
-        await session.endSession();
-        return NextResponse.json({ res: "data success" });
+
     } catch (error) {
         console.error('Error creating purchases:', error);
         if (session) {

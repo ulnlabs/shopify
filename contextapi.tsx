@@ -23,7 +23,7 @@ const ContextContent = ({ children }: children) => {
   const [selectedRow, setSelectedRow] = useState<string[]>([]);
 
 
-  const [salesStocks, setSalesStocks] = useState<any>([]);
+  const [stocks, setStocks] = useState<any>([]);
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -32,37 +32,23 @@ const ContextContent = ({ children }: children) => {
         {
           data: { header: "getItems" }
         },);
-      setSalesStocks(response.data)
+      setStocks(response.data)
       console.log(response.data);
     }
     fetchItem();
   }, []);
-
-  const getItems = async () => {
-    const res = await axios.put("/api/purchase", {
-      data: { header: "getItems" }
-    },);
-    const data = await res.data;
-    console.log(data);
-    return data;
-  }
-  const fetchItem = async () => {
-    console.log("entered");
-
-    const response = await axios.put("/api/items", {
-      data: {
-        header: "getItems"
-      }
-    })
-    console.log(response.data);
-    return response.data;
-
-  }
-
-  const { data } = useSWR("api/items", fetchItem);
-  console.log(data);
-
-  const { data: purchaseStocks, error: itemError } = useSWR("/api/purchase", getItems)
+  /* 
+    const getItems = async () => {
+      const res = await axios.put("/api/purchase", {
+        data: { header: "getItems" }
+      },);
+      const data = await res.data;
+      console.log(data);
+      return data;
+    }
+  
+  
+    const { data: purchaseStocks, error: itemError } = useSWR("/api/purchase", getItems) */
 
 
 
@@ -90,7 +76,7 @@ const ContextContent = ({ children }: children) => {
   return (
     <>
       <ContextData.Provider value={{
-        selectedRow, customerDetails, setCustomerDetails, supplierDetails, setSupplierDetails, editItem, setEditItem, setSelectedRow, purchaseStocks, purhcaseRecord, salesStocks, setPurchaseRecord, customerData, setCustomerData, supplierData, setSupplierData, salesRecord, setSalesRecord
+        selectedRow, customerDetails, setCustomerDetails, supplierDetails, setSupplierDetails, editItem, setEditItem, setSelectedRow, purhcaseRecord, stocks, setPurchaseRecord, customerData, setCustomerData, supplierData, setSupplierData, salesRecord, setSalesRecord
       }}>
         {children}
       </ContextData.Provider>

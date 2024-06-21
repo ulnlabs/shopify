@@ -7,13 +7,14 @@ import { FormState } from "../../../../../global";
 import axios from "axios";
 import { useAnimation } from "framer-motion";
 import { ContextData } from "../../../../../contextapi";
-
+import { useRouter } from "next/navigation";
 const page = () => {
 
 
-  const { salesStocks: item, customerDetails } = useContext(ContextData)
+  const { stocks: item, customerDetails, setSalesRecord } = useContext(ContextData)
 
   console.log(customerDetails);
+  const router = useRouter();
 
 
 
@@ -67,7 +68,7 @@ const page = () => {
 
 
       try {
-        const { data } = await axios.post("/api/sales", {
+        const { data, status } = await axios.post("/api/sales", {
           header: "sales",
           data: {
             sales: salesData,
@@ -75,6 +76,11 @@ const page = () => {
             status: "Sold"
           }
         })
+        console.log("dataItem", data);
+        if (status === 200) {
+          setSalesRecord(data);
+          router.push("/sales/invoice")
+        }
       }
       catch (err) {
         console.log(err);

@@ -5,12 +5,13 @@ import { useContext, useEffect, useState } from "react";
 import { FormState } from "../../../../../global";
 import { ContextData } from "../../../../../contextapi";
 import axios from "axios";
-
+import { useRouter } from "next/navigation";
 
 
 const page = () => {
+  const { push } = useRouter();
 
-  const { purhcaseRecord } = useContext(ContextData);
+  const { purhcaseRecord, supplierDetails } = useContext(ContextData);
 
   const { s_name, items, paymentType, otherCharges, discount, discountType, taxType, note, s_id, purchaseCode } = purhcaseRecord;
 
@@ -54,33 +55,23 @@ const page = () => {
 
     })
     console.log("res", data);
+    if (data.status === 200) {
+      alert("Purchase Return Successfull");
+      if (status === "Return Raised")
+        push("/purchases/purchase-list")
+      else if (status === "Returned")
+        push("/purchases/return-list")
+    }
 
     console.log(purchaseReturnData);
   }
-  const customerName = [
-    {
-      value: "Fire10",
-      label: "Fire10",
-    },
-    {
-      value: "deepath",
-      label: "Deepath",
-    },
-    {
-      value: "deepak",
-      label: "Deepak",
-    },
-    {
-      value: "999",
-      label: "Dhilip",
-    },
-  ]
+
 
   const [cus, setCus] = useState<any>("");
 
   useEffect(() => {
-    setCus(customerName.filter((item: any) => {
-      return purchaseReturnData.customerName === "" ? true : item.value.toLowerCase().includes(purchaseReturnData.customerName.toLowerCase())
+    setCus(supplierDetails.filter((item: any) => {
+      return (item.name.toLowerCase().includes(purchaseReturnData.customerName.toLowerCase()) || item.id.toString().includes(purchaseReturnData.customerName) || item.mobile.toLowerCase().includes(purchaseReturnData.customerName.toLowerCase()))
     })
     )
 

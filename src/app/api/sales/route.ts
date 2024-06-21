@@ -6,43 +6,43 @@ import { format } from "date-fns";
 import Item from "@/app/mongoose/models/Items";
 
 
+const findOverall = (sale: any) => {
+    const initial = 0;
+    const overall = sale.items.map((item: any) => {
+        const { total } = findTotal(item.price, sale.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+        console.log(total);
+        console.log(item.returned_quantity);
+        return total
+    })
+    const temp = overall.reduce((prev: number, current: number) => prev + current, initial);
+    console.log(temp);
+    const taxValue = (sale.taxType ? (sale.taxType?.match(/\d+/g)!.map(Number)[0] * Number(sale.otherCharges) / 100) : 0) + Number(sale.otherCharges)
+    const discount = sale.discountType && (sale.discountType).toLowerCase() === "Percentage".toLowerCase() ? Math.floor(((sale.discount / 100) * (temp + taxValue)) * 10) / 10 : sale.discount;
+    return temp + taxValue - discount;
+}
 
+const findTotal = (price: number, quantity: number = 0, tax: string, discountType: string, discount: number, taxType: string,) => {
+    console.log(quantity);
+
+    console.log(price);
+
+
+    const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
+    console.log(taxValue);
+
+
+    const discountValue = discountType.toLowerCase() === "Fixed".toLowerCase() ? discount * quantity : discountType.toLowerCase() === "Percentage".toLowerCase() ? (discount * price / 100) * quantity : 0;
+    console.log(discountValue);
+
+    const total = taxType.toLowerCase() === "Inclusive".toLowerCase() ? price * quantity - discountValue : taxValue + price * quantity - discountValue
+    console.log(total);
+
+    return { total, taxValue, discountValue };
+}
 
 export const PUT = async (req: Request) => {
 
-    const findOverall = (sale: any) => {
-        const initial = 0;
-        const overall = sale.items.map((item: any) => {
-            const { total } = findTotal(item.price, sale.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
-            console.log(total);
-            console.log(item.returned_quantity);
-            return total
-        })
-        const temp = overall.reduce((prev: number, current: number) => prev + current, initial);
-        console.log(temp);
-        const taxValue = (sale.taxType ? (sale.taxType?.match(/\d+/g)!.map(Number)[0] * sale.otherCharges / 100) : 0) + sale.otherCharges
-        const discount = sale.discountType && (sale.discountType).toLowerCase() === "Percentage".toLowerCase() ? Math.floor(((sale.discount / 100) * (temp + taxValue)) * 10) / 10 : sale.discount;
-        return temp + taxValue - discount;
-    }
 
-    const findTotal = (price: number, quantity: number = 0, tax: string, discountType: string, discount: number, taxType: string,) => {
-        console.log(quantity);
-
-        console.log(price);
-
-
-        const taxValue = (tax.match(/\d+/g)!.map(Number)[0] * price / 100) * quantity;
-        console.log(taxValue);
-
-
-        const discountValue = discountType.toLowerCase() === "Fixed".toLowerCase() ? discount * quantity : discountType.toLowerCase() === "Percentage".toLowerCase() ? (discount * price / 100) * quantity : 0;
-        console.log(discountValue);
-
-        const total = taxType.toLowerCase() === "Inclusive".toLowerCase() ? price * quantity - discountValue : taxValue + price * quantity - discountValue
-        console.log(total);
-
-        return { total, taxValue, discountValue };
-    }
     try {
         await connectDB();
     }
@@ -165,6 +165,8 @@ export const PUT = async (req: Request) => {
             }
         }
         else if (header === "getReturn") {
+            console.log("done");
+
             const { from, end } = data.data
             const fromDate = new Date(from);
             fromDate.setHours(fromDate.getHours() + 5)
@@ -338,6 +340,50 @@ export async function POST(req: any) {
                 console.log(updated);
             }
             console.log('Sales created successfully:', newSales);
+            await session.commitTransaction();
+            await session.endSession();
+
+            const data = [{
+                c_id,
+                c_name,
+                date,
+                salesCode,
+                taxType,
+                discountType,
+                discount,
+                otherCharges,
+                items,
+                paymentType,
+                status,
+                note
+            }]
+            console.log(data);
+            const modified = data.map((sales: any) => {
+                const itemList = sales.items.map((item: any) => {
+                    const { total, taxValue, discountValue } = findTotal(item.price, sales.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
+                    console.log(item.discountPer);
+                    return ({
+                        ...item,
+                        taxAmount: Math.floor(taxValue * 100) / 100,
+                        subtotal: total,
+                        quantity: item.sold_quantity,
+                        discount: Math.floor(discountValue * 100) / 100,
+                        discountPer: item.discount
+                    })
+                })
+                return ({
+                    ...sales,
+                    date: format(sales.date, "dd-MM-yy"),
+                    c_name: sales.c_name,
+                    salesCode: sales.salesCode,
+                    total: findOverall(sales),
+                    items: itemList
+                })
+            })
+            console.log(modified[0].items);
+
+            return NextResponse.json(modified[0], { status: 200 });
+
         }
         else if (header === "return") {
             const { salesCode: code } = data
@@ -376,10 +422,10 @@ export async function POST(req: any) {
             }
             const change = await Sales.updateOne({ salesCode: code }, { $set: { status: status } });
             console.log(change);
+            await session.commitTransaction();
+            await session.endSession();
+            return NextResponse.json({ res: "data success" });
         }
-        await session.commitTransaction();
-        await session.endSession();
-        return NextResponse.json({ res: "data success" });
     } catch (error) {
         console.error('Error creating sales:', error);
         if (session) {

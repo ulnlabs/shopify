@@ -142,6 +142,7 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn,
                                         salesCode: row.original.salesCode
                                     }
                                 })
+                                mutate();
                                 console.log(remove);
 
                             }}
@@ -276,22 +277,22 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn,
             <section className="grid gap-5 ">
                 <div className="grid grid-cols-12 grid-rows-3 gap-8 md:gap-0 my-5">
                     <div className="bg-primary-gray px-2 pt-1 grid rounded-sm  gap-3 row-span-4 col-start-1 col-span-full md:col-span-5  outline outline-offset-4 outline-1 outline-primary-gray  ">
-                        <h2 className="col-start-1 col-span-2 row-start-1">Today's Invoice</h2>
-                        <p className="col-start-1 col-span-3 text-2xl">{invoice}</p>
+                        <h2 className="col-start-1 p-2 col-span-2 row-start-1">Today's Invoice</h2>
+                        <p className="col-start-1 col-span-3 px-2 text-2xl">{invoice}</p>
                         <span className="col-start-5 col-span-1  bg-white mx-auto p-3 row-start-2 rounded-sm shadow-sm">
                             <BsFillHandbagFill />
                         </span>
-                        <Link href={"dashboard"} className="row-start-3 mx-auto col-start-1 col-span-5 ">
+                        <Link href={"dashboard"} className="row-start-3 mx-auto p-2 col-start-1 col-span-5 ">
                             <span>More Detials  </span>
                         </Link>
                     </div>
                     <div className="bg-primary-gray px-2 py-1 grid gap-3 row-span-4 md:col-end-13 col-span-full md:col-span-5 rounded-sm  outline outline-offset-4 outline-1 outline-primary-gray  ">
-                        <h2 className="col-start-1 col-span-2 row-start-1">Today's Amount</h2>
-                        <p className="col-start-1 col-span-3 text-2xl">{total}</p>
+                        <h2 className="col-start-1 col-span-2 p-2 row-start-1">Today's Amount</h2>
+                        <p className="col-start-1 col-span-3 px-2 text-2xl">{total}</p>
                         <span className="col-start-5 col-span-1 bg-white mx-auto p-3 row-start-2 shadow-sm rounded-sm">
                             <RxReload />
                         </span>
-                        <Link href={"dashboard"} className="row-start-3 mx-auto col-start-1 col-span-5 ">
+                        <Link href={"dashboard"} className="row-start-3 p-2 mx-auto col-start-1 col-span-5 ">
                             <span>More Detials  </span>
                         </Link>
                     </div>

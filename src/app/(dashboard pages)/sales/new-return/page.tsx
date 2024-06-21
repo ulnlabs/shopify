@@ -4,7 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { ContextData } from "../../../../../contextapi";
-
+import { useRouter } from "next/navigation";
 
 
 interface FormState {
@@ -28,7 +28,8 @@ interface FormState {
 }
 
 const page = () => {
-  const { salesRecord } = useContext(ContextData);
+  const { salesRecord, customerDetails } = useContext(ContextData);
+  const { push } = useRouter();
   console.log("jkj", salesRecord);
   const { c_name, items, paymentType, otherCharges, discount, discountType, taxType, note, c_id, salesCode } = salesRecord;
   console.log(salesCode);
@@ -69,8 +70,14 @@ const page = () => {
         salesCode: salesCode,
         status: status
       }
-
     })
+    if (data.status === 200) {
+      alert("Sales Return Successfull");
+      if (status === "Return Raised")
+        push("/sales/sales-list")
+      else if (status === "Returned")
+        push("/sales/return-list")
+    }
     console.log("res", data);
 
     console.log(salesReturnData);
@@ -95,14 +102,19 @@ const page = () => {
   ]
 
   const [cus, setCus] = useState<any>("");
-
   useEffect(() => {
-    setCus(customerName.filter((item: any) => {
-      return salesReturnData.customerName === "" ? true : item.value.toLowerCase().includes(salesReturnData.customerName.toLowerCase())
-    })
-    )
 
+    customerDetails &&
+      setCus(customerDetails?.filter((item: any) => {
+        console.log(customerDetails);
+        console.log(item.name, item.id, item.mobile);
+
+
+        return (item.name.toLowerCase().includes(salesReturnData.customerName.toLowerCase()) || item.id.toString().includes(salesReturnData.customerName) || item.mobile.toLowerCase().includes(salesReturnData.customerName.toLowerCase()))
+      })
+      )
   }, [salesReturnData.customerName])
+  console.log(cus);
 
 
   const [inputItem, setInputItem] = useState<String>("");

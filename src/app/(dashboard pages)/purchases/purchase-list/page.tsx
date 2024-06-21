@@ -5,10 +5,20 @@ import React, { useEffect, useState } from 'react'
 import useSWR from 'swr'
 
 const page = () => {
+
+  const Customer = [
+    "Deepath",
+    "Hari",
+    "Deepath",
+    "Deepath",
+    "Deepath",
+  ]
+
+
   const [from, setFrom] = useState<Date>(new Date);
   const [end, setEnd] = useState<Date>(new Date);
-  const fetchPurchase = async () => {
 
+  const fetchPurchase = async () => {
     const response = await axios.put('/api/purchase', {
 
       data: {
@@ -18,20 +28,24 @@ const page = () => {
       }
 
     })
+    console.log(response.data);
     return response.data
+
   }
 
-  const { data: purchaseData, mutate } = useSWR("/api/purchase", fetchPurchase)
-
+  const { data, mutate } = useSWR("/api/purchase", fetchPurchase)
   useEffect(() => {
-    mutate()
-  }, [from, end])
+    mutate();
+  })
+  console.log(data);
+
+
+
 
   return (
     <div className='w-full px-10'>
       <h1>Purchase List</h1>
-      {/* {isLoading && <div>Loading...</div>} */}
-      <List list={purchaseData ? purchaseData : []} mutate={mutate} isReturn={false} path='new-purchase' page="Purchase" setFrom={setFrom} setEnd={setEnd} from={from} end={end} />
+      <List list={data ? data : []} mutate={mutate} path='new-purchase' page="Purchase" isReturn={false} setFrom={setFrom} setEnd={setEnd} from={from} end={end} />
     </div>
   )
 }

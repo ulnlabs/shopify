@@ -141,7 +141,7 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
 
   console.log(taxValue);
 
-  const overallCharges = (taxValue / 100 * otherCharges) + otherCharges;
+  const overallCharges = (taxValue / 100 * Number(otherCharges)) + Number(otherCharges);
 
   console.log(overallCharges);
 
@@ -150,7 +150,9 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
   const totalTaxAmount = Math.floor(itemList?.reduce((total, Item: any) => total + Item.taxAmount, 0) * 100) / 100
   const totalDisAmount = Math.floor(itemList?.reduce((total, Item: any) => total + Item.discount, 0) * 100) / 100
   const totalAmount = Math.floor(itemList?.reduce((total, Item: any) => total + Item.subtotal, 0) * 100) / 100
-  const discountValue = Math.floor(discountType ? (discountType.toLowerCase() === "fixed" ? discountAll : discountAll * (totalAmount + overallCharges) / 100) : 0 * 100) / 100
+  console.log(discountAll);
+
+  const discountValue = Math.floor((discountType ? (discountType.toLowerCase() === "fixed" ? discountAll : discountAll * (totalAmount + overallCharges) / 100) : 0) * 100) / 100
   console.log(discountValue);
   const rTotalQuantity = itemList?.reduce((total, Item: any) => total + Item.returned_quantity, 0)
   const rTotalTaxAmount = Math.floor(itemList?.reduce((total, Item: any) => total + (Item.taxAmount / Item.quantity) * Item.returned_quantity, 0) * 100) / 100

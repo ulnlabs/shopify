@@ -2,13 +2,14 @@
 import NewPurchase from "@/app/components/sales-pur/addnew";
 import Link from "next/link";
 import { useState, useEffect, useContext } from "react";
-import useSWR from 'swr'
+import { useRouter } from "next/navigation";
 import { FormState } from "../../../../../global";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { ContextData } from "../../../../../contextapi";
 
 const page = () => {
+  const router = useRouter();
 
   const { data: session } = useSession();
   const [purchaseData, setPurchaseData] = useState<FormState>({
@@ -31,12 +32,11 @@ const page = () => {
     billUserName: "",
   })
 
-  const { purchaseStocks: Items, supplierDetails } = useContext(ContextData)
+  const { stocks: Items, supplierDetails, setPurchaseRecord } = useContext(ContextData)
   console.log(supplierDetails);
 
 
   const [inputItem, setInputItem] = useState<any>("");
-  console.log(Items);
 
   useEffect(() => {
     setProduct(Items ? Items.filter((item: any) => {
@@ -66,7 +66,7 @@ const page = () => {
     console.log(itemList);
     //sending data to purchase backend
     try {
-      const { data } = await axios.post("/api/purchase", {
+      const { data, status } = await axios.post("/api/purchase", {
         header: "purchase",
         data: {
           purchase: purchaseData,
@@ -74,8 +74,13 @@ const page = () => {
           status: "Purchased"
         }
       });
-      console.log(data);
-      alert("saved")
+      console.log(status);
+      if (status === 200) {
+        console.log(data);
+        setPurchaseRecord(data);
+        router.push("/purchases/invoice")
+      }
+
     }
     catch (err) {
       console.log(err);
