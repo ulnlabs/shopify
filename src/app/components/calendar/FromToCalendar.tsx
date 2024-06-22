@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/popover"
 
 export default function FromToCalendar({
-  className,
-}: React.HTMLAttributes<HTMLDivElement>) {
+  className,setdate
+}:any) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
