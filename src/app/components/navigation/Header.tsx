@@ -46,26 +46,6 @@ function Header() {
     }
   })
   const [profileimg, setProfileimg] = useState('')
-  useEffect(() => {
-    const localProfile = localStorage.getItem('profile')
-
-    const profileUpdater = async () => {
-      await fetch('/api/user/profile', {
-        method: 'PUT',
-        body: JSON.stringify({ email: session?.user?.email })
-      }).then((data) => data.json()).then((data) =>{
-        const {profile} = data;
-        console.log(profile.data.toString('base64'));
-        
-        setProfileimg(`data:image/jpeg;base64,${profile.data.toString('base64')}`)
-      })
-    }
-    if (localProfile) {
-      setProfileimg(`data:image/jpeg;base64,${localProfile}`)
-    } else {
-      profileUpdater()
-    }
-  })
   return (
     <div className='w-full bg-white border-b flex items-center justify-between px-4 h-[60px]'>
       <div className=" flex items-center justify-center">
@@ -78,16 +58,11 @@ function Header() {
           {
             toggleprofile && (
               <motion.div ref={profileCardRef} initial={profileVarient.closed} animate={profileVarient.open} exit={profileVarient.closed} className="absolute min-w-[200px] gap-4 px-2 py-2 border rounded-md flex justify-between items-center inset-y-full h-fit z-[10]  bg-white mt-[14px]">
-                <div className="h-4 w-4 absolute -top-2 right-2 rotate-45 border-t border-l rounded bg-white"></div>
-                {
-                  profileimg ? (
-                    <Image src={profileimg} height={50} width={50} alt='' className='rounded-full border-2 border-[--primary]' />
-                  ) :
-                    <div className="h-[50px] w-[50px] rounded-full border"></div>
-                }
-                <div className="flex flex-col items-end justify-center">
-                  <h1 className='w-fit text-gray-800'>{session?.user?.username}</h1>
-                  <p className='text-[12px] font-light text-gray-800'>{session?.user?.role}</p>
+                <div className="flex flex items-center justify-between w-full">
+                  <div className="flex flex-col">
+                    <h1 className='w-fit text-gray-800'>{session?.user?.username}</h1>
+                    <p className='text-[12px] font-light text-gray-800'>{session?.user?.role}</p>
+                  </div>
                   <button onClick={() => signOut({ callbackUrl: '/' })} className='border border-[--primary] rounded p-1 mt-1 text-sm text-[--primary] hover:text-white hover:bg-[--primary] transition-all duration-500 ease-In-Out'>SignOut</button>
                 </div>
               </motion.div>

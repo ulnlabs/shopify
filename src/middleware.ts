@@ -30,18 +30,18 @@ export async function middleware(req: NextRequest) {
         if (pathname == '/') {
             return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
         }
-    }
-    if (token?.role == 'admin') {
-        return NextResponse.next();
-
-    }
-    if (token?.role == 'worker') {
-        if (protectedPathsWorker.includes(pathname)) {
+        if (token?.role == 'admin') {
             return NextResponse.next();
+
         }
-        return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+        if (token?.role == 'worker') {
+            if (protectedPathsWorker.includes(pathname)) {
+                return NextResponse.next();
+            }
+            return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+        }
     }
-    if (!token?.role) {
+    if (!session && pathname != '/') {
         return NextResponse.redirect(new URL('/', req.nextUrl));
     }
     return NextResponse.next()
