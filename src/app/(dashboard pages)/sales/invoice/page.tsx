@@ -3,6 +3,7 @@
 import React, { useContext } from 'react'
 import Invoice from '@/app/components/sales-pur/invoice'
 import { ContextData } from '../../../../../contextapi';
+import DashboardHeader from '@/app/components/dashboard/DashboardHeader';
 
 function page() {
 
@@ -19,6 +20,7 @@ function page() {
 
   return (
     <div className='w-[100%] h-fit'>
+      <DashboardHeader title="Sales" subtitle={"Invoice"} />
       <Invoice date={date} total={total} status={status} isSales={true} discountType={discountType} customerName={c_name} taxType={taxType} paymentType={paymentType} note={note} itemList={itemList} invoiceId={invoiceId} discountAll={discountAll} otherCharges={otherCharges} />
     </div>
   )

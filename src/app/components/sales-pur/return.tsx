@@ -18,6 +18,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { columnHeader_dataTable } from "../../../../global";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { toast } from "@/components/ui/use-toast";
 
 
 const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList, searchPlaceholder, products }: any) => {
@@ -82,6 +83,12 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                         }
                         const upQuantity = itemList.map((item: any) => item.itemName === row.original.itemName ? uplist : item)
                         setItemList(upQuantity)
+                    }
+                    else {
+                        toast({
+                            title: "New PopUp !",
+                            description: "Reached Maximum Stock limit",
+                        });
                     }
                 }} >
                     <AiOutlinePlus />
@@ -274,30 +281,50 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                     const updatedList = itemList.map((item: any) => item.itemName === value.itemName ? updatedItem : item);
                     setItemList(updatedList);
                 }
+                else {
+                    toast({
+                        title: "New PopUp !",
+                        description: "Reached Maximum Stock limit",
+                    });
+                }
                 setInputItem("");
             }
         }
-    }
 
+    }
     const [taxex, setTaxex] = useState<any>([]);
+    const [paymentData, setPaymentData] = useState<any>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             const { data: tax } = await axios.put("/api/tax")
             console.log(tax[0].value);
+            const { data: payment } = await axios.get("/api/paymentList");
+            console.log("payment", payment.data);
+
+            const modified = payment.data.map((item: any) => {
+                return {
+                    ...payment.data,
+                    value: item.paymentName
+                }
+            })
+
+            console.log(modified[0].value);
+
 
             setTaxex(tax)
+            setPaymentData(modified);
 
         }
         fetchData();
     }, [])
     const discountType = [
         {
-            label: "Fixed",
+            value: "Fixed",
 
         },
         {
-            label: "Percentage"
+            value: "Percentage"
         }
     ]
     const framerTemplate = (variants: any) => {
@@ -412,7 +439,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                 <div ref={itemRef} className="mt-5 relative">
                     <div className="flex items-center border py-1 bg-primary-gray px-2 rounded-lg">
                         <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
-                        <Input placeholder={searchPlaceholder}
+                        <Input placeholder="Search Items..."
                             value={inputItem}
                             onClick={() => {
                             }}
@@ -556,7 +583,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       </section> */}
             <section className="grid grid-cols-12 md:gap-10 gap-5">
                 <div className="mt-5 col-start-1 col-span-6 relative ">
-                    <Selections inputData={[{ laebl: "Cash" }, { label: "Credit Card" }, { label: "Debit Card" }, { label: "Paytm" }]} label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} />
+                    <Selections inputData={paymentData} label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} />
                 </div>
                 <div className="col-span-6 gird items-center border bg-primary-gray py-1 px-2 rounded-lg col-start-7 mt-5 ">
                     <Input type="text"

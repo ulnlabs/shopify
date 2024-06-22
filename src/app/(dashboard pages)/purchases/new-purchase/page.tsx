@@ -7,6 +7,7 @@ import { FormState } from "../../../../../global";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { ContextData } from "../../../../../contextapi";
+import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
 
 const page = () => {
   const router = useRouter();
@@ -90,7 +91,8 @@ const page = () => {
 
   return (
     <div className="w-full ">
-      <h1 className="px-10 pt-5 ">New Purchase</h1>
+      <DashboardHeader title="Purchasae" subtitle={"New"} />
+
 
       <NewPurchase
         isSales={false}  //false parameter used to behave as purchase

@@ -6,6 +6,7 @@ import { FormState } from "../../../../../global";
 import { ContextData } from "../../../../../contextapi";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
 
 
 const page = () => {
@@ -106,7 +107,7 @@ const page = () => {
 
   return (
     <div className="w-full ">
-      <h1 className="px-10 pt-5 ">New Purchase Return</h1>
+      <DashboardHeader title="Purchasae" subtitle={"New Return"} />
 
       <NewReturn
         isSales={false}

@@ -8,6 +8,7 @@ import axios from "axios";
 import { useAnimation } from "framer-motion";
 import { ContextData } from "../../../../../contextapi";
 import { useRouter } from "next/navigation";
+import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
 const page = () => {
 
 
@@ -116,7 +117,7 @@ const page = () => {
 
   return (
     <div className="w-full relative ">
-      <h1 className="px-10 pt-5 ">New Sales</h1>
+      <DashboardHeader title="Sales" subtitle={"new"} />
       <NewSales
         placeholder="Search Customer"
         data={salesData}
