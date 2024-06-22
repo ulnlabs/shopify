@@ -10,13 +10,12 @@ type Props = {}
 
 interface userDatatype {
     username?: string | '';
-    profile?: Buffer; // Make profile optional
     phoneno?: string;
     email?: string | '';
     role?: string;
     password?: string;
     conformpass?: string;
-    status?:'active'
+    status?: 'active'
 }
 
 
@@ -25,22 +24,9 @@ function page({ }: Props) {
     const [userdata, setUserDate] = useState<userDatatype | null>();
     const [profile, setProfile] = useState<string>();
     const router = useRouter()
-
-    const updateprofile = async (e: any) => {
-        const file = await e.target.files[0]
-        const url = URL.createObjectURL(file);
-        setProfile(url)
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const arrayBuffer = e.target?.result as ArrayBuffer;
-            const profileBuffer = Buffer.from(arrayBuffer);
-            setUserDate({ ...userdata, profile: profileBuffer });
-        }
-        await reader.readAsArrayBuffer(file);
-    }
     const eventHander = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!userdata?.username && !userdata?.email && !userdata?.password && !userdata?.phoneno && !userdata?.role && !userdata?.conformpass){
+        if (!userdata?.username && !userdata?.email && !userdata?.password && !userdata?.phoneno && !userdata?.role && !userdata?.conformpass) {
             toast.warn("please fill all fields");
             return
         }
@@ -80,16 +66,6 @@ function page({ }: Props) {
             <div className="w-full mt-4 border-t-2 border-[--primary] rounded-lg py-2 lg:px-2 shadow">
                 <form onSubmit={(e) => eventHander(e)} action="" className='w-full flex flex-col items-center justify-center' method="post">
                     <div className="flex gap-4 flex-col w-full items-center justify-center p-4">
-                        <div className="lg:col-start-2 col-start-1 row-start-1 flex flex-col items-center gap-4 justify-center">
-                            <input onChange={updateprofile} accept="image/*" type="file" name="" id="" />
-                            <div className="h-[200px] w-[200px] border rounded-full bg-white ">
-                                {
-                                    profile && (
-                                        <Image src={profile} height={10} width={10} alt="profile" className='h-full w-full rounded-full'/>
-                                    )
-                                }
-                            </div>
-                        </div>
                         <div className="grid lg:col-start-1 grid-cols-4 grid-rows-6 gap-4">
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="username">User Name <span className='text-red-400'>*</span></label>
                             <input onChange={(e) => setUserDate({ ...userdata, username: e.target.value })} id='username' type="text" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
@@ -99,7 +75,7 @@ function page({ }: Props) {
                             <input onChange={(e) => setUserDate({ ...userdata, email: e.target.value })} id='email' type="email" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="role">role<span className='text-red-400'>*</span></label>
                             <div className="col-start-3 lg:col-span-3 col-span-4">
-                                <Selector commonTitle='select role' changeState={setUserRole} currentstate={userRole} data={["admin","worker"]} />
+                                <Selector commonTitle='select role' changeState={setUserRole} currentstate={userRole} data={["admin", "worker"]} />
                             </div>
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="password">Password <span className='text-red-400'>*</span></label>
                             <input onChange={(e) => setUserDate({ ...userdata, password: e.target.value })} id='password' type="password" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />

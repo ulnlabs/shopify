@@ -1,9 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
 const UserSchema = new Schema({
-    profile:{  
-        type:Buffer
-    },
     username: {
         type: String,
         required: true,
