@@ -10,7 +10,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [user, setUser] = useState({
-    email: '',
+    username: '',
     password: ''
   })
   const router = useRouter()
@@ -19,7 +19,7 @@ export default function Home() {
     setError(null)
     setStatus('Signing in...')
     const logger = await signIn('credentials', {
-      email: user.email,
+      username: user.username,
       password: user.password,
       redirect: false
     })
@@ -63,16 +63,16 @@ export default function Home() {
             <input type="hidden" name="remember" value="true" />
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
-                <label htmlFor="email-address" className="sr-only">Email address</label>
+                <label htmlFor="email-address" className="sr-only">User Name</label>
                 <input
-                  onChange={(e) => setUser({ ...user, email: e.target.value })}
+                  onChange={(e) => setUser({ ...user, username: e.target.value })}
                   id="email-address"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="email"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-purple-600 focus:border-purple-600 focus:z-10 sm:text-sm"
-                  placeholder="Email address"
+                  placeholder="Username"
                 />
               </div>
               <div>

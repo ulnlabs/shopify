@@ -12,7 +12,7 @@ export type NavBarItem = {
     key?: string;
     children?: NavBarItem[];
 };
-export const navItems: NavBarItem[] = [
+export const adminItems: NavBarItem[] = [
     {
         label: "Dashboard",
         icon: <AiOutlineShop />,
@@ -231,12 +231,79 @@ export const navItems: NavBarItem[] = [
             {
                 label: 'Users List',
                 key: "/users/list"
-            }, {
-                label: 'role list',
-                key: "/users/roles"
             }
         ]
     }, {
+        label: 'Settings',
+        icon: <IoIosSettings />,
+        key: "/settings",
+        children: [
+            { label: 'Company Profile', key: "/settings/company" },
+            { label: 'Site Settings', key: "/settings/sitelist" },
+            { label: 'Tax List', key: "/settings/taxlist" },
+            { label: 'Units List', key: "/settings/unitlist" },
+            { label: 'Payment Types List', key: "/settings/payment-type" },
+            { label: 'Change Password', key: "/settings/change-password" },
+        ]
+    }
+]
+
+
+export const workerItems: NavBarItem[] = [
+    {
+        label: "Dashboard",
+        icon: <AiOutlineShop />,
+        key: "/dashboard",
+    },
+    {
+        label: "Sales",
+        icon: <FaDolly />,
+        key: "",
+        children: [
+            {
+                label: "POS",
+                key: "/sales/pos",
+            },
+            {
+                label: "New Sales",
+                key: "/sales/new-sales",
+            },
+            {
+                label: "Sales List",
+                key: "/sales/sales-list",
+            },
+            {
+                label: "New Sales Return",
+                key: "/sales/new-return",
+            },
+            {
+                label: "Sales Returns List",
+                key: "/sales/return-list",
+            },
+
+
+        ],
+    },
+    {
+        label: "Customers",
+        icon: <FaUsers />,
+        key: "/customers",
+        children: [
+            {
+                label: "New Customer",
+                key: "/customers/new",
+            },
+            {
+                label: "Customers List",
+                key: "/customers/list",
+            },
+            {
+                label: "Import Customers",
+                key: "/customers/import",
+            },
+        ]
+    },
+    {
         label: 'Settings',
         icon: <IoIosSettings />,
         key: "/settings",

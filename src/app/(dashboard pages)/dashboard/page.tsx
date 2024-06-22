@@ -1,5 +1,5 @@
 import DashboardHeader from '@/app/components/dashboard/DashboardHeader'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 function page() {
   return (

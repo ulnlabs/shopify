@@ -188,9 +188,13 @@ export default function page() {
             })
         }
         onChangeEvent();
-    }, [taxValue, taxType, formDetails.price, formDetails.profitmargin]);
+    }, [taxValue, taxType, formDetails.price]);
 
-
+    /*   useEffect(()=>{
+          
+      },[formDetails.saleprice,formDetails.profitmargin,formDetails.price])
+  
+   */
 
     return (
         <div className='w-full py-2 px-4'>
@@ -347,24 +351,6 @@ export default function page() {
                         </div>
                     </div>
                 </form>
-                {/* <div className='w-full overflow-x-scroll  p-4 mt-4 rounded-lg shadow-md'>
-                    <h1 className='text-2xl font-bold'>Opening Stock Adjustment Records</h1>
-                    <table className='w-full mt-4 table-auto'>
-                        <thead>
-                            <tr className='border-b border-gray-100 rounded-lg'>
-                                <th className='border px-4 py-2'>Date</th>
-                                <th className='border px-4 py-2'>Opening Stock</th>
-                                <th className='border px-4 py-2'>Adjustment</th>
-                                <th className='border px-4 py-2'>Current Stock</th>
-                                <th className='border px-4 py-2'>Note</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                          
-                        </tbody>
-                    </table>
-                </div> */}
-
             </div>
         </div>
     )

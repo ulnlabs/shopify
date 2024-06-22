@@ -48,17 +48,30 @@ export default function RootLayout
   }, []);
   return (
     <UserProvider>
-
-      <div className="min-h-screen max-w-screen flex justify-between">
-        <SideBar />
-        <div className="w-full max-h-screen overflow-hidden">
-          <Header />
-          <div className="w-full max-h-[calc(100vh_-_60px)] overflow-y-scroll flex flex-col items-center justify-start scrollbar-hide">
-            {children}
+      {
+        session?.user?.email ? (
+          <>
+            <div className="min-h-screen max-w-screen flex justify-between">
+              <SideBar />
+              <div className="w-full max-h-screen overflow-hidden">
+                <Header />
+                <div className="w-full max-h-[calc(100vh_-_60px)] overflow-y-scroll flex flex-col items-center justify-start scrollbar-hide">
+                  {children}
+                </div>
+              </div>
+            </div>
+            <Toaster />
+          </>
+        ) : (
+          <div className="flex items-center justify-center h-screen bg-gray-100">
+            <div className="flex space-x-2 animate-pulse">
+              <div className="w-8 h-8 bg-[--primary] rounded-full"></div>
+              <div className="w-8 h-8 bg-[--primary] rounded-full"></div>
+              <div className="w-8 h-8 bg-[--primary] rounded-full"></div>
+            </div>
           </div>
-        </div>
-      </div>
-      <Toaster />
+        )
+      }
     </UserProvider>
 
   );

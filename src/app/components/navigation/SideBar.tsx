@@ -1,9 +1,8 @@
 "use client";
 import React, { useContext, useState } from "react";
-import { AnimatePresence, motion, useCycle } from "framer-motion";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { NavBarItem, navItems, NavItemProps } from "./Type";
+import { adminItems, workerItems } from "./Type";
 import { cn } from "@/lib/utils";
 import {
   Accordion,
@@ -13,11 +12,13 @@ import {
 } from "@/components/ui/accordion";
 import Image from "next/image";
 import { UserContext } from "@/UserContext";
-import { FaX } from "react-icons/fa6";
 import { AiOutlineClose } from "react-icons/ai";
+import { useSession } from "next-auth/react";
+import { UrlObject } from "url";
 function SideBar() {
-  const router = useRouter();
+  const { data: session } = useSession();
   const pathname = usePathname();
+  const [navItems, setNavItems] = useState<any[]>(session?.user?.role == 'admin' ? adminItems : workerItems)
   const { toggleNav, setToggleNav } = useContext(UserContext)
   return (
     <div className={cn('w-[280px] md:relative absolute top-0 z-[10] left-0 min-h-screen bg-[--primary] rounded-r-lg md:translate-x-0 transition duration-500 ease-In-Out', toggleNav ? "translate-x-0" : "-translate-x-[100%]")}>
@@ -59,7 +60,7 @@ function SideBar() {
                     <AccordionContent className='py-0 px-0 pt-2'>
                       <div className="flex flex-col gap-2 items-center px-2 py-2 bg-white/[.1] rounded-lg">
                         {
-                          item.children?.map((child, index) => {
+                          item.children?.map((child: { key: string | UrlObject; label: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | React.PromiseLikeOfReactNode | null | undefined; }, index: React.Key | null | undefined) => {
                             return (
                               <Link key={index} className={cn('px-2 py-2 w-full bg-white/[.2] rounded-md text-white hover:bg-white/[.3]', child.key === pathname ? 'text-gray-800 font-bold bg-white/[.8] hover:bg-white/[.8]' : '')} href={child?.key ? child.key : ''}>
                                 {child.label}
