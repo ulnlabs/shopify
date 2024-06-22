@@ -22,7 +22,7 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { tableVeiw } from "../../../../../global";
 import {
   Table,
   TableBody,

@@ -1,43 +1,275 @@
 "use client"
-import { AiOutlineClockCircle } from "react-icons/ai";
+import { AiOutlineLine, AiOutlineMore } from "react-icons/ai";
 import { RxReload } from "react-icons/rx";
-import { AiOutlinePlus } from "react-icons/ai";
 import { BsFillHandbagFill } from "react-icons/bs";
-import React, { useState } from 'react'
+import React, { SetStateAction, useContext, useEffect, useState } from 'react'
 import Link from "next/link";
 import CalenSelect from "./calselect";
-import { s_LIST_Column,p_LIST_Column } from "../datatable/listColumn";
-import {format} from "date-fns"
-import  DataTable  from "../datatable/DataTable";
+import DataTable from "../datatable/DataTable";
+import { format, setISODay } from "date-fns"
+import { Dispatch } from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { columnHeader_dataTable } from "../../../../global";
 
+import { useRouter } from "next/navigation";
 
+import { Command, CommandList, CommandItem } from "@/components/ui/command";
+import { useReturn } from "./returnContext";
+import { ContextData } from "../../../../contextapi";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 
 interface propType {
-    Customer: string[],
     page: string,
     isSales?: boolean,
-    path : string,
+    path: string,
+    list: any[],
+    from: Date,
+    end: Date,
+    setFrom: Dispatch<SetStateAction<Date>>,
+    setEnd: Dispatch<SetStateAction<Date>>,
+    isReturn?: boolean,
+    mutate?: any,
 }
+const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn, mutate }: propType) => {
+    const [invoice, setInvoice] = useState<number>(0);
+    const [total, setTotal] = useState<number>(0);
+
+    useEffect(() => {
+
+        const todayList = list.filter((item: any) => item.date === format(new Date, "dd-MM-yy"))
+        setTotal(list.reduce((a, b) => a + b.total, 0));
+        setInvoice(todayList.length);
+        setTotal(todayList.reduce((a, b) => a + b.total, 0));
 
 
 
 
-const List = ({ Customer, page,isSales,path }: propType) => {
-    const [customerName, setCustomerName] = useState<string>("");
-    const [user, setUser] = useState<string>("");
-    const [from, setFrom] = useState<Date | undefined>(new Date);
-    const [end, setEnd] = useState<Date | undefined>(new Date);
+    }, [list])
 
-    const sample = [
-        {
-            date : format(new Date, "dd-MM-yy"),
-            name: "Deepath",
-            total:1000,
-            user:"Fire10",
-            action:"delete"
-        }
-    ]
+    console.log(invoice);
+    console.log(total);
+
+
+    const router = useRouter()
+    const { setSalesRecord, setPurchaseRecord } = useContext(ContextData);
+
+
+
+    const DATE: columnHeader_dataTable = {
+        accessorKey: "date",
+        header: "DATE",
+    };
+    const STATUS: columnHeader_dataTable = {
+        accessorKey: "status",
+        header: "STATUS"
+    }
+    const SALES_CODE: columnHeader_dataTable = {
+        accessorKey: "salesCode",
+        header: "Sales Code"
+    }
+    const c_NAME: columnHeader_dataTable = {
+        accessorKey: "c_name",
+        header: "CUSTOMER NAME",
+    };
+
+
+    const TOTAL: columnHeader_dataTable = {
+        accessorKey: "total",
+        header: "TOTAL",
+    };
+
+
+    const USER: columnHeader_dataTable = {
+        accessorKey: "user",
+        header: "CREATED BY",
+    };
+
+    const SALE_ACTION: any = {
+        accessorKey: "action",
+        header: "ACTION",
+        cell: (({ row }: any) => {
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <AiOutlineMore className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => {
+                                setSalesRecord(row.original);
+                                router.push("/sales/invoice")
+                            }}
+                        >
+                            View Sales
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+
+                        {isReturn === false && <div>
+
+                            <DropdownMenuItem
+                                className="cursor-pointer" onClick={() => {
+                                    setSalesRecord(row.original);
+                                    router.push("/sales/new-return")
+                                }
+                                }>
+                                Sales Return
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </div>
+                        }
+                        <DropdownMenuItem
+                            className="cursor-pointer">
+                            Print
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={async () => {
+                                console.log(row.original.salesCode);
+
+                                const remove = await axios.put("/api/sales", {
+                                    data: {
+                                        header: "deleteSales",
+                                        salesCode: row.original.salesCode
+                                    }
+                                })
+                                mutate();
+                                console.log(remove);
+
+                            }}
+                        >
+                            Delete
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu >
+            )
+        })
+    };
+
+    const PUR_ACTION: any = {
+        accessorKey: "action",
+        header: "ACTION",
+        cell: (({ row }: any) => {
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <AiOutlineMore className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => {
+                                setPurchaseRecord(row.original);
+                                router.push("/purchases/invoice")
+                            }}
+                        >
+                            View Purchase
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        {isReturn == false && <div>
+                            <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                                setPurchaseRecord(row.original);
+                                router.push(`/purchases/new-return`)
+                            }
+
+                            }>
+                                Purchase Return
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </div>}
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                        /* onClick={() => handleUpdate(row.original)} */>
+                            Print
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={async () => {
+                                console.log(row.original.purchaseCode);
+
+                                const remove = await axios.put("/api/purchase", {
+                                    data: {
+                                        header: "deletePurchase",
+                                        purchaseCode: row.original.purchaseCode
+                                    }
+                                })
+                                mutate();
+                                console.log(remove);
+
+                            }}
+                        >
+                            Delete
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
+        })
+
+
+    };
+
+    const s_NAME: columnHeader_dataTable = {
+
+        accessorKey: "s_name",
+        header: "SUPPLIER NAME",
+    }
+
+    const PURCHASE_CODE: columnHeader_dataTable = {
+        accessorKey: "purchaseCode",
+        header: "PURCHASE CODE"
+    }
+
+    const s_LIST_Column: ColumnDef<any>[] = [
+
+        DATE,
+        c_NAME,
+        SALES_CODE,
+        TOTAL,
+        STATUS,
+        USER,
+        SALE_ACTION,
+
+    ];
+
+    const p_LIST_Column: ColumnDef<any>[] = [
+
+
+        DATE,
+        s_NAME,
+        PURCHASE_CODE,
+        TOTAL,
+        STATUS,
+        USER,
+        PUR_ACTION,
+
+    ];
+
+
+
+    /*   const list = [
+          {
+              date : format(new Date, "dd-MM-yy"),
+              name: "Deepath",
+              total:1000,
+              user:"Fire10",
+              action:"delete"
+          }
+      ] */
 
 
     return (
@@ -45,23 +277,22 @@ const List = ({ Customer, page,isSales,path }: propType) => {
             <section className="grid gap-5 ">
                 <div className="grid grid-cols-12 grid-rows-3 gap-8 md:gap-0 my-5">
                     <div className="bg-primary-gray px-2 pt-1 grid rounded-sm  gap-3 row-span-4 col-start-1 col-span-full md:col-span-5  outline outline-offset-4 outline-1 outline-primary-gray  ">
-                        <h2 className="col-start-1 col-span-2 row-start-1">Total Invoice</h2>
-                        <p className="col-start-1 col-span-3 text-2xl">10000000</p>
+                        <h2 className="col-start-1 p-2 col-span-2 row-start-1">Today's Invoice</h2>
+                        <p className="col-start-1 col-span-3 px-2 text-2xl">{invoice}</p>
                         <span className="col-start-5 col-span-1  bg-white mx-auto p-3 row-start-2 rounded-sm shadow-sm">
                             <BsFillHandbagFill />
                         </span>
-                        <Link href={"dashboard"} className="row-start-3 mx-auto col-start-1 col-span-5 ">
+                        <Link href={"dashboard"} className="row-start-3 mx-auto p-2 col-start-1 col-span-5 ">
                             <span>More Detials  </span>
                         </Link>
                     </div>
-                   
                     <div className="bg-primary-gray px-2 py-1 grid gap-3 row-span-4 md:col-end-13 col-span-full md:col-span-5 rounded-sm  outline outline-offset-4 outline-1 outline-primary-gray  ">
-                        <h2 className="col-start-1 col-span-2 row-start-1">Total Amount Recieved</h2>
-                        <p className="col-start-1 col-span-3 text-2xl">10000000</p>
+                        <h2 className="col-start-1 col-span-2 p-2 row-start-1">Today's Amount</h2>
+                        <p className="col-start-1 col-span-3 px-2 text-2xl">{total}</p>
                         <span className="col-start-5 col-span-1 bg-white mx-auto p-3 row-start-2 shadow-sm rounded-sm">
                             <RxReload />
                         </span>
-                        <Link href={"dashboard"} className="row-start-3 mx-auto col-start-1 col-span-5 ">
+                        <Link href={"dashboard"} className="row-start-3 p-2 mx-auto col-start-1 col-span-5 ">
                             <span>More Detials  </span>
                         </Link>
                     </div>
@@ -86,28 +317,17 @@ const List = ({ Customer, page,isSales,path }: propType) => {
                     </span>
                 </div>
             </section>
-            <section>
-                {  isSales ?
+            <section className="z-5">
+
                 <DataTable
-                    columns={s_LIST_Column}
-                    data={sample}
+                    columns={isSales ? s_LIST_Column : p_LIST_Column}
+                    data={list ? list : []}
                     rows={true}
                     paginater={true}
                     filter={true}
-                /> : 
-                <DataTable
-                columns={p_LIST_Column}
-                data={sample}
-                rows={true}
-                paginater={true}
-                filter={true}
-            />
-                }
+                />
             </section>
         </div>
     )
 }
-
-
-
 export default List

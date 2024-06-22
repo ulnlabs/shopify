@@ -12,7 +12,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-
+import { tableVeiw } from "../../../../../global";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {

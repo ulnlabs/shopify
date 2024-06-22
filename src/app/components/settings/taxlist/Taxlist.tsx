@@ -18,6 +18,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import Edit from "@/app/components/settings/popup/Edit"
+import { columnHeader_dataTable } from '../../../../../global';
+ interface initial{
+  id:number|null,
+  taxname:string,
+  taxpercentage:string
+    
+}
+export const data  =
+  [
+    {
+      id: 1,
+      taxname: "SGST 9%",
+      taxpercentage: "9.00"
+    },
+    {
+      id: 2,
+      taxname: "IGST 9%",
+      taxpercentage: "9.00"
+    },
+    {
+      id: 3,
+      taxname: "SGST 4.5%",
+      taxpercentage: "4.50"
+    },
+  ]
 import axios from 'axios';
 interface TaxType {
   taxId: String,

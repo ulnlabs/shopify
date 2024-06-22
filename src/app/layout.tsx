@@ -4,6 +4,7 @@ import "./globals.css";
 import ContextContent from "../../contextapi";
 import AuthProvider from "./Provider";
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ContextContent>
           <AuthProvider>
-            {children}
+              {children}
           </AuthProvider>
         </ContextContent>
       </body>

@@ -21,6 +21,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import axios from "axios";
 import { ContextData } from "../../../../../contextapi";
 import { AnimatePresence, motion } from "framer-motion";
+import { customerList ,columnHeader_dataTable} from "../../../../../global";
 export default function Page() {
   const { toast } = useToast();
   const [customerData, setCustomerData] = useState<customerList[]>([]);

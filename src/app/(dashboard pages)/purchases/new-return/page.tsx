@@ -1,62 +1,126 @@
 "use client"
-import NewSales from "@/app/components/sales-pur/addnew";
+import NewReturn from "@/app/components/sales-pur/return";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { FormState } from "../../../../../global";
+import { ContextData } from "../../../../../contextapi";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-interface FormState {
-  customerName: string,
-  billDate: Date,
-  billStatus: string,
-  billQuantity: number,
-  billCharges: any,
-  billTaxType: string,
-  billDiscount: any,
-  billDiscountType: string,
-  billNote: string,
-  billSubtotal: number,
-  billOtherCharge: number,
-  billOverallDis: number
-  billTotal: number,
-  billPaymentType: string,
-  billAmount: any,
-  billPayNote: string,
-
-
-}
 
 const page = () => {
+  const { push } = useRouter();
+
+  const { purhcaseRecord, supplierDetails } = useContext(ContextData);
+
+  const { s_name, items, paymentType, otherCharges, discount, discountType, taxType, note, s_id, purchaseCode } = purhcaseRecord;
+
+  console.log(purhcaseRecord);
 
 
   const [purchaseReturnData, setPurchaseReturnData] = useState<FormState>({
-    customerName: "",
+    customerName: s_name,
+    customerId: s_id,
     billDate: new Date,
-    billStatus: "",
     billQuantity: 0,
-    billCharges: 0,
-    billTaxType: "",
-    billDiscount: 0,
-    billDiscountType: "",
-    billNote: "",
-    billSubtotal: 100000000,
+    billCharges: otherCharges | 0,
+    billTaxType: taxType || "",
+    billDiscount: discount || "",
+    billDiscountType: discountType || "",
+    billNote: note || "",
+    billSubtotal: 0,
     billOtherCharge: 0,
     billOverallDis: 0,
     billTotal: 0,
-    billPaymentType: "",
+    billPaymentType: paymentType || "",
     billAmount: 0,
-    billPayNote: "",
   })
 
-  const handleClick = () =>{
-    console.log(purchaseReturnData);  
+  useEffect(() => {
+    setItemList(items)
+  }, [items])
+
+  const [status, setStatus] = useState<string>("")
+
+  const handleClick = async () => {
+
+    const data = await axios.post("/api/purchase", {
+      header: "return",
+      data: {
+        purchase: purchaseReturnData,
+        items: itemList,
+        purchaseCode: purchaseCode,
+        status: status
+      }
+
+    })
+    console.log("res", data);
+    if (data.status === 200) {
+      alert("Purchase Return Successfull");
+      if (status === "Return Raised")
+        push("/purchases/purchase-list")
+      else if (status === "Returned")
+        push("/purchases/return-list")
+    }
+
+    console.log(purchaseReturnData);
   }
+
+
+  const [cus, setCus] = useState<any>("");
+
+  useEffect(() => {
+    setCus(supplierDetails.filter((item: any) => {
+      return (item.name.toLowerCase().includes(purchaseReturnData.customerName.toLowerCase()) || item.id.toString().includes(purchaseReturnData.customerName) || item.mobile.toLowerCase().includes(purchaseReturnData.customerName.toLowerCase()))
+    })
+    )
+
+  }, [purchaseReturnData.customerName])
+
+
+  const [inputItem, setInputItem] = useState<String>("");
+  const [product, setProduct] = useState<any>([])
+
+  useEffect(() => {
+    setProduct(items?.filter((item: any) => {
+      return inputItem === "" ? true : item.itemName?.toLowerCase().includes(inputItem.toLowerCase())
+    }
+    ))
+  }, [inputItem])
+
+  const [itemList, setItemList] = useState<any>([]);
+
+  useEffect(() => {
+    if (items != itemList) {
+      setStatus("Return Raised")
+    }
+
+    else if (items == itemList) {
+      setStatus("Returned");
+    }
+
+  }, [itemList])
+
+  console.log(purchaseReturnData);
 
 
   return (
     <div className="w-full ">
       <h1 className="px-10 pt-5 ">New Purchase Return</h1>
 
-      <NewSales data={purchaseReturnData} setData={setPurchaseReturnData} placeholder="Select Customer" isSales={true} />
-      <div className="flex justify-center pt-5 pb-10 gap-10">
+      <NewReturn
+        isSales={false}
+        placeholder="Search Customer"
+        data={purchaseReturnData}
+        setData={setPurchaseReturnData}
+        inputItem={inputItem}
+        setInputItem={setInputItem}
+        Items={product}
+        products={items}
+        customerData={cus}
+        itemList={itemList}
+        setItemList={setItemList}
+      />      <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
         <Link href={"../../dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
       </div>

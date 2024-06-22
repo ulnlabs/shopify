@@ -19,6 +19,7 @@ import { AnimatePresence } from 'framer-motion';
 import AddPayment from '../popup/AddPayment';
 import axios from 'axios';
 import Edit_Payment from "@/app/components/settings/popup/EDit_Payment"
+import { columnHeader_dataTable } from '../../../../../global';
 
 
 interface PaymentType {

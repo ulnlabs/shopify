@@ -16,23 +16,23 @@ import { useContext } from "react";
 import { UserContext } from "@/UserContext";
 import { ColumnDef } from "@tanstack/react-table";
 import axios from "axios";
-
-const {setIsDeleted,isDeleted}=useContext(UserContext)
+import { customerList ,columnHeader_dataTable} from "../../../../global";
+const { setIsDeleted, isDeleted } = useContext(UserContext)
 
 
 /* //delete the data or update here you have to use your custom function import it from your area */
 async function handleDelete(row: customerList): Promise<void> {
 
 
-  if(row._id){
-  const ID=row._id 
+  if (row._id) {
+    const ID = row._id
 
-const response= await axios.delete("/api/customers",{data:{id: ID}})
-if(response.status){
-setIsDeleted(!isDeleted)
-}
-}
-  
+    const response = await axios.delete("/api/customers", { data: { id: ID } })
+    if (response.status) {
+      setIsDeleted(!isDeleted)
+    }
+  }
+
 }
 //see this is an example to sort your column  replace it wth yours
 const C_Email = {
@@ -68,13 +68,13 @@ const C_PAID: any = {
   header: () => <div className="text-right">Paid</div>,
   cell: ({ row }: any) => {
     const amount = parseFloat(row.getValue("paid"));
-    if(!isNaN(amount)){
+    if (!isNaN(amount)) {
 
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "INR",
       }).format(amount);
-  
+
       return <div className="text-right font-medium">{formatted}</div>;
     }
     return <div className="text-right font-medium">-</div>;
@@ -143,7 +143,7 @@ export const c_columns: ColumnDef<any>[] = [
   C_MOBILE,
   C_Email,
   C_PAID,
-  
+
   C_STATUS,
   C_ACTION,
 ];

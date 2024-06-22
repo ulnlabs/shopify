@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-
+import { columnHeader_dataTable } from "../../../../../../global";
 const Payment_Date: columnHeader_dataTable = {
   accessorKey: "Date",
   header: "Payment Date",

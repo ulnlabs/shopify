@@ -4,6 +4,7 @@ import { Checkbox } from "@radix-ui/react-checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { supplierColumn } from "../../../../global";
 function handleDelete(original: any) {
     throw new Error("Function not implemented.");
 }

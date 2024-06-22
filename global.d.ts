@@ -1,4 +1,10 @@
+import { Dispatch,SetStateAction } from "react";
+
+
+
 type customerAdd = {
+
+
   name: string;
   mobile: string;
   email: string;
@@ -7,7 +13,7 @@ type customerAdd = {
   city: string;
   pincode: string;
   address: string;
-  id:number
+  id: number
 };
 type contextData = {
   formData: customerAdd;
@@ -46,3 +52,25 @@ type supplierColumn = {
   accessorKey: string;
   header: string;
 };
+export interface FormState {
+  customerName: string,
+  billReturnQuantity?: number;
+  customerId: number,
+  billDate: Date,
+  billStatus?: string,
+  billQuantity: number,
+  billCharges: any,
+  billTaxType: string,
+  billDiscount: any,
+  billDiscountType: string,
+  billNote: string,
+  billSubtotal: number,
+  billOtherCharge: number,
+  billOverallDis: number
+  billTotal: number,
+  billPaymentType: string,
+  billAmount: any,
+  billUserName?:string,
+
+
+}
