@@ -61,7 +61,6 @@ export default function Page() {
   }
   
    const expColumn: ColumnDef<any>[] = [
-    EXP_SELECT,
     DATE,
     CATEGORY,
     REFERENCE_NO,
