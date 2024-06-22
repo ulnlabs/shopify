@@ -6,7 +6,7 @@ const secret = process.env.NEXTAUTH_SECRET;
 export async function middleware(req: NextRequest) {
     const token = await getToken({ req, secret })
     const { pathname } = req.nextUrl
-    const session = req.cookies.get('next-auth.session-token')
+    const session = req.cookies.get('__Secure-next-auth.session-token') || req.cookies.get('next-auth.session-token')
     const protectedPathsWorker = [
         '/dashboard',
         '/settings',
