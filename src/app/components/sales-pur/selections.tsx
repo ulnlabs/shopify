@@ -20,12 +20,10 @@ interface selectionProp {
     inputData: any,
     icon?: boolean,
     payment?: boolean,
-    setValue?: any
-    values?: boolean
-    id?:string
+    id?: string
 }
 
-const Selections = ({ label, setLabel, placeholder, inputData, icon, payment, setValue, values,id }: selectionProp) => {
+const Selections = ({ label, setLabel, placeholder, inputData, icon, payment, id }: selectionProp) => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -40,8 +38,7 @@ const Selections = ({ label, setLabel, placeholder, inputData, icon, payment, se
         document.addEventListener('click', handleClose)
     })
     const handleStatusClick = (item: any): void => {
-        setLabel(item.label);
-        values && setValue(item.value)
+        setLabel(item.value);
         setIsOpen(!isOpen);
     }
 
@@ -54,7 +51,7 @@ const Selections = ({ label, setLabel, placeholder, inputData, icon, payment, se
                         <IoMdContact className="mr-2 h-4 w-4 shrink-0 opacity-50" />
                     }
                     <Input placeholder={placeholder}
-                    id={id}
+                        id={id}
                         value={"" || label}
                         className={`${icon ? "border" : " border-none"} cursor-pointer`}
                         readOnly />
@@ -75,7 +72,7 @@ const Selections = ({ label, setLabel, placeholder, inputData, icon, payment, se
                                             className="cursor-pointer px-2 py-1  rounded-md"
                                             onSelect={() => { handleStatusClick(item) }}
                                         >
-                                            {item.label}
+                                            {item.value}
                                         </CommandItem>
                                     ))}
                                 </CommandGroup>

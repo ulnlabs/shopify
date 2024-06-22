@@ -17,6 +17,7 @@ import PopUp from "./extraPopUp";
 import { AnimatePresence, motion } from "framer-motion";
 import { columnHeader_dataTable } from "../../../../global";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 
 
 const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList, searchPlaceholder }: any) => {
@@ -280,14 +281,27 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     }
 
   }
-  const taxex = [
-    {
-      label: "GST 5%",
-    },
-    {
-      label: "VAT 10%",
+
+  const [taxex, setTaxex] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: tax } = await axios.put("/api/tax")
+      console.log(tax[0].value);
+
+      setTaxex(tax)
+
     }
-  ]
+    fetchData();
+  }, [])
+  /*   const taxex = [
+      {
+        label: "GST 5%",
+      },
+      {
+        label: "VAT 10%",
+      }
+    ] */
   const discountType = [
     {
       label: "Fixed",
