@@ -24,10 +24,6 @@ export const adminItems: NavBarItem[] = [
         key: "",
         children: [
             {
-                label: "POS",
-                key: "/sales/pos",
-            },
-            {
                 label: "New Sales",
                 key: "/sales/new-sales",
             },
@@ -35,10 +31,7 @@ export const adminItems: NavBarItem[] = [
                 label: "Sales List",
                 key: "/sales/sales-list",
             },
-            {
-                label: "New Sales Return",
-                key: "/sales/new-return",
-            },
+           
             {
                 label: "Sales Returns List",
                 key: "/sales/return-list",
@@ -78,10 +71,7 @@ export const adminItems: NavBarItem[] = [
                 label: 'Purchases List',
                 key: "/purchases/purchase-list"
             },
-            {
-                label: 'New Purchase Return',
-                key: "/purchases/new-return"
-            },
+           
             {
                 label: 'Purchase Returns List',
                 key: "/purchases/return-list"
@@ -134,14 +124,14 @@ export const adminItems: NavBarItem[] = [
                 label: 'Brands List',
                 key: "/items/brands"
             },
-            {
+            /* {
                 label: 'Print Labels',
                 key: "/items/labels"
-            },
-            {
+            }, */
+            /* {
                 label: 'Import Items',
                 key: "/items/import"
-            }
+            } */
         ]
     }, {
         label: 'expenses',

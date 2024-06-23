@@ -46,6 +46,7 @@ function Header() {
     }
   })
   const [profileimg, setProfileimg] = useState('')
+
   return (
     <div className='w-full bg-white border-b flex items-center justify-between px-4 h-[60px]'>
       <div className=" flex items-center justify-center">
@@ -53,12 +54,12 @@ function Header() {
         <div className="logo md:hidden flex items-center justify-center"></div>
       </div>
       <div className="relative capitalize text-gray-800 font-semibold flex flex-col items-end h-fit">
-        <h1 ref={profileRef} className='text-gray-800 cursor-pointer' onClick={() => setToggleProfile(!toggleprofile)}>{"Admin"}</h1>
+        <h1 ref={profileRef} className='text-gray-800 cursor-pointer' onClick={() => setToggleProfile(!toggleprofile)}>{session?.user?.username}</h1>
         <AnimatePresence mode='wait'>
           {
             toggleprofile && (
               <motion.div ref={profileCardRef} initial={profileVarient.closed} animate={profileVarient.open} exit={profileVarient.closed} className="absolute min-w-[200px] gap-4 px-2 py-2 border rounded-md flex justify-between items-center inset-y-full h-fit z-[10]  bg-white mt-[14px]">
-                <div className="flex flex items-center justify-between w-full">
+                <div className="flex items-center justify-between w-full">
                   <div className="flex flex-col">
                     <h1 className='w-fit text-gray-800'>{session?.user?.username}</h1>
                     <p className='text-[12px] font-light text-gray-800'>{session?.user?.role}</p>

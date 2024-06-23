@@ -79,7 +79,7 @@ function page({ }: Props) {
                             </div>
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="password">Password <span className='text-red-400'>*</span></label>
                             <input onChange={(e) => setUserDate({ ...userdata, password: e.target.value })} id='password' type="password" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
-                            <label className='col-start-1 col-span-1 whitespace-nowrap text-left whitespace-nowrap' htmlFor="conformpassword">Conform Password <span className='text-red-400'>*</span></label>
+                            <label className='col-start-1 col-span-1  text-left whitespace-nowrap' htmlFor="conformpassword">Conform Password <span className='text-red-400'>*</span></label>
                             <input onChange={(e) => setUserDate({ ...userdata, conformpass: e.target.value })} id='conformpassword' type="password" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
                         </div>
                     </div>

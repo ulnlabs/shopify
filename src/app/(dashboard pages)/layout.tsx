@@ -8,6 +8,8 @@ import { Toaster } from "@/components/ui/toaster"
 import axios from "axios";
 import { useContext, useEffect } from "react";
 import { ContextData } from "../../../contextapi";
+import { useSession } from "next-auth/react";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout
@@ -46,6 +48,7 @@ export default function RootLayout
     }
     getData();
   }, []);
+  const { data: session } = useSession()
   return (
     <UserProvider>
       {

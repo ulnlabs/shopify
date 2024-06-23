@@ -25,6 +25,8 @@ export async function middleware(req: NextRequest) {
         '/customers/new',
         '/customers/list',
         '/customers/import',
+        '/sales/invoice',
+        '/purchase/invoice'
     ];
     if (session) {
         if (pathname == '/') {

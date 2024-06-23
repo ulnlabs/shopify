@@ -7,6 +7,7 @@ import { ContextData } from "../../../../../contextapi";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
+import { useSession } from "next-auth/react";
 
 
 const page = () => {
@@ -17,6 +18,7 @@ const page = () => {
   const { s_name, items, paymentType, otherCharges, discount, discountType, taxType, note, s_id, purchaseCode } = purhcaseRecord;
 
   console.log(purhcaseRecord);
+  const { data: session } = useSession();
 
 
   const [purchaseReturnData, setPurchaseReturnData] = useState<FormState>({
@@ -35,6 +37,8 @@ const page = () => {
     billTotal: 0,
     billPaymentType: paymentType || "",
     billAmount: 0,
+    createdBy: session?.user?.username ? session.user?.username : "Guest",
+
   })
 
   useEffect(() => {

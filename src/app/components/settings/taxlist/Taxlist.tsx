@@ -19,13 +19,13 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import Edit from "@/app/components/settings/popup/Edit"
 import { columnHeader_dataTable } from '../../../../../global';
- interface initial{
-  id:number|null,
-  taxname:string,
-  taxpercentage:string
-    
+interface initial {
+  id: number | null,
+  taxname: string,
+  taxpercentage: string
+
 }
-export const data  =
+export const data =
   [
     {
       id: 1,
@@ -57,7 +57,7 @@ function Taxlist() {
   const [Tax, setTax] = useState<TaxType[]>([]);
   const [popup, setpopup] = useState<boolean | null>(false)
   const [edit, setEdit] = useState<boolean | null>(false)
-  const [selectedTax, setSelectedTax] = useState<TaxType|null>(null);
+  const [selectedTax, setSelectedTax] = useState<TaxType | null>(null);
 
 
   useEffect(() => {
@@ -66,7 +66,7 @@ function Taxlist() {
         const response = await axios.get("/api/taxList");
         console.log("retuernData", response.data);
         if (response.data) {
-          setTax(response.data.data);
+          setTax(response.data);
           console.log(Tax);
 
         }
@@ -116,7 +116,7 @@ function Taxlist() {
   };
 
 
-  const handleEdit = async (taxId: string, taxName: string, taxPercentage: string,taxStatus:boolean) => {
+  const handleEdit = async (taxId: string, taxName: string, taxPercentage: string, taxStatus: boolean) => {
     const taxData = { taxId, taxName, taxPercentage, taxStatus };
     setSelectedTax(taxData);
     setEdit(true);
@@ -124,7 +124,7 @@ function Taxlist() {
   const updateTax = async (taxId: String, updatedData: any) => {
     try {
       console.log(taxId, updatedData);
-      
+
       const response = await axios.put('/api/taxList', {
         taxId,
         ...updatedData

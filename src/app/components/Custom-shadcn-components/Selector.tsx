@@ -19,11 +19,13 @@ export type SelectorProps = {
     currentstate?: string;
     data: string[];
     commonTitle?: string;
-    changeState: Dispatch<SetStateAction<string> > 
+    changeState: Dispatch<SetStateAction<string>>
 }
 
-export const Selector = ({ data, changeState, currentstate, commonTitle }: SelectorProps,className:string) => {
+export const Selector = ({ data, changeState, currentstate, commonTitle }: SelectorProps, className: string) => {
     const [opener, setOpener] = useState<boolean>(false);
+    console.log(data);
+
     return (
         <Popover open={opener} onOpenChange={setOpener}>
             <PopoverTrigger className='border rounded-lg w-full flex items-center justify-between p-2 py-2 whitespace-nowrap text-ellipsis'><p>{currentstate ? currentstate : commonTitle}</p>{opener ? <AiFillCaretUp /> : <AiFillCaretDown />}</PopoverTrigger>

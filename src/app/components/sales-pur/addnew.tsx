@@ -310,8 +310,12 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: tax } = await axios.put("/api/tax")
-      console.log(tax[0].value);
+      const { data: tax } = await axios.put("/api/taxList",
+        {
+          header: "sales-pur"
+        }
+      )
+      console.log(tax);
       const { data: payment } = await axios.get("/api/paymentList");
       console.log("payment", payment.data);
 
@@ -433,7 +437,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                           <p key={index}
                             className="px-3 py-1 cursor-pointer"
                             onClick={() => {
-                              setData({ ...data, customerName: item.name, customerId: item.id });
+                              setData({ ...data, customerName: item.name, customerId: item._id });
                               setCustomerOpen(false);
                             }}>
                             {item.name}

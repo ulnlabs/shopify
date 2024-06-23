@@ -13,6 +13,8 @@ const page = () => {
   const router = useRouter();
 
   const { data: session } = useSession();
+  console.log(session?.user?.name);
+
   const [purchaseData, setPurchaseData] = useState<FormState>({
     customerName: "",
     customerId: 0,
@@ -31,6 +33,7 @@ const page = () => {
     billPaymentType: "",
     billAmount: 0,
     billUserName: "",
+    createdBy: session?.user?.username ? session.user?.username : "Guest",
   })
 
   const { stocks: Items, supplierDetails, setPurchaseRecord } = useContext(ContextData)

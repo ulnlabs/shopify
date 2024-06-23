@@ -24,18 +24,24 @@ const ContextContent = ({ children }: children) => {
 
 
   const [stocks, setStocks] = useState<any>([]);
+  const [companyDetail, setCompanyDetail] = useState<any>({});
+
 
   useEffect(() => {
-    const fetchItem = async () => {
+    const fetchData = async () => {
 
       const response = await axios.put("/api/sales",
         {
           data: { header: "getItems" }
         },);
+      const { data: company } = await axios.put("/api/companyDetail");
+      console.log(company.data[0]);
+
+      setCompanyDetail(company.data[0])
       setStocks(response.data)
       console.log(response.data);
     }
-    fetchItem();
+    fetchData();
   }, []);
   /* 
     const getItems = async () => {
@@ -76,7 +82,7 @@ const ContextContent = ({ children }: children) => {
   return (
     <>
       <ContextData.Provider value={{
-        selectedRow, customerDetails, setCustomerDetails, supplierDetails, setSupplierDetails, editItem, setEditItem, setSelectedRow, purhcaseRecord, stocks, setPurchaseRecord, customerData, setCustomerData, supplierData, setSupplierData, salesRecord, setSalesRecord
+        selectedRow, customerDetails, setCustomerDetails, companyDetail, supplierDetails, setSupplierDetails, editItem, setEditItem, setSelectedRow, purhcaseRecord, stocks, setPurchaseRecord, customerData, setCustomerData, supplierData, setSupplierData, salesRecord, setSalesRecord
       }}>
         {children}
       </ContextData.Provider>

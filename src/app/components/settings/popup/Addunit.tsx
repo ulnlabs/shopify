@@ -8,8 +8,8 @@ interface props {
 
 }
 
-export default function AddUnit({ close,dataset }: any) {
-    const [addData, setdata] = useState({ unitId: "", unitName: "", unitDescription: "", unitStatus: true });
+export default function AddUnit({ close, dataset }: any) {
+    const [addData, setdata] = useState({ unitName: "", unitDescription: "" });
 
     const handleunitNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -20,8 +20,8 @@ export default function AddUnit({ close,dataset }: any) {
         event.preventDefault();
         try {
             const response = await axios.post("/api/unitList", { data: addData });
-            if (response.status === 201 || response.status === 200) { 
-                dataset(response.data.unitListData); 
+            if (response.status === 201 || response.status === 200) {
+                dataset(response.data.unitListData);
                 close(false);
             } else {
                 console.error('Failed to save the unit data');
@@ -91,12 +91,12 @@ export default function AddUnit({ close,dataset }: any) {
                         </div>
                         <div className='w-full flex gap-3'>
                             <button type="submit" className="px-4 py-2 bg-[--primary] text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Submit</button>
-                    <button type='button'
-                        onClick={() => { close(false) }}
-                        className="px-4 py-2 bg-[--primary] text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ">Cancel</button>
+                            <button type='button'
+                                onClick={() => { close(false) }}
+                                className="px-4 py-2 bg-[--primary] text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ">Cancel</button>
                         </div>
                     </form>
-                    
+
                 </div>
 
             </motion.div>

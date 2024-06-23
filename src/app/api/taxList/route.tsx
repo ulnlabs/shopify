@@ -7,8 +7,14 @@ import { v4 as uuidv4 } from 'uuid';
 export async function PUT(req: Request) {
     try {
         await connectDB();
-        const { taxId, taxName, taxPercentage, taxStatus } = await req.json();
-        
+        const { taxId, taxName, taxPercentage, taxStatus, header } = await req.json();
+        if (header === "sales-pur") {
+            const taxListFound = await TaxList.find({ taxStatus: true });
+            console.log(taxListFound);
+
+            return NextResponse.json(taxListFound, { status: 200 });
+        }
+
         if (!taxId) {
             return NextResponse.json({ error: "Tax ID is required" }, { status: 400 });
         }
@@ -42,28 +48,49 @@ export async function PUT(req: Request) {
 export async function POST(req: Request) {
     try {
         await connectDB();
+        console.log("done");
+
         const { data } = await req.json();
-        const taxId=uuidv4();
-        data.taxId=taxId;
-        
-        const newTax=await TaxList.create(data);
+        console.log(data);
 
-        return NextResponse.json({ message: "done",taxListData:newTax }, { status: 201 });
-    } catch (error) {
-        console.error("Error saving tax data:", error);
+        /*  const taxId = uuidv4();
+         data.taxId = taxId; */
 
-        // Return an error response
-        return NextResponse.json({ error: "Failed to save the tax data" }, { status: 500 });
+        const newTax = await TaxList.create(data);
+        console.log(newTax);
+
+
+        return NextResponse.json({ message: "done", taxListData: newTax }, { status: 201 });
+    } catch (error: any) {
+        console.log(error);
+        if (error.code === 11000)
+            return NextResponse.json({ error: "Tax Already exist" }, { status: 500 });
+        else {
+            return NextResponse.json({ error: "Error Saving tax" }, { status: 500 });
+        }
     }
 }
 export async function GET(req: Request) {
     try {
         await connectDB();
-        const siteListFound = await TaxList.find();
-        return NextResponse.json({ data: siteListFound }, { status: 200 });
-    } catch (error) {
+        console.log("done loading");
+
+        const siteListFound = await TaxList.find().lean();
+        const modified = siteListFound.map((item: any) => {
+            return {
+                ...item,
+                value: (item.taxName + item.taxPercentage)
+
+            }
+        })
+        console.log(modified);
+
+        return NextResponse.json(modified, { status: 200 });
+    } catch (error: any) {
         console.log(error);
-        return NextResponse.json({ message: "Error fetching data" }, { status: 500 });
+
+        return NextResponse.json({ error: "Error fetching tax" }, { status: 500 });
+
     }
 }
 export async function DELETE(req: Request) {

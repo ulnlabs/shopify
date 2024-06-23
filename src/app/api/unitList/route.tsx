@@ -7,8 +7,14 @@ import { v4 as uuidv4 } from 'uuid';
 export async function PUT(req: Request) {
     try {
         await connectDB();
-        const { unitId, unitName, unitDescription, unitStatus } = await req.json();
-        
+        const { unitId, unitName, unitDescription, unitStatus, header } = await req.json();
+        if (header === 'items') {
+            const unitListFound = await UnitList.find({ unitStatus: true });
+            console.log(unitListFound);
+
+            return NextResponse.json(unitListFound, { status: 200 });
+        }
+
         if (!unitId) {
             return NextResponse.json({ error: "unit ID is required" }, { status: 400 });
         }
@@ -43,12 +49,10 @@ export async function POST(req: Request) {
     try {
         await connectDB();
         const { data } = await req.json();
-        const unitId=uuidv4();
-        data.unitId=unitId;
-        
-        const newunit=await UnitList.create(data);
 
-        return NextResponse.json({ message: "done",unitListData:newunit }, { status: 201 });
+        const newunit = await UnitList.create(data);
+
+        return NextResponse.json({ message: "done", unitListData: newunit }, { status: 201 });
     } catch (error) {
         console.error("Error saving unit data:", error);
 
@@ -59,6 +63,8 @@ export async function GET(req: Request) {
     try {
         await connectDB();
         const siteListFound = await UnitList.find();
+        console.log(siteListFound);
+
         return NextResponse.json({ data: siteListFound }, { status: 200 });
     } catch (error) {
         console.log(error);

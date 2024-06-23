@@ -83,7 +83,7 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn,
 
 
     const USER: columnHeader_dataTable = {
-        accessorKey: "user",
+        accessorKey: "createdBy",
         header: "CREATED BY",
     };
 
@@ -282,7 +282,7 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn,
                         <span className="col-start-5 col-span-1  bg-white mx-auto p-3 row-start-2 rounded-sm shadow-sm">
                             <BsFillHandbagFill />
                         </span>
-                        <Link href={"dashboard"} className="row-start-3 mx-auto p-2 col-start-1 col-span-5 ">
+                        <Link href={"/dashboard"} className="row-start-3 mx-auto p-2 col-start-1 col-span-5 ">
                             <span>More Detials  </span>
                         </Link>
                     </div>
@@ -292,7 +292,7 @@ const List = ({ page, isSales, path, list, from, end, setFrom, setEnd, isReturn,
                         <span className="col-start-5 col-span-1 bg-white mx-auto p-3 row-start-2 shadow-sm rounded-sm">
                             <RxReload />
                         </span>
-                        <Link href={"dashboard"} className="row-start-3 p-2 mx-auto col-start-1 col-span-5 ">
+                        <Link href={"/dashboard"} className="row-start-3 p-2 mx-auto col-start-1 col-span-5 ">
                             <span>More Detials  </span>
                         </Link>
                     </div>

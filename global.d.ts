@@ -1,4 +1,4 @@
-import { Dispatch,SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 
 
@@ -70,7 +70,8 @@ export interface FormState {
   billTotal: number,
   billPaymentType: string,
   billAmount: any,
-  billUserName?:string,
+  billUserName?: string,
+  createdBy?: string,
 
 
 }

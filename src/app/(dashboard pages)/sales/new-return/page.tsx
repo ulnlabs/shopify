@@ -6,8 +6,10 @@ import { useContext, useEffect, useState } from "react";
 import { ContextData } from "../../../../../contextapi";
 import { useRouter } from "next/navigation";
 import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
+import { FormState } from "../../../../../global";
+import { useSession } from "next-auth/react";
 
-
+/* 
 interface FormState {
   customerName: string,
   billDate: Date,
@@ -24,16 +26,18 @@ interface FormState {
   billTotal: number,
   billPaymentType: string | "",
   billAmount: any,
-  customerId: number
+  customerId: number,
+
 
 }
-
+ */
 const page = () => {
   const { salesRecord, customerDetails } = useContext(ContextData);
   const { push } = useRouter();
   console.log("jkj", salesRecord);
   const { c_name, items, paymentType, otherCharges, discount, discountType, taxType, note, c_id, salesCode } = salesRecord;
   console.log(salesCode);
+  const { data: session } = useSession();
 
   const [salesReturnData, setSalesReturnData] = useState<FormState>({
     customerName: c_name,
@@ -51,6 +55,7 @@ const page = () => {
     billTotal: 0,
     billPaymentType: paymentType || "",
     billAmount: 0,
+    createdBy: session?.user?.username ? session.user?.username : "Guest",
   })
 
   console.log(paymentType);

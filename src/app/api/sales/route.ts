@@ -4,6 +4,7 @@ import { connectDB } from "@/app/mongoose/db";
 import Sales from "@/app/mongoose/models/Sales";
 import { format } from "date-fns";
 import Item from "@/app/mongoose/models/Items";
+import { customerModel } from "@/app/mongoose/models/customer";
 
 
 const findOverall = (sale: any) => {
@@ -56,7 +57,7 @@ export const PUT = async (req: Request) => {
     const { header } = data.data
     try {
         if (header === "getItems") {
-            const data = await Item.find().lean();
+            const data = await Item.find({ status: true }).lean();
             const modified = data.map((item: any) => {
                 const profitMargin = item.profitMargin ? item.profitMargin * item.price / 100 : 0
                 console.log(profitMargin);
@@ -76,6 +77,9 @@ export const PUT = async (req: Request) => {
             return NextResponse.json(modified);
         }
         else if (header === "getSales") {
+            const findData = await Sales.find().populate('_id')
+            console.log("findData", findData);
+
             const { from, end } = data.data
             const fromDate = new Date(from);
             fromDate.setHours(fromDate.getHours() + 5)
@@ -91,7 +95,7 @@ export const PUT = async (req: Request) => {
                         { status: "Return Raised" }
 
                     ]
-                }).sort({ 'createdAt': -1 }).lean();
+                }).sort({ 'createdAt': -1 }).populate('c_id').lean();
                 console.log(data);
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
@@ -105,10 +109,15 @@ export const PUT = async (req: Request) => {
                             discountPer: item.discount
                         })
                     })
+                    console.log(sale.c_id.name);
+
+                    const c_name = sale?.c_id?.name ? sale?.c_id?.name : "unknown"
+                    console.log(c_name);
+
                     return ({
                         ...sale,
                         date: format(sale.date, "dd-MM-yy"),
-                        c_name: sale.c_name,
+                        c_name: c_name,
                         salesCode: sale.salesCode,
                         total: findOverall(sale),
                         status: sale.status,
@@ -130,7 +139,7 @@ export const PUT = async (req: Request) => {
 
                     ]
 
-                }).sort({ 'createdAt': -1 }).lean();
+                }).sort({ 'createdAt': -1 }).populate("c_id").lean();
 
 
                 const modified = data.map((sale: any) => {
@@ -149,11 +158,14 @@ export const PUT = async (req: Request) => {
 
                         })
                     })
+                    console.log(sale.c_id.name);
+
 
                     return ({
                         ...sale,
                         date: format(sale.date, "dd-MM-yy"),
-                        c_name: sale.c_name,
+                        c_name: sale.c_id.name,
+
                         salesCode: sale.salesCode,
                         total: findOverall(sale),
                         status: sale.status,
@@ -178,7 +190,7 @@ export const PUT = async (req: Request) => {
                 const data = await Sales.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
                     status: "Returned"
-                }).sort({ 'createdAt': -1 }).lean();
+                }).sort({ 'createdAt': -1 }).populate('c_id').lean();
                 console.log(data);
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
@@ -192,10 +204,13 @@ export const PUT = async (req: Request) => {
                             discountPer: item.discount
                         })
                     })
+                    console.log(sale.c_id.name);
+
                     return ({
                         ...sale,
                         date: format(sale.date, "dd-MM-yy"),
-                        c_name: sale.c_name,
+                        c_name: sale.c_id.name,
+
                         salesCode: sale.salesCode,
                         total: findOverall(sale),
                         status: sale.status,
@@ -214,7 +229,7 @@ export const PUT = async (req: Request) => {
                     },
                     status: "Returned"
 
-                }).sort({ 'createdAt': -1 }).lean();
+                }).sort({ 'createdAt': -1 }).populate('c_id').lean();
 
                 const modified = data.map((sale: any) => {
                     const itemList = sale.items.map((item: any) => {
@@ -231,7 +246,7 @@ export const PUT = async (req: Request) => {
                     return ({
                         ...sale,
                         date: format(sale.date, "dd-MM-yy"),
-                        c_name: sale.c_name,
+                        c_name: sale.c_id.name,
                         salesCode: sale.salesCode,
                         total: findOverall(sale),
                         status: sale.status,
@@ -267,11 +282,6 @@ export async function POST(req: any) {
     console.log("header", header);
     console.log("data", data);
 
-
-
-
-
-
     await connectDB();
     const session = await mongoose.startSession();
     try {
@@ -281,8 +291,9 @@ export async function POST(req: any) {
         const codeValue = counter > 0 ? String(counter + 1) : "1"
         const salesCode = "sl" + codeValue.padStart(4, '0');
 
-        const { customerName: c_name, billDiscountType: discountType, billDiscount: discount, billCharges: otherCharges, customerId: c_id, billDate, billPaymentType: paymentType/* , billStatus: status */, billTaxType: taxType, billNote: note } = data.sales;
+        const { createdBy, billDiscountType: discountType, billDiscount: discount, billCharges: otherCharges, customerId: c_id, billDate, billPaymentType: paymentType/* , billStatus: status */, billTaxType: taxType, billNote: note } = data.sales;
 
+        console.log(c_id);
 
 
         const { status } = data
@@ -319,7 +330,6 @@ export async function POST(req: any) {
 
             const newSales = await Sales.create([{
                 c_id,
-                c_name,
                 date,
                 salesCode,
                 taxType,
@@ -329,6 +339,7 @@ export async function POST(req: any) {
                 items,
                 paymentType,
                 status,
+                createdBy,
                 note
             }], { session });
 
@@ -340,12 +351,15 @@ export async function POST(req: any) {
                 console.log(updated);
             }
             console.log('Sales created successfully:', newSales);
+
+
+
             await session.commitTransaction();
             await session.endSession();
-
+            const customerDetail = await customerModel.find({ _id: c_id })
+            console.log(customerDetail);
             const data = [{
-                c_id,
-                c_name,
+
                 date,
                 salesCode,
                 taxType,
@@ -357,11 +371,11 @@ export async function POST(req: any) {
                 status,
                 note
             }]
-            console.log(data);
+            console.log("sales", data);
             const modified = data.map((sales: any) => {
                 const itemList = sales.items.map((item: any) => {
                     const { total, taxValue, discountValue } = findTotal(item.price, sales.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.sold_quantity, item.tax, item.discountType, item.discount, item.taxType)
-                    console.log(item.discountPer);
+
                     return ({
                         ...item,
                         taxAmount: Math.floor(taxValue * 100) / 100,
@@ -374,7 +388,7 @@ export async function POST(req: any) {
                 return ({
                     ...sales,
                     date: format(sales.date, "dd-MM-yy"),
-                    c_name: sales.c_name,
+                    c_id: customerDetail,
                     salesCode: sales.salesCode,
                     total: findOverall(sales),
                     items: itemList

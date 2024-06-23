@@ -9,11 +9,13 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
 const taxFetch = async () => {
-    const res = await fetch('/api/tax', {
-        method: 'PUT'
-    })
-    const data = await res.json()
-    const tax = data.map((item: any) => {
+    const data = await axios.put('/api/taxList', {
+        header: "sales-pur"
+    },)
+
+    console.log(data);
+
+    const tax = data.data.map((item: any) => {
         return `${item.value}`
     })
     console.log("arr", tax);
@@ -138,19 +140,22 @@ export default function page() {
     console.log(categoryData);
 
     const unitFetch = async () => {
-        const res = await fetch('/api/unit', {
-            method: 'PUT'
+        const data = await axios.put('/api/unitList', {
+           header:"items"
         })
-        const data = await res.json()
-        const unit = data.map((item: any) => {
-            return item.name
+        console.log(data);
+
+        const unit = data.data.map((item: any) => {
+            return item.unitName
         })
+
         console.log(unit);
+
 
         return unit
     }
-    const { data: unitData, error: unitError } = useSWR(
-        '/api/unit', unitFetch
+    const { data: unitData, mutate: unitMutate, error: unitError } = useSWR(
+        '/api/unitList', unitFetch
     )
     const [BrandPopupState, setBrandPopupState] = useState<boolean>(false)
 
@@ -169,9 +174,11 @@ export default function page() {
         router.push("/items/list")
         return
     }
-    const { data: taxData, error: taxError } = useSWR(
-        '/api/tax', taxFetch
+    const { data: taxData, mutate: taxMutate, error: taxError } = useSWR(
+        '/api/taxList', taxFetch
     )
+    console.log(taxData);
+
     useEffect(() => {
         const onChangeEvent = () => {
             const taxes = taxValue ? taxValue.match(/\d+/g)!.map(Number)[0] : 0
@@ -211,12 +218,12 @@ export default function page() {
                 </AnimatePresence>
                 <AnimatePresence mode='wait'>
                     {
-                        UnitPopupState ? <UnitPopUp close={setUnitPopupState} /> : null
+                        UnitPopupState ? <UnitPopUp mutate={unitMutate} close={setUnitPopupState} /> : null
                     }
                 </AnimatePresence>
                 <AnimatePresence mode='wait'>
                     {
-                        TaxPopupState && <TaxAddPopUp close={setTaxPopupState} />
+                        TaxPopupState && <TaxAddPopUp mutate={taxMutate} close={setTaxPopupState} />
                     }
                 </AnimatePresence>
                 <DashboardHeader title='New Item' subtitle='Add/Update Items' breadcrumb={[{ title: 'Dashboard', path: '/dashboard' }, { title: 'item List', path: '/items/list' }, { title: 'New item', path: '/items/new' },]} />
@@ -432,21 +439,29 @@ const CategoryAddPopup = ({ close }: { close: Dispatch<SetStateAction<boolean>> 
     )
 }
 
-const UnitPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
+const UnitPopUp = ({ close, mutate }: { close: Dispatch<SetStateAction<boolean>>, mutate: any }) => {
+    const [addData, setdata] = useState({ unitName: "", unitDescription: "" });
+
+
+    const handleunitNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setdata({ ...addData, [name]: value });
+    };
+
     const addUnit = async (e: React.FormEvent) => {
         e.preventDefault()
-        const formDetails = new FormData(e.target as HTMLFormElement)
-        await fetch('/api/unit', {
-            method: 'POST',
-            body: formDetails
-        }).then((res) => {
-            if (res.status === 200) {
-                close(false)
-                alert('Saved')
+        try {
+            const response = await axios.post("/api/unitList", { data: addData });
+            if (response.status === 201 || response.status === 200) {
+                mutate();
+                close(false);
+
+            } else {
+                console.error('Failed to save the unit data');
             }
-        }).catch((err) => {
-            console.log(err)
-        })
+        } catch (error) {
+            console.error('Error saving the unit data:', error);
+        }
     }
     return (
         <div className='flex h-screen absolute z-50 w-full top-0 left-0 backdrop-blur-[1px]  items-center justify-center' >
@@ -457,8 +472,8 @@ const UnitPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
                     className='bg-white p-4 rounded-lg shadow-lg'>
                     <form method="post" onSubmit={addUnit} className='w-fit flex flex-col gap-4'>
                         <h1 className='text-xl font-semibold'>Add New Unit</h1>
-                        <input type="text" name='name' id='name' placeholder='Unit Name' className='border p-2 outline-none text-gray-800' />
-                        <input type="text" name='description' id='description' placeholder='Description' className='border p-2 outline-none text-gray-800' />
+                        <input type="text" onChange={handleunitNameChange} name="unitName" id='name' placeholder='Unit Name' className='border p-2 outline-none text-gray-800' />
+                        <input type="text" onChange={handleunitNameChange} name='unitDescription' id='description' placeholder='Description' className='border p-2 outline-none text-gray-800' />
                         <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
                         <button type='reset' onClick={() => close(false)} className='bg-red-400 w-full px-4 py-2 rounded-lg text-white'>Close</button>
                     </form>
@@ -468,32 +483,41 @@ const UnitPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
     )
 }
 
-const TaxAddPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) => {
-    const { data: taxData, error: taxError } = useSWR(
-        '/api/tax', taxFetch
-    )
-    const addTax = async (e: React.FormEvent) => {
-        e.preventDefault()
-        const formDetails = new FormData(e.target as HTMLFormElement)
-        const exist = taxData.find((item: string) =>
-            item === formDetails.get("value")
-        )
+
+const TaxAddPopUp = ({ close, mutate }: { close: Dispatch<SetStateAction<boolean>>, mutate: any }) => {
+
+    const [addData, setdata] = useState({ taxName: "", taxPercentage: "" });
+    const handleTaxNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setdata({ ...addData, [name]: value });
+    };
+
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        console.log("done");
         try {
-            if (!exist) {
-                const data = await axios.post('/api/tax', formDetails);
-                console.log(data);
-                alert("saved")
+
+            const response = await axios.post("/api/taxList", { data: addData });
+            console.log(response);
+
+            if (response.status === 200 || response.status === 200) {
+                mutate();
+                console.log("dopne");
                 close(false)
-            }
-            else {
-                alert("The tax is already exist")
-            }
+
+            };
+
+
+
+
+        } catch (error: any) {
+            console.log(error.response.data.error);
+
+            alert(error.response.data.error);
+
         }
-        catch (err: any) {
-            console.log(err)
-            close(false)
-        }
-    }
+
+    };
     return (
         <div className='flex h-screen absolute z-50 w-full top-0 left-0 backdrop-blur-[1px]  items-center justify-center' >
             <motion.div
@@ -501,14 +525,11 @@ const TaxAddPopUp = ({ close }: { close: Dispatch<SetStateAction<boolean>> }) =>
                 <motion.div
                     exit={{ opacity: 0, y: -50 }} initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .2, duration: .5, type: "tween" }}
                     className='bg-white p-4 rounded-lg shadow-lg'>
-                    <form method="post" onSubmit={addTax} className='w-fit flex flex-col gap-4'>
+                    <form method="post" onSubmit={handleSubmit} className='w-fit flex flex-col gap-4'>
                         <h1 className='text-xl font-semibold'>Add New Tax</h1>
-                        <input type="text" name='value' /* onChange={(e:React.ChangeEvent<HTMLInputElement>)=> {
-                            console.log(e.target.value);
-                            
-                        }} */ id='name' placeholder='Tax Name' className='border p-2 outline-none text-gray-800' />
-                        {/*                         <input type="text" name='name' id='value' placeholder='value' className='border p-2 outline-none text-gray-800' />
- */}                        <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
+                        <input type="text" name="taxName" onChange={handleTaxNameChange} id='name' placeholder='Tax Name' className='border p-2 outline-none text-gray-800' />
+                        <input type="text" name="taxPercentage" onChange={handleTaxNameChange} id='value' placeholder='value' className='border p-2 outline-none text-gray-800' />
+                        <button type='submit' className='bg-green-400 w-full px-4 py-2 rounded-lg text-white'>Save</button>
                         <button type='reset' onClick={() => close(false)} className='bg-red-400 w-full px-4 py-2 rounded-lg text-white'>Close</button>
                     </form>
                 </motion.div>

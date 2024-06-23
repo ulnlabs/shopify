@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
+import { v4 as uuidv4 } from 'uuid';
 
 const unitSchema = new mongoose.Schema({
     unitId: {
         type: String,
         unique: true,
+        default: () => uuidv4()
+
     },
     unitName: {
         type: String,

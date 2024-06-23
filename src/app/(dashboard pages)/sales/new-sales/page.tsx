@@ -9,10 +9,14 @@ import { useAnimation } from "framer-motion";
 import { ContextData } from "../../../../../contextapi";
 import { useRouter } from "next/navigation";
 import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
+import { useSession } from "next-auth/react";
 const page = () => {
 
 
   const { stocks: item, customerDetails, setSalesRecord } = useContext(ContextData)
+  const { data: session } = useSession();
+
+  console.log(session?.user?.username);
 
   console.log(customerDetails);
   const router = useRouter();
@@ -52,6 +56,7 @@ const page = () => {
     billTotal: 0,
     billPaymentType: "",
     billAmount: 0,
+    createdBy: session?.user?.username ? session.user?.username : "Guest",
   })
 
   const controls = useAnimation();
