@@ -4,6 +4,7 @@ import DashboardHeader from "../dashboard/DashboardHeader";
 import SearchSelect from "../sales-pur/search";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+import { useSession } from "next-auth/react";
 function Newexp() {
   const [expensesData, setExpenses] = useState<any>({})
   const [category, setCategory] = useState<string[]>([])
@@ -18,6 +19,7 @@ function Newexp() {
       setCategory(res.data)
     }).catch((err) => { })
   }, [])
+  const { data: session } = useSession()
 
   const handleReset = (): void => {
     setExpenses({
@@ -27,6 +29,7 @@ function Newexp() {
       amount: "",
       refno: "",
       note: "",
+
     });
     setSelectedCategory("")
   };
@@ -39,7 +42,8 @@ function Newexp() {
         category: selectedCategory,
         expfor: expensesData.expfor,
         refno: expensesData.refno,
-        note: expensesData.note
+        note: expensesData.note,
+        createdBy: session?.user?.username ? session.user.username : "Guest",
       }
       axios.post("/api/expenses", postData, {
         headers: {

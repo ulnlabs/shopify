@@ -7,13 +7,7 @@ import useSWR from 'swr'
 
 const page = () => {
 
-  const Customer = [
-    "Deepath",
-    "Hari",
-    "Deepath",
-    "Deepath",
-    "Deepath",
-  ]
+  
 
 
   const [from, setFrom] = useState<Date>(new Date);

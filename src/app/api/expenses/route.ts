@@ -46,6 +46,8 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
 
     const header = req.headers.get("data");
+    console.log(header);
+
     if (header === "get-category") {
         try {
             await connectDB();
@@ -73,6 +75,8 @@ export async function GET(req: Request) {
         try {
             await connectDB();
             const expenses = await addExpense.find({});
+            console.log(expenses);
+
             return NextResponse.json(expenses, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
@@ -105,8 +109,56 @@ export async function DELETE(req: Request) {
         } catch (error) {
             return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
         }
-    } else {
+    }
+    else if (header === "delete-expense") {
+        try {
+            await connectDB();
+            const { id } = await req.json();
+            console.log(id);
+
+            const Expense = await addExpense.findOneAndDelete({ _id: id });
+            console.log(Expense);
+
+            if (Expense) {
+                return NextResponse.json({ message: "Expense deleted" }, { status: 200 });
+            }
+            return NextResponse.json({ message: "Expense not found" }, { status: 404 });
+        } catch (error) {
+            return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        }
+    }
+    else {
         return NextResponse.json({ message: "Invalid Request" }, { status: 400 });
+    }
+
+}
+
+export const PUT = async (req: Request, res: NextResponse) => {
+    const { from, end } = await req.json();
+    console.log(from, end);
+    const fromDate = new Date(from);
+    fromDate.setHours(fromDate.getHours() + 5)
+    fromDate.setMinutes(fromDate.getMinutes() + 30)
+    const endDate = new Date(end);
+    endDate.setHours(endDate.getHours() + 5)
+    endDate.setMinutes(endDate.getMinutes() + 30)
+    if (fromDate.getDate() === endDate.getDate()) {
+        const data = await addExpense.find({
+            date: fromDate.setUTCHours(0, 0, 0, 0)
+        })
+        console.log("data", data);
+        return NextResponse.json(data, { status: 200 });
+
+    }
+    else {
+        const data = await addExpense.find({
+            date: {
+                $gte: fromDate,
+                $lte: endDate,
+            }
+        })
+        console.log("data", data);
+        return NextResponse.json(data, { status: 200 });
     }
 
 }

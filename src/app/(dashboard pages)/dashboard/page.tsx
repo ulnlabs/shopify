@@ -1,36 +1,178 @@
+'use client'
 import DashboardHeader from '@/app/components/dashboard/DashboardHeader'
+import axios from 'axios'
+import Link from 'next/link'
 import React, { useEffect } from 'react'
-
+import useSWR from 'swr'
 function page() {
+  const fetchTodaySales = async () => {
+    const { data } = await axios.put('/api/sales', {
+      data: {
+        header: "getSales",
+        from: new Date,
+        end: new Date
+      }
+    })
+    return data
+  }
+  const { data: todaySalesData } = useSWR("/api/sales", fetchTodaySales)
+  const SalesAmount = todaySalesData ? todaySalesData?.reduce((acc: any, data: any) => {
+    return acc + data.total
+  }, 0) : 0
+  const date = new Date
+  date.setDate(1)
+  const fetchSales = async () => {
+    const response = await axios.put('/api/sales', {
+      data: {
+        header: "getSales",
+        from: date,
+        end: new Date
+      }
+
+    })
+    return response.data
+  }
+  const { data: monthlySale } = useSWR("/api/sales", fetchSales)
+  const MonthlySaleAmount = monthlySale ? monthlySale?.reduce((acc: any, data: any) => {
+    return acc + data.total
+  }, 0) : 0
+
+  const fetchPurchase = async () => {
+    const { data } = await axios.put('/api/purchase', {
+      data: {
+        header: "getPurchase",
+        from: new Date,
+        end: new Date
+      }
+    })
+    return data
+  }
+
+  const { data: purchaseData } = useSWR("/api/purchase", fetchPurchase)
+  const PurchaseAmount = purchaseData ? purchaseData?.reduce((acc: any, data: any) => {
+    return acc + data.total
+  }, 0) : 0
+
+  const fetchMonthlyPurchase = async () => {
+    const { data } = await axios.put('/api/purchase', {
+      data: {
+        header: "getPurchase",
+        from: date,
+        end: new Date
+      }
+    })
+    return data
+  }
+
+  const { data: purchaseMonthly } = useSWR("/api/purchase", fetchMonthlyPurchase)
+  console.log(purchaseMonthly);
+
+  const purchaseMonthlyAmount = purchaseMonthly ? purchaseMonthly?.reduce((acc: any, data: any) => acc + data.total, 0) : 0
+  console.log(monthlySale ? monthlySale.length : 0);
+
+  const todaySaleCount = todaySalesData ? todaySalesData.length : 0
+  const monthlySaleCount = monthlySale ? monthlySale.length : 0
+
+  const fetchExpense = async () => {
+    const { data } = await axios.put('/api/expenses',
+      {
+        from: new Date,
+        end: new Date
+      }
+    )
+    return data
+  }
+
+  const { data: todayExpense } = useSWR("/api/expense", fetchExpense)
+  console.log(todayExpense);
+  const todayExpenseAmount = todayExpense ? todayExpense?.reduce((acc: any, data: any) => acc + data.amount, 0) : 0
+  console.log(todayExpenseAmount);
+
+  const fetchMonthlyExpense = async () => {
+    const { data } = await axios.put('/api/expenses',
+      {
+        from: date,
+        end: new Date
+      }
+    )
+    return data
+  }
+  const { data: MonthlyExpense } = useSWR("/api/expenses", fetchMonthlyExpense)
+
+  const MonthlyExpenseAmount = MonthlyExpense ? MonthlyExpense?.reduce((acc: any, data: any) => acc + data.amount, 0) : 0
+
+  function calculateProfitPercentage(purchasePrice: number, salesPrice: number) {
+    // Validate input (optional)
+    if (typeof purchasePrice !== 'number' || typeof salesPrice !== 'number') {
+      throw new Error('Invalid input: Purchase price and sales price must be numbers.');
+    }
+
+    // Handle cases where purchase price is zero (avoid division by zero)
+    if (purchasePrice === 0) {
+      return 'Cannot calculate percentage with zero purchase price.';
+    }
+
+    // Calculate profit
+    const profit = salesPrice - purchasePrice;
+
+    // Calculate profit percentage with absolute value (avoid negative percentage)
+    const profitPercentage = Math.abs((profit / purchasePrice) * 100);
+
+    // Indicate profit or loss based on sign
+    const profitOrLoss = profit > 0 ? 'Profit' : 'Loss';
+
+    return ` ${profitPercentage.toFixed(2)}% ${profitOrLoss}`;
+  }
+  const todayprofit = calculateProfitPercentage(PurchaseAmount + todayExpenseAmount, SalesAmount);
+  const monthPorfit = calculateProfitPercentage(purchaseMonthlyAmount + MonthlyExpenseAmount, MonthlySaleAmount)
+
+
+
   return (
     <div className='w-full flex flex-col items-center py-6 px-6 gap-4'>
       <DashboardHeader title='Dashboard' subtitle='Business analatics' />
       <div className="flex justify-evenly w-full gap-6 flex-wrap">
-        <SaleAmount title="today Sale Amount" amount={2000} />
-        <SaleAmount title="today Sale Amount" amount={20} />
+        <SaleAmount title="Today Sale Amount" amount={SalesAmount || 0} path="/sales/sales-list" />
+        <SaleAmount title="Monthly Sale Amount" amount={MonthlySaleAmount || 0} path="/sales/sales-list" />
+
+      </div>
+      <div className="flex justify-evenly w-full gap-6 flex-wrap">
+        <SaleAmount title="Today Purchase Amount" amount={PurchaseAmount || 0} path="/purchases/purchase-list" />
+        <SaleAmount title="Monthly Purchase Amount" amount={purchaseMonthlyAmount || 0} path="/purchases/purchase-list" />
+
+      </div>
+      <div className="flex justify-evenly w-full gap-6 flex-wrap">
+        <SaleAmount title="Today Expense Amount" amount={todayExpenseAmount || 0} path="/expenses/list" />
+        <SaleAmount title="Monthly Expense Amount" amount={MonthlyExpenseAmount || 0} path="/expenses/list" />
+
       </div>
       <div className="flex w-full justify-evenly items-center flex-wrap">
-        <ProductCount title='Product Count' count={30} subtitle='Daily Sale' dec='10% of profit from overall month' />
-        <ProductCount title='Product Count' count={30} subtitle='Daily Sale' dec='10% of profit from overall month' />
+        <ProductCount title='Today sales Count' count={todaySaleCount} subtitle='Today Sale' dec={`${todayprofit} of Today`} />
+        <ProductCount title='This Month Sales Count' count={monthlySaleCount} subtitle='This Month Sale' dec={`${monthPorfit} of from overall month`} />
       </div>
-      <div className="flex items-center justify-center w-full py-2">
+      {/*  <div className="flex items-center justify-center w-full py-2">
         <div className="sm:w-[82%] w-full h-[200px] border bg-gray-200 rounded-[30px]"></div>
-      </div>
+      </div> */}
     </div>
   )
 }
 
 export default page
 
-const SaleAmount = ({ title, amount }: { title: String, amount: number }) => {
+const SaleAmount = ({ title, amount, path }: { title: String, amount: number, path: string }) => {
   return (
-    <div className="sm:w-[400px] w-full p-2  shadow-gray-200 rounded-[20px] shadow-[inset_0px_0px_4px_1px] flex items-center justify-between">
-      <div className="min-w-[100px] min-h-[100px] border rounded-[20px] font-bold flex items-center justify-center text-4xl text-[--primary]">
-        {
-          amount >= 1000 ? amount / 1000 + "k" : (amount >= 100 && amount < 1000) ? amount / 100 + "h" : "₹" + amount
-        }
+    <div className="sm:w-[400px] w-full p-2  shadow-gray-200 rounded-[20px] shadow-[inset_0px_0px_4px_1px] ">
+      <div className='flex items-center justify-between' >
+        <div className="min-w-[100px] px-2 min-h-[100px] border rounded-[20px] font-bold flex items-center justify-center text-4xl text-[--primary]">
+          {
+            amount >= 1000 ? Math.floor(amount / 1000 * 100) / 100 + "k" : "₹" + Math.floor(amount * 100) / 100
+          }
+        </div>
+        <h2 className='text-gray-700 px-4 text-lg'>{title}</h2>
       </div>
-      <h2 className='text-gray-700 px-4 text-lg'>{title}</h2>
+      <div className='w-full flex justify-center'>
+        <Link href={path} className='text-center'>Know More</Link>
+      </div>
     </div>
   )
 }
