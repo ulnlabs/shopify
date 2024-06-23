@@ -1,4 +1,4 @@
-import React, { useState, SetStateAction, Dispatch, useRef,useEffect } from 'react'
+import React, { useState, SetStateAction, Dispatch, useRef, useEffect } from 'react'
 
 import {
     Command,
@@ -18,37 +18,41 @@ interface searchType {
     placeholder?: string,
     inputData: string[],
     searchPlaceholder?: string,
-    className?:string,
-    isExpense?:boolean,
-    upClassName?:string,
+    className?: string,
+    isExpense?: boolean,
+    upClassName?: string,
 
 }
 
-const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlaceholder,className , isExpense,upClassName}: searchType) => {
+const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlaceholder, className, isExpense, upClassName }: searchType) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const handleClick = (label: string) => {
+        console.log(label);
+
         setValue(label);
         setIsOpen(false);
     }
 
-    const selRef=useRef<any>()
-    useEffect(()=>{
-        const handleClose = (e:any) =>{
-            if (!selRef.current?.contains(e.target)){
+
+    const selRef = useRef<any>()
+    useEffect(() => {
+        const handleClose = (e: any) => {
+            if (!selRef.current?.contains(e.target)) {
                 setIsOpen(false)
             }
         }
-        document.addEventListener('click',handleClose)
-    },[])
+        document.addEventListener('click', handleClose)
+    }, [])
 
     return (
         //do  nothing
         <div ref={selRef} className='relative'>
-            
+
             <div className="  py-1  rounded-lg">
                 <div className={`  px-2 py-1  border-none rounded-md cursor-pointer ${upClassName} `} onClick={() => { setIsOpen(!isOpen) }} >
-                    <div className={`flex items-center rounded-md  ${isExpense ? "bg-gray-200" : "bg-primary" } `}>
+                    <div className={`flex items-center rounded-md  ${isExpense ? "bg-gray-200" : "bg-primary"} `}>
                         <Input placeholder={placeholder}
+
                             value={"" || value}
                             className={`border-none bg-primary-gray cursor-pointer ${className}`}
                             readOnly />
@@ -66,7 +70,7 @@ const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlacehold
                                 <CommandGroup>
                                     {
                                         inputData.map((item: any) => (
-                                            <CommandItem
+                                            <CommandItem key={item}
                                                 className="cursor-pointer bg-white px-2 py-1  rounded-md"
                                                 onSelect={() => { handleClick(item) }}
                                             >
@@ -81,7 +85,7 @@ const SearchSelect = ({ value, setValue, inputData, placeholder, searchPlacehold
                 )
             }
 
-            
+
         </div>
     )
 }

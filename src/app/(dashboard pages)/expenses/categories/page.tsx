@@ -1,68 +1,119 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "@/app/components/datatable/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+
 import { columnHeader_dataTable } from "../../../../../global";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
 function List() {
+  const [category, setCategory] = useState<any>([])
+  const [updater, setUpdater] = useState<boolean>(false)
+  const { toast } = useToast()
+  useEffect(() => {
+    axios.get("/api/expenses", {
+      headers: {
+        data: "get-category"
+      }
+    }).then((res) => setCategory(res.data)
+    )
+  }, [updater])
+  const handleDelete = (row: any): void => {
+
+    axios.delete("/api/expenses", {
+      headers: {
+        data: "delete-category"
+      },
+      data: { id: row._id },
+    }).then((res) => {
+      setUpdater(!updater);
+      toast({
+        title: "New PopUp !",
+        description: "category is deleted"
+      })
+    }).catch((err) => {
+      toast({
+        title: "New PopUp !",
+        description: "something went wrong",
+      })
+    })
+  }
+  const CATEGORY_NAME: columnHeader_dataTable = {
+    accessorKey: "name",
+    header: "Category Name",
+  };
+  const DESCRIPTION = {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }: any) =>{
+const value:string=row.getValue("description")
+if(value.length>0){
+  return( <div>{value}</div>)
+}
+else{
+  return <div className="ml-3">-</div>
+}
+    } 
+  };
+  const ACTION = {
+    accessorKey: "Action",
+    cell: ({ row }: any) => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => {
+                handleDelete(row.original);
+              }}
+            >
+              Delete category
+            </DropdownMenuItem>
+
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  };
+  const listColumn: ColumnDef<any>[] = [
+    CATEGORY_NAME,
+    DESCRIPTION,
+    ACTION,
+  ];
+
+
   return (
-    
+
     <>
 
-    <div className="container mx-auto py-3">
-      <DataTable
-        columns={listColumn}
-        data={[]}
-        column={true}
-        filter={true}
-        rows={true}
-        paginater={true}
-      />
-    </div>
-  </>
+      <div className="container mx-auto py-3">
+        <DataTable
+          columns={listColumn}
+          data={category}
+          column={false}
+          filter={true}
+          rows={true}
+          paginater={true}
+        />
+      </div>
+    </>
   );
 }
-const CTG_SELECT = {
-  id: "select",
-  header: ({ table }: any) => (
-    <Checkbox
-      checked={
-        table.getIsAllPageRowsSelected() ||
-        (table.getIsSomePageRowsSelected() && "indeterminate")
-      }
-      onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-      aria-label="Select all"
-    />
-  ),
-  cell: ({ row }: any) => (
-    <Checkbox
-      checked={row.getIsSelected()}
-      onCheckedChange={(value) => row.toggleSelected(!!value)}
-      aria-label="Select row"
-    />
-  ),
-};
-const CATEGORY_NAME: columnHeader_dataTable = {
-  accessorKey: "category_name",
-  header: "Category Name",
-};
-const DESCRIPTION: columnHeader_dataTable = {
-  accessorKey: "description",
-  header: "Description",
-};
-const STATUS: columnHeader_dataTable = {
-  accessorKey: "status",
-  header: "Status",
-};
-const ACTION: columnHeader_dataTable = {
-  accessorKey: "action",
-  header: "Action",
-};
+
 export default List;
-const listColumn: ColumnDef<any>[] = [
-  CTG_SELECT,
-  CATEGORY_NAME,
-  DESCRIPTION,
-  STATUS,
-  ACTION,
-];

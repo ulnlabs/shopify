@@ -1,36 +1,74 @@
 "use client";
-import React, { FormEvent, useContext, useState } from "react";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
 import DashboardHeader from "../dashboard/DashboardHeader";
 import SearchSelect from "../sales-pur/search";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 function Newexp() {
-const [expensesData,setExpenses] = useState<any>({})
+  const [expensesData, setExpenses] = useState<any>({})
+  const [category, setCategory] = useState<string[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string>("")
+  const { toast } = useToast()
+  useEffect(() => {
+    axios.get("/api/expenses", {
+      headers: {
+        data: "get-onlyName"
+      }
+    }).then((res) => {
+      setCategory(res.data)
+    }).catch((err) => { })
+  }, [])
+
   const handleReset = (): void => {
     setExpenses({
-      date: "",
+      date: null,
       category: "",
       expfor: "",
       amount: "",
       refno: "",
       note: "",
     });
+    setSelectedCategory("")
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    if (selectedCategory.length > 0) {
+      const postData = {
+        date: expensesData.date,
+        amount: expensesData.amount,
+        category: selectedCategory,
+        expfor: expensesData.expfor,
+        refno: expensesData.refno,
+        note: expensesData.note
+      }
+      axios.post("/api/expenses", postData, {
+        headers: {
+          data: "add-expense"
+        }
+      }).then((res) => {
 
-    setExpenses({
-      date: "",
-      category: "",
-      expfor: "",
-      amount: "",
-      refno: "",
-      note: "",
-    });
+        setExpenses({
+          date: null,
+          category: "",
+          expfor: "",
+          amount: "",
+          refno: "",
+          note: "",
+        });
+      }).catch((err) => { })
+    } else {
+      toast({
+        title: "New PopUp !",
+        description: "Please select category",
+      })
+    }
+
   };
   return (
     <>
-    <div className="mt-8 ml-4">
-      <DashboardHeader title="Expenses" subtitle="Add/Update Expense" breadcrumb={[{title:"dashboard",path:"/dashboard"},{title:"Expenses",path:""}]}/>
-    </div>
+      <div className="mt-8 ml-4">
+        <DashboardHeader title="Expenses" subtitle="Add/Update Expense" breadcrumb={[{ title: "dashboard", path: "/dashboard" }, { title: "Expenses", path: "" }]} />
+      </div>
       <main className="flex">
         <section className=" min-h-[500px]  mt-28 w-[90%] ml-[5%] rounded-2xl shadow-[rgba(50,50,93,0.25)_0px_6px_4px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px]">
           <form
@@ -46,10 +84,10 @@ const [expensesData,setExpenses] = useState<any>({})
                 Date<span className="text-red-400">*</span>
               </label>
               <input
+                value={expensesData.date}
                 onChange={(e) =>
-                  setExpenses({ ...expensesData, name: e.target.value })
+                  setExpenses({ ...expensesData, date: e.target.value })
                 }
-                value={expensesData.name}
                 required
                 type="date"
                 id="date"
@@ -64,8 +102,8 @@ const [expensesData,setExpenses] = useState<any>({})
               >
                 Category<span className="text-red-400">*</span>
               </label>
-              <div className="col-start-2  md:col-s{ttart-1 md:col-span-5  col-span-3">
-              <SearchSelect isExpense className="bg-gray-200 h-8 " upClassName="bg-gray-200 " value={expensesData} setValue={setExpenses} inputData={["category","fuel"]} placeholder="Select" searchPlaceholder="Search category" />
+              <div className="col-start-2  md:col-start-1 md:col-span-5  col-span-3">
+                <SearchSelect isExpense className="bg-gray-200 h-8 " upClassName="bg-gray-200 " value={selectedCategory} setValue={setSelectedCategory} inputData={category} placeholder="Select" searchPlaceholder="Search category" />
               </div>
             </div>
             <div className="md:col-span-5  md:col-end-5 row-span-2 grid grid-cols-5 col-span-12   ">
@@ -76,10 +114,11 @@ const [expensesData,setExpenses] = useState<any>({})
                 Expense for<span className="text-red-400">*</span>
               </label>
               <input
+                required={true}
                 onChange={(e) =>
-                  setExpenses({ ...expensesData, email: e.target.value })
+                  setExpenses({ ...expensesData, expfor: e.target.value })
                 }
-                value={expensesData.email}
+                value={expensesData.expfor}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="expfor"
                 id="expfor"
@@ -95,15 +134,27 @@ const [expensesData,setExpenses] = useState<any>({})
                 Amount<span className="text-red-400">*</span>
               </label>
               <input
-                onChange={(e) =>
-                  setExpenses({ ...expensesData, due: e.target.value })
-                }
-                value={expensesData.due}
-                className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
+                required={true}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+
+                  setExpenses({ ...expensesData, amount: value });
+
+                }}
+                onKeyDown={(e) => {
+                  if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== ".") {
+                    e.preventDefault();
+                  }
+                }}
+                value={expensesData.amount}
+                className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3 px-2 outline-none rounded-md"
                 type="text"
+                inputMode="numeric"
                 name="amount"
                 id="amount"
               />
+
             </div>
             <div className="md:col-span-5 md:col-start-7  md:col-end-12 row-span-2 grid grid-cols-5 col-span-12    md:row-start-3">
               <label
@@ -113,10 +164,11 @@ const [expensesData,setExpenses] = useState<any>({})
                 Reference No<span className="text-red-400">*</span>
               </label>
               <input
+                required={true}
                 onChange={(e) =>
-                  setExpenses({ ...expensesData, state: e.target.value })
+                  setExpenses({ ...expensesData, refno: e.target.value })
                 }
-                value={expensesData.state}
+                value={expensesData.refno}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="refno"
                 type="text"
@@ -132,9 +184,9 @@ const [expensesData,setExpenses] = useState<any>({})
               </label>
               <input
                 onChange={(e) =>
-                  setExpenses({ ...expensesData, city: e.target.value })
+                  setExpenses({ ...expensesData, note: e.target.value })
                 }
-                value={expensesData.city}
+                value={expensesData.note}
                 className="h-10 bg-gray-200 col-start-2 md:col-start-1 md:col-span-5 col-span-3  px-2 outline-none rounded-md"
                 name="note"
                 type="text"
