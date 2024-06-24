@@ -43,8 +43,8 @@ export const authConfig: NextAuthOptions = {
         email?: string;
       }
       const extendedUser = user as ExtendedUser;
-      const { status } = await User.findOne({ email: extendedUser.email }).select('status');
       if (extendedUser?.role) {
+        const { status } = await User.findOne({ email: extendedUser.email })
         return {
           ...token,
           role: extendedUser.role,
