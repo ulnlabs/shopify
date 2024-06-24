@@ -68,19 +68,19 @@ function page({ }: Props) {
                     <div className="flex gap-4 flex-col w-full items-center justify-center p-4">
                         <div className="grid lg:col-start-1 grid-cols-4 grid-rows-6 gap-4">
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="username">User Name <span className='text-red-400'>*</span></label>
-                            <input value={userdata.username} onChange={(e) => setUserDate({ ...userdata, username: e.target.value })} id='username' type="text" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
+                            <input onChange={(e) => setUserDate({ ...userdata, username: e.target.value })} id='username' type="text" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="phnum">Phone Number <span className='text-red-400'>*</span></label>
-                            <input value={userdata.phoneno} onChange={(e) => setUserDate({ ...userdata, phoneno: e.target.value })} id='phnum' type="tel" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
+                            <input onChange={(e) => setUserDate({ ...userdata, phoneno: e.target.value })} id='phnum' type="tel" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="email">Email <span className='text-red-400'>*</span></label>
-                            <input value={userdata.email} onChange={(e) => setUserDate({ ...userdata, email: e.target.value })} id='email' type="email" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
+                            <input onChange={(e) => setUserDate({ ...userdata, email: e.target.value })} id='email' type="email" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="role">role<span className='text-red-400'>*</span></label>
                             <div className="col-start-3 lg:col-span-3 col-span-4">
                                 <Selector commonTitle='select role' changeState={setUserRole} currentstate={userdata.role} data={["admin", "worker"]} />
                             </div>
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="password">Password <span className='text-red-400'>*</span></label>
-                            <input value={userdata.password} onChange={(e) => setUserDate({ ...userdata, password: e.target.value })} id='password' type="password" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
+                            <input onChange={(e) => setUserDate({ ...userdata, password: e.target.value })} id='password' type="password" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
                             <label className='col-start-1 col-span-1  text-left whitespace-nowrap' htmlFor="conformpassword">Conform Password <span className='text-red-400'>*</span></label>
-                            <input value={userdata.conformpass} onChange={(e) => setUserDate({ ...userdata, conformpass: e.target.value })} id='conformpassword' type="password" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
+                            <input onChange={(e) => setUserDate({ ...userdata, conformpass: e.target.value })} id='conformpassword' type="password" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
                         </div>
                     </div>
                     <div className="h-fit w-full py-4 flex items-center justify-center gap-4">
