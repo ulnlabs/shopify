@@ -40,19 +40,16 @@ export const authConfig: NextAuthOptions = {
         role?: string;
         username?: string;
         status?: String;
-        email?:string;
+        email?: string;
       }
       const extendedUser = user as ExtendedUser;
-      const { status } = await fetch('/api/user/status', {
-        method: 'PUT',
-        body: JSON.stringify({ email: extendedUser.email })
-      })
+      const { status } = await User.findOne({ email: extendedUser.email }).select('status');
       if (extendedUser?.role) {
         return {
           ...token,
           role: extendedUser.role,
           username: extendedUser.username,
-          status:status
+          status: status
         };
       }
       return token;
