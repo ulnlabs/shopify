@@ -39,13 +39,15 @@ export const authConfig: NextAuthOptions = {
       interface ExtendedUser {
         role?: string;
         username?: string;
+        status?:String
       }
-      const extendedUser = user as ExtendedUser;      
+      const extendedUser = user as ExtendedUser;     
       if (extendedUser?.role) {
         return {
           ...token,
           role: extendedUser.role,
           username:extendedUser.username,
+          status:extendedUser.status
         };
       }
       return token;
@@ -56,7 +58,8 @@ export const authConfig: NextAuthOptions = {
         user: {
           ...session.user,
           role: token.role,
-          username:token.username
+          username:token.username,
+          status:token.status
         },
       };
     },

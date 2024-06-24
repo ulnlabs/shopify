@@ -8,24 +8,29 @@ import { Toaster } from "@/components/ui/toaster"
 import axios from "axios";
 import { useContext, useEffect } from "react";
 import { ContextData } from "../../../contextapi";
-import { useSession } from "next-auth/react";
-
-const inter = Inter({ subsets: ["latin"] });
+import { signOut, useSession } from "next-auth/react";
+import useSWR from "swr";
 
 export default function RootLayout
   ({
-
-
-
     children,
   }: Readonly<{
     children: React.ReactNode;
   }>) {
 
   const { setCustomerDetails } = useContext(ContextData);
-
   const { setSupplierDetails } = useContext(ContextData);
-
+  const { data: session } = useSession()
+  const { data: status } = useSWR('status', async () => {
+    const res = await fetch('/api/user/status', {
+      method: 'PUT',
+      body: JSON.stringify({ email: session?.user?.email })
+    })
+    if (res.ok) {
+      const { status } = await res.json();
+      return status
+    }
+  })
   useEffect(() => {
     async function getData(): Promise<void> {
       const responseCustomer = await axios.get(`/api/customers`, {
@@ -48,23 +53,32 @@ export default function RootLayout
     }
     getData();
   }, []);
-  const { data: session } = useSession()
+
   return (
     <UserProvider>
       {
         session?.user?.email ? (
-          <>
-            <div className="min-h-screen max-w-screen flex justify-between">
-              <SideBar />
-              <div className="w-full max-h-screen overflow-hidden">
-                <Header />
-                <div className="w-full max-h-[calc(100vh_-_60px)] overflow-y-scroll flex flex-col items-center justify-start scrollbar-hide">
-                  {children}
+          status === 'active' ? (
+            <>
+              <div className="min-h-screen max-w-screen flex justify-between">
+                <SideBar />
+                <div className="w-full max-h-screen overflow-hidden">
+                  <Header />
+                  <div className="w-full max-h-[calc(100vh_-_60px)] overflow-y-scroll flex flex-col items-center justify-start scrollbar-hide">
+                    {children}
+                  </div>
                 </div>
               </div>
-            </div>
-            <Toaster />
-          </>
+              <Toaster />
+            </>
+          ) : (
+            <>
+              <div className="flex h-screen w-screen items-center justify-center flex-col gap-6">
+                  <h1>Your Account as been suspended by admin</h1>
+                  <button className="text-white font-semibold px-6 py-2 rounded bg-[--primary]" onClick={()=>signOut()}>Exit Account</button>
+              </div>
+            </>
+          )
         ) : (
           <div className="flex items-center justify-center h-screen bg-gray-100">
             <div className="flex space-x-2 animate-pulse">
