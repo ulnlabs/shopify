@@ -77,8 +77,8 @@ export const PUT = async (req: Request) => {
             return NextResponse.json(modified);
         }
         else if (header === "getSales") {
-            const findData = await Sales.find().populate('_id')
-            console.log("findData", findData);
+            /*  const findData = await Sales.find().populate('_id')
+             console.log("findData", findData); */
 
             const { from, end } = data.data
             const fromDate = new Date(from);
@@ -87,7 +87,11 @@ export const PUT = async (req: Request) => {
             const endDate = new Date(end);
             endDate.setHours(endDate.getHours() + 5)
             endDate.setMinutes(endDate.getMinutes() + 30)
+            console.log("done", endDate.getDate(), fromDate.getDate());
+
             if (fromDate.getDate() === endDate.getDate()) {
+                console.log("done");
+
                 const data = await Sales.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
                     $or: [

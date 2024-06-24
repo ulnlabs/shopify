@@ -8,7 +8,6 @@ import companyDetail from '@/app/mongoose/models/companyProfile'
 import { ContextData } from '../../../../contextapi'
 interface invoiceType {
   date: Date | any
-  customerName: string | any
   invoiceId: string | any
   discountAll: number | any
   otherCharges: number | any
@@ -24,7 +23,7 @@ interface invoiceType {
   s_id?: {} | any
 
 }
-function invoice({ date, customerName, invoiceId, discountAll, discountType, otherCharges, itemList, paymentType, note, taxType, total, isSales, status, c_id, s_id }: invoiceType) {
+function invoice({ date, invoiceId, discountAll, discountType, otherCharges, itemList, paymentType, note, taxType, total, isSales, status, c_id, s_id }: invoiceType) {
 
   const router = useRouter()
 
@@ -255,7 +254,7 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
             </div>
           </div>
         </div>
-        <div className="w-full px-10 flex gap-3 flex-wrap mt-2 ">
+        <div className="w-full px-10 mb-5 flex gap-3 flex-wrap mt-2 ">
 
           <button className='bg-green-400  px-2 py-3 rounded-md' onClick={handlePrint} >Print</button>
           {isSales ? <button className='bg-yellow-400  px-2 py-3 rounded-md'

@@ -148,10 +148,11 @@ const page = () => {
 
   console.log(salesReturnData);
 
+
+
   return (
     <div className="w-full ">
       <DashboardHeader title="Sales" subtitle={"New Return"} />
-
       <NewReturn
         placeholder="Search Customer"
         data={salesReturnData}
@@ -166,11 +167,12 @@ const page = () => {
         setItemList={setItemList}
 
       />
-      <div className="flex justify-center pt-5 pb-10 gap-10">
+      {itemList && <div className="flex justify-center pt-5 pb-10 gap-10">
         <button onClick={handleClick} type="button" className="w-20 py-2 bg-primary-save rounded-md text-white">Save</button>
         <Link href={"/dashboard"} className="w-20 py-2 text-center bg-primary-close rounded-md text-white">Close</Link>
-      </div>
+      </div>}
     </div>
-  );
+  )
+
 };
 export default page;

@@ -12,7 +12,7 @@ const page = () => {
   const [end, setEnd] = useState<Date>(new Date);
 
   const fetchSales = async () => {
-    console.log(from.setUTCHours(0, 0, 0, 0));
+
 
     const response = await axios.put('/api/sales', {
 

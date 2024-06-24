@@ -101,6 +101,8 @@ export const PUT = async (req: Request) => {
             endDate.setMinutes(endDate.getMinutes() + 30)
             console.log(endDate);
             if (fromDate.getDate() === endDate.getDate()) {
+                console.log("done");
+
                 const data = await Purchase.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
                     $or: [
@@ -110,7 +112,9 @@ export const PUT = async (req: Request) => {
                     ]
                 }).sort({ 'createdAt': -1 }).populate("s_id").lean();
                 console.log(data);
-                const modified = data.map((purchase: any) => {
+                const modified = data?.map((purchase: any) => {
+                    console.log(purchase.s_id);
+
                     const itemList = purchase.items.map((item: any) => {
                         const { total, taxValue, discountValue } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
                         return ({
@@ -150,11 +154,12 @@ export const PUT = async (req: Request) => {
                     ]
 
                 }).sort({ 'createdAt': -1 }).populate("s_id").lean();
+                console.log("done");
 
                 console.log(data);
 
 
-                const modified = data.map((purchase: any) => {
+                const modified = data && data?.map((purchase: any) => {
 
                     const itemList = purchase.items.map((item: any) => {
                         const { total, taxValue, discountValue } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
