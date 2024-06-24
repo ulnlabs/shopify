@@ -14,14 +14,14 @@ export const authConfig: NextAuthOptions = {
           username: string;
           password: string;
         };
-        
+
         if (!credentials || !username || !password) return null;
         await connectDB();
         const user = await User.findOne({ username });
         if (!user) return null;
         const verifypassword = await bcrypt.compare(password, user.password);
-        console.log(await bcrypt.compare(password,user.password));
-        
+        console.log(await bcrypt.compare(password, user.password));
+
         if (!verifypassword) return null;
         return user;
       },
@@ -39,15 +39,20 @@ export const authConfig: NextAuthOptions = {
       interface ExtendedUser {
         role?: string;
         username?: string;
-        status?:String
+        status?: String;
+        email?:string;
       }
-      const extendedUser = user as ExtendedUser;     
+      const extendedUser = user as ExtendedUser;
+      const { status } = await fetch('/api/user/status', {
+        method: 'PUT',
+        body: JSON.stringify({ email: extendedUser.email })
+      })
       if (extendedUser?.role) {
         return {
           ...token,
           role: extendedUser.role,
-          username:extendedUser.username,
-          status:extendedUser.status
+          username: extendedUser.username,
+          status:status
         };
       }
       return token;
@@ -58,8 +63,8 @@ export const authConfig: NextAuthOptions = {
         user: {
           ...session.user,
           role: token.role,
-          username:token.username,
-          status:token.status
+          username: token.username,
+          status: token.status
         },
       };
     },

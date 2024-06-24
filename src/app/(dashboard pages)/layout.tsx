@@ -58,7 +58,14 @@ export default function RootLayout
     <UserProvider>
       {
         session?.user?.email ? (
-          status === 'active' ? (
+          session.user.status === 'suspend' ? (
+            <>
+              <div className="flex h-screen w-screen items-center justify-center flex-col gap-6">
+                <h1>Your Account as been suspended by admin</h1>
+                <button className="text-white font-semibold px-6 py-2 rounded bg-[--primary]" onClick={() => signOut()}>Exit Account</button>
+              </div>
+            </>
+          ) : (
             <>
               <div className="min-h-screen max-w-screen flex justify-between">
                 <SideBar />
@@ -70,13 +77,6 @@ export default function RootLayout
                 </div>
               </div>
               <Toaster />
-            </>
-          ) : (
-            <>
-              <div className="flex h-screen w-screen items-center justify-center flex-col gap-6">
-                  <h1>Your Account as been suspended by admin</h1>
-                  <button className="text-white font-semibold px-6 py-2 rounded bg-[--primary]" onClick={()=>signOut()}>Exit Account</button>
-              </div>
             </>
           )
         ) : (
