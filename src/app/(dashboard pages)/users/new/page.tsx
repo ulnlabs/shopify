@@ -24,7 +24,7 @@ function page({ }: Props) {
     const [userdata, setUserDate] = useState<userDatatype | null>();
     const [profile, setProfile] = useState<string>();
     const router = useRouter()
-    const eventHander = async (e: React.FormEvent) => {
+    const eventHander = async (e:any) => {
         e.preventDefault()
         if (!userdata?.username && !userdata?.email && !userdata?.password && !userdata?.phoneno && !userdata?.role && !userdata?.conformpass) {
             toast.warn("please fill all fields");
@@ -54,6 +54,7 @@ function page({ }: Props) {
         if (postacc.status == 200) {
             toast.success('New User Added');
             setUserDate({})
+            e.target.reset();
             return
         }
         toast.error('Something Went Wrong!');
