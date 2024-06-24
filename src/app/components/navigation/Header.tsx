@@ -5,6 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FaBars } from 'react-icons/fa6';
+import { VscAccount } from 'react-icons/vsc'
 
 
 const profileVarient = {
@@ -54,7 +55,7 @@ function Header() {
         <div className="logo md:hidden flex items-center justify-center"></div>
       </div>
       <div className="relative capitalize text-gray-800 font-semibold flex flex-col items-end h-fit">
-        <h1 ref={profileRef} className='text-gray-800 cursor-pointer' onClick={() => setToggleProfile(!toggleprofile)}>{session?.user?.username}</h1>
+        <h1 ref={profileRef} className='text-gray-800 cursor-pointer flex item-center justify-center gap-4' onClick={() => setToggleProfile(!toggleprofile)}><VscAccount />{session?.user?.username}</h1>
         <AnimatePresence mode='wait'>
           {
             toggleprofile && (
