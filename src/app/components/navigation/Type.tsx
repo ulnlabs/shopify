@@ -158,57 +158,7 @@ export const adminItems: NavBarItem[] = [
     }, {
         label: 'reports',
         icon: <GiNewspaper />,
-        key: "/reports",
-        children: [
-            {
-                label: 'Profit & Loss Report',
-                key: "/reports/profit-loss"
-            },
-            {
-                label: 'Purchase Report',
-                key: "/reports/purchase"
-            },
-            {
-                label: 'Purchase Return Report',
-                key: "/reports/purchase-return"
-            },
-            {
-                label: 'Purchase Payments Report',
-                key: "/reports/purchase-payments"
-            },
-            {
-                label: 'Item Sales Report',
-                key: "/reports/item-sales"
-            },
-            {
-                label: 'Item Purchase Report',
-                key: "/reports/item-purchase"
-            },
-            {
-                label: 'Sales Report',
-                key: "/reports/sales"
-            },
-            {
-                label: 'Sales Return Report',
-                key: "/reports/sales-return"
-            },
-            {
-                label: 'Sales Payments Report',
-                key: "/reports/sales-payments"
-            },
-            {
-                label: 'Stock Report',
-                key: "/reports/stock"
-            },
-            {
-                label: 'Expense Report',
-                key: "/reports/expense"
-            },
-            {
-                label: 'Expired Items Report',
-                key: "/reports/expired-items"
-            },
-        ]
+        key: "/reports/profit-loss",
     }, {
         label: 'Users',
         icon: <TiUser />,
