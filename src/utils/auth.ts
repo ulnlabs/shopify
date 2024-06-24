@@ -39,29 +39,27 @@ export const authConfig: NextAuthOptions = {
       interface ExtendedUser {
         role?: string;
         username?: string;
-        status?: String;
         email?: string;
       }
       const extendedUser = user as ExtendedUser;
       if (extendedUser?.role) {
-        const { status } = await User.findOne({ email: extendedUser.email })
         return {
           ...token,
           role: extendedUser.role,
           username: extendedUser.username,
-          status: status
         };
       }
       return token;
     },
     async session({ session, token }) {
+      const { status } = await User.findOne({ email: token.email })
       return {
         ...session,
         user: {
           ...session.user,
           role: token.role,
           username: token.username,
-          status: token.status
+          status: status
         },
       };
     },
