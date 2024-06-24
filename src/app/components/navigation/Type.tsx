@@ -155,11 +155,7 @@ export const adminItems: NavBarItem[] = [
                 key: "/expenses/categories"
             },
         ]
-    }, {
-        label: 'reports',
-        icon: <GiNewspaper />,
-        key: "/reports/profit-loss",
-    }, {
+    },{
         label: 'Users',
         icon: <TiUser />,
         key: "/users",
