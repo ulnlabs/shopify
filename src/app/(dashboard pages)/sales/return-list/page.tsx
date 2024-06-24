@@ -1,4 +1,5 @@
 "use client"
+import DashboardHeader from '@/app/components/dashboard/DashboardHeader';
 import List from '@/app/components/sales-pur/list'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
@@ -23,7 +24,7 @@ const page = () => {
       }
 
     })
-  
+
     return response.data
   }
 
@@ -36,7 +37,7 @@ const page = () => {
 
   return (
     <div className='w-full px-10'>
-      <h1>Sales Return List</h1>
+      <DashboardHeader title="Sales" subtitle={"Return List"} />
       <List list={data ? data : []} mutate={mutate} path='new-sales' page="Sales" setFrom={setFrom} setEnd={setEnd} from={from} end={end} isReturn={true} isSales={true} />
 
     </div>

@@ -3,13 +3,10 @@ import mongoose, { Schema } from "mongoose";
 
 const purchaseSchema = new Schema({
     s_id: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'supplier'
     },
-    s_name: {
-        type: String,
-        required: true
-    },
+   
     date: {
         type: Date,
         required: true
@@ -79,6 +76,10 @@ const purchaseSchema = new Schema({
         required: true
     },
     status: {
+        type: String,
+        required: true
+    },
+    createdBy: {
         type: String,
         required: true
     }

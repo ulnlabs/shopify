@@ -108,13 +108,11 @@ export const PUT = async (req: Request) => {
                         { status: "Return Raised" }
 
                     ]
-                }).sort({ 'createdAt': -1 }).lean();
+                }).sort({ 'createdAt': -1 }).populate("s_id").lean();
                 console.log(data);
                 const modified = data.map((purchase: any) => {
                     const itemList = purchase.items.map((item: any) => {
                         const { total, taxValue, discountValue } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
-                        console.log(item.discountPer);
-
                         return ({
                             ...item,
                             taxAmount: Math.floor(taxValue * 100) / 100,
@@ -127,7 +125,7 @@ export const PUT = async (req: Request) => {
                     return ({
                         ...purchase,
                         date: format(purchase.date, "dd-MM-yy"),
-                        c_name: purchase.c_name,
+                        s_name: purchase.s_id?.name,
                         purchaseCode: purchase.purchaseCode,
                         total: findOverall(purchase),
                         status: purchase.status,
@@ -151,7 +149,7 @@ export const PUT = async (req: Request) => {
 
                     ]
 
-                }).sort({ 'createdAt': -1 }).lean();
+                }).sort({ 'createdAt': -1 }).populate("s_id").lean();
 
                 console.log(data);
 
@@ -174,7 +172,7 @@ export const PUT = async (req: Request) => {
                     return ({
                         ...purchase,
                         date: format(purchase.date, "dd-MM-yy"),
-                        s_name: purchase.s_name,
+                        s_name: purchase.s_id?.name,
                         purchaseCode: purchase.purchaseCode,
                         total: findOverall(purchase),
                         status: purchase.status,
@@ -199,7 +197,7 @@ export const PUT = async (req: Request) => {
                 const data = await Purchase.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
                     status: "Returned"
-                }).sort({ 'createdAt': -1 }).lean();
+                }).sort({ 'createdAt': -1 }).populate("s_id").lean();
                 console.log(data);
                 const modified = data.map((purchase: any) => {
                     const itemList = purchase.items.map((item: any) => {
@@ -216,7 +214,7 @@ export const PUT = async (req: Request) => {
                     return ({
                         ...purchase,
                         date: format(purchase.date, "dd-MM-yy"),
-                        s_name: purchase.s_name,
+                        s_name: purchase.s_id?.name,
                         purchaseCode: purchase.purchaseCode,
                         total: findOverall(purchase),
                         status: purchase.status,
@@ -237,7 +235,7 @@ export const PUT = async (req: Request) => {
                     },
                     status: "Returned"
 
-                }).sort({ 'createdAt': -1 }).lean();
+                }).sort({ 'createdAt': -1 }).populate("s_id").lean();
 
                 const modified = data.map((purchase: any) => {
                     const itemList = purchase.items.map((item: any) => {
@@ -254,7 +252,7 @@ export const PUT = async (req: Request) => {
                     return ({
                         ...purchase,
                         date: format(purchase.date, "dd-MM-yy"),
-                        s_name: purchase.s_name,
+                        s_name: purchase.s_id?.name,
                         purchaseCode: purchase.purchaseCode,
                         total: findOverall(purchase),
                         status: purchase.status,
@@ -296,7 +294,7 @@ export async function POST(req: any) {
         const counter = temp[0]?.purchaseCode.match(/\d+/g)!.map(Number)[0];
         const codeValue = counter > 0 ? String(counter + 1) : "1"
         const purchaseCode = "pu" + codeValue.padStart(4, '0');
-        const { customerName: s_name, billDiscountType: discountType, billDiscount: discount, billCharges: otherCharges, customerId: s_id, billDate, billPaymentType: paymentType/* , billStatus: status */, billTaxType: taxType, billNote: note } = data.purchase;
+        const { createdBy, billDiscountType: discountType, billDiscount: discount, billCharges: otherCharges, customerId: s_id, billDate, billPaymentType: paymentType/* , billStatus: status */, billTaxType: taxType, billNote: note } = data.purchase;
         console.log();
         const { status } = data
         console.log(status);
@@ -326,7 +324,7 @@ export async function POST(req: any) {
             session.startTransaction();
             const newPurchase = await Purchase.create([{
                 s_id,
-                s_name,
+
                 date,
                 purchaseCode,
                 taxType,
@@ -336,6 +334,7 @@ export async function POST(req: any) {
                 items: itemData,
                 paymentType,
                 status,
+                createdBy,
                 note
             }], { session });
             console.log("purchases", newPurchase);
@@ -352,7 +351,7 @@ export async function POST(req: any) {
 
             const data = [{
                 s_id,
-                s_name,
+
                 date,
                 purchaseCode,
                 taxType,
@@ -381,7 +380,6 @@ export async function POST(req: any) {
                 return ({
                     ...purchase,
                     date: format(purchase.date, "dd-MM-yy"),
-                    c_name: purchase.c_name,
                     purchaseCode: purchase.purchaseCode,
                     total: findOverall(purchase),
                     items: itemList

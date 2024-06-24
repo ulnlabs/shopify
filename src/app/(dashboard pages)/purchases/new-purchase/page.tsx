@@ -7,11 +7,14 @@ import { FormState } from "../../../../../global";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { ContextData } from "../../../../../contextapi";
+import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
 
 const page = () => {
   const router = useRouter();
 
   const { data: session } = useSession();
+  console.log(session?.user?.name);
+
   const [purchaseData, setPurchaseData] = useState<FormState>({
     customerName: "",
     customerId: 0,
@@ -30,6 +33,7 @@ const page = () => {
     billPaymentType: "",
     billAmount: 0,
     billUserName: "",
+    createdBy: session?.user?.username ? session.user?.username : "Guest",
   })
 
   const { stocks: Items, supplierDetails, setPurchaseRecord } = useContext(ContextData)
@@ -90,7 +94,8 @@ const page = () => {
 
   return (
     <div className="w-full ">
-      <h1 className="px-10 pt-5 ">New Purchase</h1>
+      <DashboardHeader title="Purchasae" subtitle={"New"} />
+
 
       <NewPurchase
         isSales={false}  //false parameter used to behave as purchase

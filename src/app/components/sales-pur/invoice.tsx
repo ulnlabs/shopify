@@ -1,9 +1,11 @@
 'use client'
-import React, { useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import DataTable from './billDatable'
 import { columnHeader_dataTable } from '../../../../global'
 import { useRouter } from 'next/navigation'
 import { useReactToPrint } from 'react-to-print';
+import companyDetail from '@/app/mongoose/models/companyProfile'
+import { ContextData } from '../../../../contextapi'
 interface invoiceType {
   date: Date | any
   customerName: string | any
@@ -18,8 +20,11 @@ interface invoiceType {
   total: number | any
   isSales?: boolean | any
   status?: string | any
+  c_id?: {} | any
+  s_id?: {} | any
+
 }
-function invoice({ date, customerName, invoiceId, discountAll, discountType, otherCharges, itemList, paymentType, note, taxType, total, isSales, status }: invoiceType) {
+function invoice({ date, customerName, invoiceId, discountAll, discountType, otherCharges, itemList, paymentType, note, taxType, total, isSales, status, c_id, s_id }: invoiceType) {
 
   const router = useRouter()
 
@@ -134,6 +139,10 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
     const year = currentDate.getFullYear();
     console.log(year); */
 
+  const { companyDetail } = useContext(ContextData);
+  console.log(companyDetail);
+
+
 
 
   console.log(taxType);
@@ -196,18 +205,29 @@ function invoice({ date, customerName, invoiceId, discountAll, discountType, oth
             <div className="w-full  flex md:flex-row flex-col justify-between md:gap-0 gap-3">
               <div>
                 <p>From</p>
-                {/*  <p>{customer.name}</p>
-                <p>{customer.address}</p>
-                <p>{customer.mobile}</p>
-                <p>{customer.email}</p>
-                <p>{customer.gstNumber}</p>
-                <p>{customer.vatNumber}</p> */}
+                <p>{companyDetail.companyName}</p>
+                <p>{companyDetail.address},{companyDetail.city},{companyDetail.state}</p>
+                <p>{companyDetail.country} </p>
+                <p>{companyDetail.mobile}</p>
+                <p>{companyDetail.email}</p>
+                <p>{companyDetail.gstNo}</p>
+                <p>{companyDetail.vatNo}</p>
               </div>
               <div className="">
-                {isSales ? <p>Customer Details</p>
-                  : <p>Supplier Details</p>
+                {isSales ? <div>
+                  <p>Customer Details</p>
+                  <p>Name: {c_id.name ? c_id?.name : "Unkown"}</p>
+                  <p>Mobile: {c_id.mobile ? c_id?.mobile : "XXXXXXXXXX"}</p>
+                  <p>Address: {c_id?.address ? c_id.address : " ..."}  </p>
+                </div>
+                  : <div>
+                    <p>Supplier Details</p>
+                    <p>Name: {s_id.name ? s_id?.name : "Unkown"}</p>
+                    <p>Mobile: {s_id.mobile ? s_id?.mobile : "XXXXXXXXXX"}</p>
+                    <p>Address: {s_id.address ? s_id.address : "..."} </p>
+                  </div>
                 }
-                <p>{customerName}</p>
+
               </div>
               <div>
                 <p>Invoice #{invoiceId}</p>

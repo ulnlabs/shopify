@@ -1,4 +1,5 @@
 "use client"
+import DashboardHeader from '@/app/components/dashboard/DashboardHeader';
 import List from '@/app/components/sales-pur/list'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
@@ -32,7 +33,8 @@ const page = () => {
   }, [from, end])
   return (
     <div className='w-full px-10'>
-      <h1>Purchase Return List</h1>
+      <DashboardHeader title="Purchasae" subtitle={"Return List"} />
+
       <List list={purchaseData ? purchaseData : []} path='new-purchase' page="Purchase" setFrom={setFrom} setEnd={setEnd} from={from} mutate={mutate} end={end} />
 
     </div>

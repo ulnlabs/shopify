@@ -3,13 +3,10 @@ import mongoose, { Schema } from 'mongoose';
 
 const SalesSchema = new Schema({
     c_id: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'customer'
     },
-    c_name: {
-        type: String,
-        required: true
-    },
+
     date: {
         type: Date,
         required: true
@@ -79,6 +76,10 @@ const SalesSchema = new Schema({
         required: true
     },
     status: {
+        type: String,
+        required: true
+    },
+    createdBy: {
         type: String,
         required: true
     }

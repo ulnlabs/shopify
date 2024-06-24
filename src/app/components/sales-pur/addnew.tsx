@@ -19,11 +19,12 @@ import { columnHeader_dataTable } from "../../../../global";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import Notification from "@/app/components/sales-pur/Notification";
+import { toast } from "@/components/ui/use-toast";
 
 
 const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, inputItem, setInputItem, itemList, setItemList, searchPlaceholder }: any) => {
 
-  const [notificationStatus,setnotificationStatus]=useState<boolean>(false)
+  const [notificationStatus, setnotificationStatus] = useState<boolean>(false)
   console.log(itemList);
 
   const { data: session } = useSession();
@@ -90,6 +91,12 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
             }
             const upQuantity = itemList.map((item: any) => item.itemName === row.original.itemName ? uplist : item)
             setItemList(upQuantity)
+          }
+          else {
+            toast({
+              title: "New PopUp !",
+              description: "Reached Maximum Stock limit",
+            });
           }
         }} >
           <AiOutlinePlus />
@@ -279,28 +286,51 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
           setItemList(updatedList);
           setInputItem("");
         }
+        else {
+          toast({
+            title: "New PopUp !",
+            description: "Reached Maximum Stock limit",
+          });
+        }
       }
     }
-    else{
-     
-      setnotificationStatus(true);
-      setTimeout(() => {
-        setnotificationStatus(false);
-      }, 3000);
+    else {
 
+      toast({
+        title: "New PopUp !",
+        description: "Out of stock",
+      });
 
     }
 
   }
 
   const [taxex, setTaxex] = useState<any>([]);
+  const [paymentData, setPaymentData] = useState<any>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: tax } = await axios.put("/api/tax")
-      console.log(tax[0].value);
+      const { data: tax } = await axios.put("/api/taxList",
+        {
+          header: "sales-pur"
+        }
+      )
+      console.log(tax);
+      const { data: payment } = await axios.get("/api/paymentList");
+      console.log("payment", payment.data);
+
+      const modified = payment.data.map((item: any) => {
+        return {
+          ...payment.data,
+          value: item.paymentName
+        }
+      })
+
+      console.log(modified[0].value);
+
 
       setTaxex(tax)
+      setPaymentData(modified);
 
     }
     fetchData();
@@ -315,11 +345,11 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
     ] */
   const discountType = [
     {
-      label: "Fixed",
+      value: "Fixed",
 
     },
     {
-      label: "Percentage"
+      value: "Percentage"
     }
   ]
   const framerTemplate = (variants: any) => {
@@ -375,8 +405,8 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       </AnimatePresence>
       <section>
         <div className="">
-        <AnimatePresence mode="wait">
-          {notificationStatus && <Notification close={setnotificationStatus} /> }
+          <AnimatePresence mode="wait">
+            {notificationStatus && <Notification close={setnotificationStatus} />}
           </AnimatePresence>
         </div>
         <div className="grid grid-cols-12 gap-5 md:gap-10">
@@ -407,7 +437,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
                           <p key={index}
                             className="px-3 py-1 cursor-pointer"
                             onClick={() => {
-                              setData({ ...data, customerName: item.name, customerId: item.id });
+                              setData({ ...data, customerName: item.name, customerId: item._id });
                               setCustomerOpen(false);
                             }}>
                             {item.name}
@@ -441,7 +471,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         <div ref={itemRef} className="mt-5 relative">
           <div className="flex items-center border py-1 bg-primary-gray px-2 rounded-lg">
             <BiCart className="mr-2 h-4 w-4 shrink-0  opacity-50" />
-            <Input placeholder={searchPlaceholder}
+            <Input placeholder="Search Items..."
               value={inputItem}
               onClick={() => {
               }}
@@ -551,7 +581,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
         <div className="md:col-end-13  h-auto md:col-span-4 rounded-lg col-span-full grid items-center bg-primary-gray">
           <div className="grid whitespace-nowrap text-ellipsis overflow-clip grid-cols-4 lg:grid-cols-3 py-2 justify-start gap-4  px-5 ">
             <p className="col-start-1 md:text-end col-end-3">Subtotal</p>
-            <p className="col-span-2 col-start-3 md-pr-2 "> $ {data.billSubtotal} </p>
+            <p className="col-span-2 col-start-3 md-pr-2 "> $ {Math.floor(data.billSubtotal * 100) / 100} </p>
           </div>
 
         </div>
@@ -585,7 +615,7 @@ const NewSales = ({ data, setData, placeholder, isSales, customerData, Items, in
       </section> */}
       <section className="grid grid-cols-12 md:gap-10 gap-5">
         <div className="mt-5 col-start-1 col-span-6 relative ">
-          <Selections inputData={[{ laebl: "Cash" }, { label: "Credit Card" }, { label: "Debit Card" }, { label: "Paytm" }]} label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} />
+          <Selections inputData={paymentData} label={payType} placeholder="Payment Type" setLabel={setPayType} icon={false} payment={true} />
         </div>
         <div className="col-span-6 gird items-center border bg-primary-gray py-1 px-2 rounded-lg col-start-7 mt-5 ">
           <Input type="text"
