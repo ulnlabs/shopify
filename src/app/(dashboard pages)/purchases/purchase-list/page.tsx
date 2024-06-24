@@ -7,7 +7,7 @@ import useSWR from 'swr'
 
 const page = () => {
 
-  
+
 
 
   const [from, setFrom] = useState<Date>(new Date);
@@ -31,7 +31,7 @@ const page = () => {
   const { data, mutate } = useSWR("/api/purchase", fetchPurchase)
   useEffect(() => {
     mutate();
-  })
+  }, [from, end])
   console.log(data);
 
 
