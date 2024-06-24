@@ -75,7 +75,7 @@ function page({ }: Props) {
                             <input onChange={(e) => setUserDate({ ...userdata, email: e.target.value })} id='email' type="email" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="role">role<span className='text-red-400'>*</span></label>
                             <div className="col-start-3 lg:col-span-3 col-span-4">
-                                <Selector commonTitle='select role' changeState={setUserRole} currentstate={userdata.role} data={["admin", "worker"]} />
+                                <Selector commonTitle='select role' changeState={setUserRole} currentstate={userRole} data={["admin", "worker"]} />
                             </div>
                             <label className='col-start-1 col-span-1 whitespace-nowrap text-left' htmlFor="password">Password <span className='text-red-400'>*</span></label>
                             <input onChange={(e) => setUserDate({ ...userdata, password: e.target.value })} id='password' type="password" className='col-start-3 lg:col-span-3 col-span-4 py-1 px-2 rounded border outline-none' />
