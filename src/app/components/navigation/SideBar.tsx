@@ -16,6 +16,7 @@ import { UserContext } from "@/UserContext";
 import { FaX } from "react-icons/fa6";
 import { AiOutlineClose } from "react-icons/ai";
 function SideBar() {
+  
   const router = useRouter();
   const pathname = usePathname();
   const { toggleNav, setToggleNav } = useContext(UserContext)
@@ -38,6 +39,9 @@ function SideBar() {
           <Accordion type="single" className='w-full h-[90vh] flex flex-col gap-1 items-center py-2' collapsible>
             {
               navItems.map((item, index) => {
+               
+          
+                
                 if (!item.children) {
                   return (
                     <Link key={index}

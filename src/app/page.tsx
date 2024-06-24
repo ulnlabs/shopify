@@ -1,7 +1,7 @@
 'use client'
 import { signIn } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { AnimatePresence, motion } from "framer-motion";
@@ -13,6 +13,7 @@ export default function Home() {
     email: '',
     password: ''
   })
+  const pathname = usePathname();
   const router = useRouter()
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,6 +34,8 @@ export default function Home() {
       setError(null)
     }, 10000)
   }
+console.log("pathName is here :",pathname);
+
   return (
     <>
       <AnimatePresence mode="wait">

@@ -6,8 +6,12 @@ import Taxlist from "@/app/components/settings/taxlist/Taxlist"
 import Unitlist from '@/app/components/settings/unitlist/Unitlist'
 import Payment from "@/app/components/settings/payment_type/Payment"
 import Changepassword from '@/app/components/settings/Passwordchange/Changepassword'
+import Link from 'next/link'
+import { usePathname, useRouter } from "next/navigation";
+
 
 function page({params}:{params:{slag:string}}) {
+  const currentrouter = useRouter()
     const router=params.slag
     interface Details {
         current_route: React.ReactNode;
@@ -59,7 +63,8 @@ function page({params}:{params:{slag:string}}) {
     
           
         default:
-            detail.current_route= <div>Invalid Route</div>;
+          currentrouter.push("/404page")
+          
     }
   return (
     <>
