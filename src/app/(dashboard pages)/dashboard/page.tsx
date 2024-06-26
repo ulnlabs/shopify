@@ -2,102 +2,124 @@
 import DashboardHeader from '@/app/components/dashboard/DashboardHeader'
 import axios from 'axios'
 import Link from 'next/link'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import useSWR from 'swr'
 function page() {
-  const fetchTodaySales = async () => {
-    const { data } = await axios.put('/api/sales', {
-      data: {
-        header: "getSales",
-        from: new Date,
-        end: new Date
-      }
-    })
-    return data
-  }
-  const { data: todaySalesData } = useSWR("/api/sales", fetchTodaySales)
+  const date = new Date
+  date.setDate(1)
+
+  const [todaySalesData, setTodaySales] = useState<any>([])
+  const [monthlySale, setMonthlySale] = useState<any>([]);
+  useEffect(() => {
+    const fetchTodaySales = async () => {
+      const { data } = await axios.put('/api/sales', {
+        data: {
+          header: "getSales",
+          from: new Date,
+          end: new Date
+        }
+      })
+      setTodaySales(data)
+    }
+    const fetchSales = async () => {
+      const response = await axios.put('/api/sales', {
+        data: {
+          header: "getSales",
+          from: date,
+          end: new Date
+        }
+
+      })
+      setMonthlySale(response.data)
+    }
+    fetchTodaySales();
+    fetchSales();
+  }, [])
   const SalesAmount = todaySalesData ? todaySalesData?.reduce((acc: any, data: any) => {
     return acc + data.total
   }, 0) : 0
-  const date = new Date
-  date.setDate(1)
-  const fetchSales = async () => {
-    const response = await axios.put('/api/sales', {
-      data: {
-        header: "getSales",
-        from: date,
-        end: new Date
-      }
 
-    })
-    return response.data
-  }
-  const { data: monthlySale } = useSWR("/api/sales", fetchSales)
+
   const MonthlySaleAmount = monthlySale ? monthlySale?.reduce((acc: any, data: any) => {
+    console.log(data);
+
     return acc + data.total
   }, 0) : 0
 
-  const fetchPurchase = async () => {
-    const { data } = await axios.put('/api/purchase', {
-      data: {
-        header: "getPurchase",
-        from: new Date,
-        end: new Date
-      }
-    })
-    return data
-  }
+  const [purchaseData, setPurchaseData] = useState<any>();
+  const [purchaseMonthly, setPurchaseMonthly] = useState<any>();
 
-  const { data: purchaseData } = useSWR("/api/purchase", fetchPurchase)
+  useEffect(() => {
+    const fetchPurchase = async () => {
+      const { data } = await axios.put('/api/purchase', {
+        data: {
+          header: "getPurchase",
+          from: new Date,
+          end: new Date
+        }
+      })
+      setPurchaseData(data)
+    }
+    const fetchMonthlyPurchase = async () => {
+      const { data } = await axios.put('/api/purchase', {
+        data: {
+          header: "getPurchase",
+          from: date,
+          end: new Date
+        }
+      })
+      setPurchaseMonthly(data)
+    }
+    fetchMonthlyPurchase();
+    fetchPurchase();
+  }, [])
+
+
   const PurchaseAmount = purchaseData ? purchaseData?.reduce((acc: any, data: any) => {
     return acc + data.total
   }, 0) : 0
 
-  const fetchMonthlyPurchase = async () => {
-    const { data } = await axios.put('/api/purchase', {
-      data: {
-        header: "getPurchase",
-        from: date,
-        end: new Date
-      }
-    })
-    return data
-  }
-
-  const { data: purchaseMonthly } = useSWR("/api/purchase", fetchMonthlyPurchase)
   console.log(purchaseMonthly);
 
   const purchaseMonthlyAmount = purchaseMonthly ? purchaseMonthly?.reduce((acc: any, data: any) => acc + data.total, 0) : 0
+  console.log(purchaseMonthly);
+
   console.log(monthlySale ? monthlySale.length : 0);
 
   const todaySaleCount = todaySalesData ? todaySalesData.length : 0
   const monthlySaleCount = monthlySale ? monthlySale.length : 0
 
-  const fetchExpense = async () => {
-    const { data } = await axios.put('/api/expenses',
-      {
-        from: new Date,
-        end: new Date
-      }
-    )
-    return data
-  }
+  const [todayExpense, setTodayExpense] = useState<any>();
+  const [MonthlyExpense, setMonthlyExpense] = useState<any>();
+  useEffect(() => {
+    const fetchExpense = async () => {
+      const { data } = await axios.put('/api/expenses',
+        {
+          from: new Date,
+          end: new Date
+        }
+      )
+      setTodayExpense(data)
+    }
+    const fetchMonthlyExpense = async () => {
+      const { data } = await axios.put('/api/expenses',
+        {
+          from: date,
+          end: new Date
+        }
+      )
+      setMonthlyExpense(data)
+    }
+    fetchExpense();
+    fetchMonthlyExpense();
+  }, [])
 
-  const { data: todayExpense } = useSWR("/api/expense", fetchExpense)
+
   console.log(todayExpense);
   const todayExpenseAmount = todayExpense ? todayExpense?.reduce((acc: any, data: any) => acc + data.amount, 0) : 0
   console.log(todayExpenseAmount);
 
-  const fetchMonthlyExpense = async () => {
-    const { data } = await axios.put('/api/expenses',
-      {
-        from: date,
-        end: new Date
-      }
-    )
-    return data
-  }
-  const { data: MonthlyExpense } = useSWR("/api/expenses", fetchMonthlyExpense)
+
 
   const MonthlyExpenseAmount = MonthlyExpense ? MonthlyExpense?.reduce((acc: any, data: any) => acc + data.amount, 0) : 0
 

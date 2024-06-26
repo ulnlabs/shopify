@@ -196,22 +196,23 @@ function invoice({ date, invoiceId, discountAll, discountType, otherCharges, ite
 
         <div className="w-full py-4 px-10 " ref={billRef} >
 
+          {isSales ? <h1>Sales Invoice</h1> : <h1>Purchase Invoice</h1>}
           <div className='border-b-2 w-full py-3 flex  justify-between'>
-            {isSales ? <h1>Sales Invoice</h1> : <h1>Purchase Invoice</h1>}
+            <p>Invoice #{invoiceId}</p>
             <p>Date:{date}</p>
           </div>
           <div className="flex w-[100%] py-3  flex-col">
-            <div className="w-full  flex md:flex-row flex-col justify-between md:gap-0 gap-3">
+            <div className="w-full  flex  justify-between md:gap-0 gap-3">
               <div>
                 <p>From</p>
                 <p>{companyDetail.companyName}</p>
                 <p>{companyDetail.address},{companyDetail.city},{companyDetail.state}</p>
-                <p>{companyDetail.country} </p>
                 <p>{companyDetail.mobile}</p>
                 <p>{companyDetail.email}</p>
                 <p>{companyDetail.gstNo}</p>
                 <p>{companyDetail.vatNo}</p>
               </div>
+              {/*  <div className='flex md:flex-row justify-between ' > */}
               <div className="">
                 {isSales ? <div>
                   <p>Customer Details</p>
@@ -227,9 +228,8 @@ function invoice({ date, invoiceId, discountAll, discountType, otherCharges, ite
                   </div>
                 }
 
-              </div>
-              <div>
-                <p>Invoice #{invoiceId}</p>
+                {/* </div> */}
+
               </div>
             </div>
             <div>
@@ -245,18 +245,18 @@ function invoice({ date, invoiceId, discountAll, discountType, otherCharges, ite
                 <h3 className="text-xl">Payment Information :</h3>
                 <DataTable columns={[DATE, PAYMENT_TYPE, PAYMENT_NOTE, PAYMENT]} data={paymentInformation} />
               </div>
-              <div className="pt-3 grid grid-cols-12">
-                <p className='col-span-2 col-end-13' >SubTotal : ₹{totalAmount}</p>
-                <p className='col-span-2 col-end-13' >Other Charges : ₹{overallCharges}</p>
-                <p className='col-span-2 col-end-13' >Discount on All :{discountValue}</p>
-                <p className='col-span-2 col-end-13' >Grand Total : ₹{total}</p>
+              <div className="pt-3 grid grid-cols-12 ">
+                <p className='col-span-3 col-end-11 text-end ' >SubTotal : </p>       <p className='col-span-2 col-end-13 ml-2 text-start'> ₹{totalAmount}</p>
+                <p className='col-span-3 col-end-11 text-end ' >Other Charges : </p>  <p className='col-span-2 col-end-13 ml-2 text-start'> ₹{overallCharges}</p>
+                <p className='col-span-3 col-end-11 text-end ' >Discount on All : </p><p className='col-span-2 col-end-13 ml-2 text-start'> ₹{discountValue}</p>
+                <p className='col-span-3 col-end-11 text-end ' >Grand Total : </p>    <p className='col-span-2 col-end-13 ml-2 text-start'> ₹{total}</p>
               </div>
             </div>
           </div>
         </div>
         <div className="w-full px-10 mb-5 flex gap-3 flex-wrap mt-2 ">
 
-          <button className='bg-green-400  px-2 py-3 rounded-md' onClick={handlePrint} >Print</button>
+          <button className='bg-green-400 px-2 py-3 rounded-md' onClick={handlePrint} >Print</button>
           {isSales ? <button className='bg-yellow-400  px-2 py-3 rounded-md'
             onClick={(e) => {
               e.preventDefault();
@@ -285,7 +285,7 @@ function invoice({ date, invoiceId, discountAll, discountType, otherCharges, ite
         )
 
       }
-    </div>
+    </div >
 
   )
 }
