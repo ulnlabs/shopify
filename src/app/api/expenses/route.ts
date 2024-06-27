@@ -142,6 +142,8 @@ export const PUT = async (req: Request, res: NextResponse) => {
     const endDate = new Date(end);
     endDate.setHours(endDate.getHours() + 5)
     endDate.setMinutes(endDate.getMinutes() + 30)
+    console.log(fromDate,endDate);
+    
     if (fromDate.getDate() === endDate.getDate()) {
         const data = await addExpense.find({
             date: fromDate.setUTCHours(0, 0, 0, 0)

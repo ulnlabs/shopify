@@ -87,6 +87,8 @@ export const PUT = async (req: Request) => {
             const endDate = new Date(end);
             endDate.setHours(endDate.getHours() + 5)
             endDate.setMinutes(endDate.getMinutes() + 30)
+            console.log("done", endDate, fromDate);
+
             if (fromDate.getDate() === endDate.getDate()) {
                 const data = await Sales.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
