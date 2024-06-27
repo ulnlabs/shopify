@@ -3,37 +3,58 @@ import DashboardHeader from '@/app/components/dashboard/DashboardHeader'
 import axios from 'axios'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import { useToast } from "@/components/ui/use-toast";
 import useSWR from 'swr'
 function page() {
+  const {toast} = useToast()
   const date = new Date
   date.setDate(1)
 
   const [todaySalesData, setTodaySales] = useState<any>([])
   const [monthlySale, setMonthlySale] = useState<any>([]);
   useEffect(() => {
-    const fetchTodaySales = async () => {
-      const { data } = await axios.put('/api/sales', {
-        data: {
-          header: "getSales",
-          from: new Date,
-          end: new Date
-        }
-      })
-      setTodaySales(data)
-    }
-    const fetchSales = async () => {
-      const response = await axios.put('/api/sales', {
-        data: {
-          header: "getSales",
-          from: date,
-          end: new Date
-        }
+    try {
 
+      const fetchTodaySales = async () => {
+
+        axios.put('/api/sales', {
+          data: {
+            header: "getSales",
+            from: new Date,
+            end: new Date
+          }
+        }).then((data) => {
+          console.log({jk:data});
+          
+          setTodaySales(data.data)
+        }).catch(() => {
+          toast({
+            title: "New PopUp !",
+            description: "Something went wrong"
+          })
+        })
+
+      }
+      const fetchSales = async () => {
+        const response = await axios.put('/api/sales', {
+          data: {
+            header: "getSales",
+            from: date,
+            end: new Date
+          }
+
+        })
+        setMonthlySale(response.data)
+      }
+      fetchTodaySales();
+      fetchSales();
+    } catch (error) {
+      toast({
+        title: "New PopUp !",
+        description: "Something went wrong"
       })
-      setMonthlySale(response.data)
+
     }
-    fetchTodaySales();
-    fetchSales();
   }, [])
   const SalesAmount = todaySalesData ? todaySalesData?.reduce((acc: any, data: any) => {
     return acc + data.total
@@ -50,28 +71,42 @@ function page() {
   const [purchaseMonthly, setPurchaseMonthly] = useState<any>();
 
   useEffect(() => {
-    const fetchPurchase = async () => {
-      const { data } = await axios.put('/api/purchase', {
-        data: {
-          header: "getPurchase",
-          from: new Date,
-          end: new Date
-        }
+    try {
+      const fetchPurchase = async () => {
+        const { data } = await axios.put('/api/purchase', {
+          data: {
+            header: "getPurchase",
+            from: new Date,
+            end: new Date
+          }
+        })
+        setPurchaseData(data)
+      }
+      const fetchMonthlyPurchase = async () => {
+        axios.put('/api/purchase', {
+          data: {
+            header: "getPurchase",
+            from: date,
+            end: new Date
+          }
+        }).then((data)=>{
+          setPurchaseMonthly(data.data)
+
+        }).catch(()=>{
+          toast({
+            title: "New PopUp !",
+            description: "Something went wrong"
+          })
+        })
+      }
+      fetchMonthlyPurchase();
+      fetchPurchase();
+    } catch (error) {
+      toast({
+        title: "New PopUp !",
+        description: "Something went wrong"
       })
-      setPurchaseData(data)
     }
-    const fetchMonthlyPurchase = async () => {
-      const { data } = await axios.put('/api/purchase', {
-        data: {
-          header: "getPurchase",
-          from: date,
-          end: new Date
-        }
-      })
-      setPurchaseMonthly(data)
-    }
-    fetchMonthlyPurchase();
-    fetchPurchase();
   }, [])
 
 
@@ -92,26 +127,33 @@ function page() {
   const [todayExpense, setTodayExpense] = useState<any>();
   const [MonthlyExpense, setMonthlyExpense] = useState<any>();
   useEffect(() => {
-    const fetchExpense = async () => {
-      const { data } = await axios.put('/api/expenses',
-        {
-          from: new Date,
-          end: new Date
-        }
-      )
-      setTodayExpense(data)
+    try {
+      const fetchExpense = async () => {
+        const { data } = await axios.put('/api/expenses',
+          {
+            from: new Date,
+            end: new Date
+          }
+        )
+        setTodayExpense(data)
+      }
+      const fetchMonthlyExpense = async () => {
+        const { data } = await axios.put('/api/expenses',
+          {
+            from: date,
+            end: new Date
+          }
+        )
+        setMonthlyExpense(data)
+      }
+      fetchExpense();
+      fetchMonthlyExpense();
+    } catch (error) {
+      toast({
+        title: "New PopUp !",
+        description: "Something went wrong"
+      })
     }
-    const fetchMonthlyExpense = async () => {
-      const { data } = await axios.put('/api/expenses',
-        {
-          from: date,
-          end: new Date
-        }
-      )
-      setMonthlyExpense(data)
-    }
-    fetchExpense();
-    fetchMonthlyExpense();
   }, [])
 
 

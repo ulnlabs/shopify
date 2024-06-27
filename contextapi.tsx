@@ -4,11 +4,13 @@ import { customerAdd } from "./global";
 import axios from "axios";
 import useSWR from "swr";
 import { children } from "./global";
+import { useToast } from "@/components/ui/use-toast";
 //if some types are not seen here they are mentioned in the global.d.ts file
 
 
 export const ContextData = createContext<any>({});
 const ContextContent = ({ children }: children) => {
+  const {toast}=useToast()
   const [customerData, setCustomerData] = useState<customerAdd>({
     name: "",
     mobile: "",
@@ -28,6 +30,7 @@ const ContextContent = ({ children }: children) => {
 
 
   useEffect(() => {
+   try {
     const fetchData = async () => {
 
       const response = await axios.put("/api/sales",
@@ -42,6 +45,12 @@ const ContextContent = ({ children }: children) => {
       console.log(response.data);
     }
     fetchData();
+   } catch (error) {
+    toast({
+      title: "Error",
+      description: "Something went wrong",
+    })
+   }
   }, []);
   /* 
     const getItems = async () => {
