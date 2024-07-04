@@ -4,9 +4,8 @@ import axios from 'axios'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useToast } from "@/components/ui/use-toast";
-import useSWR from 'swr'
 function page() {
-  const {toast} = useToast()
+  const { toast } = useToast()
   const date = new Date
   date.setDate(1)
 
@@ -24,8 +23,8 @@ function page() {
             end: new Date
           }
         }).then((data) => {
-          console.log({jk:data});
-          
+          console.log({ jk: data });
+
           setTodaySales(data.data)
         }).catch(() => {
           toast({
@@ -56,16 +55,7 @@ function page() {
 
     }
   }, [])
-  const SalesAmount = todaySalesData ? todaySalesData?.reduce((acc: any, data: any) => {
-    return acc + data.total
-  }, 0) : 0
 
-
-  const MonthlySaleAmount = monthlySale ? monthlySale?.reduce((acc: any, data: any) => {
-    console.log(data);
-
-    return acc + data.total
-  }, 0) : 0
 
   const [purchaseData, setPurchaseData] = useState<any>();
   const [purchaseMonthly, setPurchaseMonthly] = useState<any>();
@@ -73,14 +63,21 @@ function page() {
   useEffect(() => {
     try {
       const fetchPurchase = async () => {
-        const { data } = await axios.put('/api/purchase', {
+        axios.put('/api/purchase', {
           data: {
             header: "getPurchase",
-            from: new Date,
+            from: date,
             end: new Date
           }
+        }).then((data) => {
+          setPurchaseData(data.data)
+
+        }).catch(() => {
+          toast({
+            title: "New PopUp !",
+            description: "Something went wrong"
+          })
         })
-        setPurchaseData(data)
       }
       const fetchMonthlyPurchase = async () => {
         axios.put('/api/purchase', {
@@ -89,10 +86,10 @@ function page() {
             from: date,
             end: new Date
           }
-        }).then((data)=>{
+        }).then((data) => {
           setPurchaseMonthly(data.data)
 
-        }).catch(()=>{
+        }).catch(() => {
           toast({
             title: "New PopUp !",
             description: "Something went wrong"
@@ -109,6 +106,17 @@ function page() {
     }
   }, [])
 
+  const SalesAmount = todaySalesData ? todaySalesData?.reduce((acc: any, data: any) => {
+    return acc + data.total
+  }, 0) : 0
+
+
+  const MonthlySaleAmount = monthlySale ? monthlySale?.reduce((acc: any, data: any) => {
+    console.log(data);
+
+    return acc + data.total
+  }, 0) : 0
+
 
   const PurchaseAmount = purchaseData ? purchaseData?.reduce((acc: any, data: any) => {
     return acc + data.total
@@ -116,7 +124,9 @@ function page() {
 
   console.log(purchaseMonthly);
 
-  const purchaseMonthlyAmount = purchaseMonthly ? purchaseMonthly?.reduce((acc: any, data: any) => acc + data.total, 0) : 0
+  const purchaseMonthlyAmount = purchaseMonthly ? purchaseMonthly?.reduce((acc: any, data: any) => {
+    return acc + data.total
+  }, 0) : 0
   console.log(purchaseMonthly);
 
   console.log(monthlySale ? monthlySale.length : 0);
