@@ -12,8 +12,8 @@ function page() {
   const [todaySalesData, setTodaySales] = useState<any>([])
   const [monthlySale, setMonthlySale] = useState<any>([]);
 
-  const [purchaseData, setPurchaseData] = useState<any>();
-  const [purchaseMonthly, setPurchaseMonthly] = useState<any>();
+  const [purchaseData, setPurchaseData] = useState<any>([]);
+  const [purchaseMonthly, setPurchaseMonthly] = useState<any>([]);
   console.log("stoday", todaySalesData);
   console.log("smonthly", monthlySale);
   console.log("ptoday", purchaseData);
