@@ -75,6 +75,7 @@ function page() {
         description: "Unable to get today purchase"
       })
     })
+    
   }
   const fetchMonthlyPurchase = async () => {
     await axios.put('/api/purchase', {
@@ -137,27 +138,27 @@ function page() {
     }
   }, [])
 
-  const SalesAmount = todaySalesData ? todaySalesData?.reduce((acc: any, data: any) => {
+  const SalesAmount = todaySalesData?.reduce((acc: any, data: any) => {
     return acc + data.total
-  }, 0) : 0
+  }, 0)
 
 
-  const MonthlySaleAmount = monthlySale ? monthlySale?.reduce((acc: any, data: any) => {
+  const MonthlySaleAmount = monthlySale?.reduce((acc: any, data: any) => {
     console.log(data);
 
     return acc + data.total
-  }, 0) : 0
+  }, 0)
 
 
-  const PurchaseAmount = purchaseData ? purchaseData?.reduce((acc: any, data: any) => {
+  const PurchaseAmount = purchaseData?.reduce((acc: any, data: any) => {
     return acc + data.total
-  }, 0) : 0
+  }, 0)
 
   console.log(purchaseMonthly);
 
-  const purchaseMonthlyAmount = purchaseMonthly ? purchaseMonthly?.reduce((acc: any, data: any) => {
+  const purchaseMonthlyAmount = purchaseMonthly?.reduce((acc: any, data: any) => {
     return acc + data.total
-  }, 0) : 0
+  }, 0)
   console.log(purchaseMonthly);
 
   console.log(monthlySale ? monthlySale.length : 0);
@@ -168,8 +169,8 @@ function page() {
 
 
 
-  const todayExpenseAmount = todayExpense ? todayExpense?.reduce((acc: any, data: any) => acc + data.amount, 0) : 0
-  const MonthlyExpenseAmount = MonthlyExpense ? MonthlyExpense?.reduce((acc: any, data: any) => acc + data.amount, 0) : 0
+  const todayExpenseAmount = todayExpense?.reduce((acc: any, data: any) => acc + data.amount, 0)
+  const MonthlyExpenseAmount = MonthlyExpense?.reduce((acc: any, data: any) => acc + data.amount, 0)
 
   function calculateProfitPercentage(purchasePrice: number, salesPrice: number) {
     // Validate input (optional)
@@ -202,18 +203,18 @@ function page() {
     <div className='w-full flex flex-col items-center py-6 px-6 gap-4'>
       <DashboardHeader title='Dashboard' subtitle='Business analatics' />
       <div className="flex justify-evenly w-full gap-6 flex-wrap">
-        <SaleAmount title="Today Sale Amount" amount={SalesAmount || "..."} path="/sales/sales-list" />
-        <SaleAmount title="Monthly Sale Amount" amount={MonthlySaleAmount || "..."} path="/sales/sales-list" />
+        <SaleAmount title="Today Sale Amount" amount={SalesAmount} path="/sales/sales-list" />
+        <SaleAmount title="Monthly Sale Amount" amount={MonthlySaleAmount} path="/sales/sales-list" />
 
       </div>
       <div className="flex justify-evenly w-full gap-6 flex-wrap">
-        <SaleAmount title="Today Purchase Amount" amount={PurchaseAmount || "..."} path="/purchases/purchase-list" />
-        <SaleAmount title="Monthly Purchase Amount" amount={purchaseMonthlyAmount || "..."} path="/purchases/purchase-list" />
+        <SaleAmount title="Today Purchase Amount" amount={PurchaseAmount} path="/purchases/purchase-list" />
+        <SaleAmount title="Monthly Purchase Amount" amount={purchaseMonthlyAmount} path="/purchases/purchase-list" />
 
       </div>
       <div className="flex justify-evenly w-full gap-6 flex-wrap">
-        <SaleAmount title="Today Expense Amount" amount={todayExpenseAmount || "..."} path="/expenses/list" />
-        <SaleAmount title="Monthly Expense Amount" amount={MonthlyExpenseAmount || "..."} path="/expenses/list" />
+        <SaleAmount title="Today Expense Amount" amount={todayExpenseAmount} path="/expenses/list" />
+        <SaleAmount title="Monthly Expense Amount" amount={MonthlyExpenseAmount} path="/expenses/list" />
 
       </div>
       <div className="flex w-full justify-evenly items-center flex-wrap">
@@ -234,8 +235,9 @@ const SaleAmount = ({ title, amount, path }: { title: String, amount: number, pa
     <div className="sm:w-[400px] w-full p-2  shadow-gray-200 rounded-[20px] shadow-[inset_0px_0px_4px_1px] ">
       <div className='flex items-center justify-between' >
         <div className="min-w-[100px] px-2 min-h-[100px] border rounded-[20px] font-bold flex items-center justify-center text-4xl text-[--primary]">
-          {
-            amount >= 1000 ? Math.floor(amount / 1000 * 100) / 100 + "k" : "₹" + Math.floor(amount * 100) / 100
+        
+          {amount ? 
+            amount >= 1000 ? Math.floor(amount / 1000 * 100) / 100 + "k" : "₹" + Math.floor(amount * 100) / 100 : 0
           }
         </div>
         <h2 className='text-gray-700 px-4 text-lg'>{title}</h2>
