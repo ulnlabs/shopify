@@ -77,8 +77,6 @@ export const PUT = async (req: Request) => {
             return NextResponse.json(modified);
         }
         else if (header === "getSales") {
-            const findData = await Sales.find().populate('_id')
-            console.log("findData", findData);
 
             const { from, end } = data.data
             const fromDate = new Date(from);
@@ -132,7 +130,7 @@ export const PUT = async (req: Request) => {
             else {
                 const data = await Sales.find({
                     date: {
-                        $gte: fromDate,
+                        $gte: fromDate.setUTCHours(0, 0, 0, 0),
                         $lte: endDate,
                     },
                     $or: [

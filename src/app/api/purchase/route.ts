@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { Purchase } from "@/app/mongoose/models/purchases"
 import { format } from "date-fns";
 import Item from "@/app/mongoose/models/Items";
+import { supplierModal } from "@/app/mongoose/models/Suppliers";
 const findOverall = (purchase: any) => {
     const initial = 0;
     const overall = purchase.items.map((item: any) => {
@@ -94,12 +95,10 @@ export const PUT = async (req: Request) => {
             const fromDate = new Date(from);
             fromDate.setHours(fromDate.getHours() + 5)
             fromDate.setMinutes(fromDate.getMinutes() + 30)
-            console.log(fromDate);
-
             const endDate = new Date(end);
             endDate.setHours(endDate.getHours() + 5)
             endDate.setMinutes(endDate.getMinutes() + 30)
-            console.log(endDate);
+            console.log("done", endDate, fromDate);
             if (fromDate.getDate() === endDate.getDate()) {
                 const data = await Purchase.find({
                     date: fromDate.setUTCHours(0, 0, 0, 0),
@@ -122,10 +121,11 @@ export const PUT = async (req: Request) => {
                             discountPer: item.discount
                         })
                     })
+                    const s_name = purchase.s_id?.name ? purchase?.s_id?.name : "unknown"
                     return ({
                         ...purchase,
                         date: format(purchase.date, "dd-MM-yy"),
-                        s_name: purchase.s_id?.name,
+                        s_name: s_name,
                         purchaseCode: purchase.purchaseCode,
                         total: findOverall(purchase),
                         status: purchase.status,
@@ -140,7 +140,7 @@ export const PUT = async (req: Request) => {
 
                 const data = await Purchase.find({
                     date: {
-                        $gte: fromDate,
+                        $gte: fromDate.setUTCHours(0, 0, 0, 0),
                         $lte: endDate,
                     },
                     $or: [
@@ -168,11 +168,11 @@ export const PUT = async (req: Request) => {
                             discountPer: item.discount
                         })
                     })
-
+                    const s_name = purchase.s_id?.name ? purchase?.s_id?.name : "unknown"
                     return ({
                         ...purchase,
                         date: format(purchase.date, "dd-MM-yy"),
-                        s_name: purchase.s_id?.name,
+                        s_name: s_name,
                         purchaseCode: purchase.purchaseCode,
                         total: findOverall(purchase),
                         status: purchase.status,
@@ -364,6 +364,7 @@ export async function POST(req: any) {
                 note
             }]
             console.log(data);
+            const supplierDetail = await supplierModal.find({ _id: s_id });
             const modified = data.map((purchase: any) => {
                 const itemList = purchase.items.map((item: any) => {
                     const { total, taxValue, discountValue } = findTotal(item.price, purchase.status.toLowerCase() === "returned".toLowerCase() ? item.returned_quantity : item.Purchase_quantity, item.tax, item.discountType, item.discount, item.taxType)
@@ -380,6 +381,7 @@ export async function POST(req: any) {
                 return ({
                     ...purchase,
                     date: format(purchase.date, "dd-MM-yy"),
+                    s_id: supplierDetail,
                     purchaseCode: purchase.purchaseCode,
                     total: findOverall(purchase),
                     items: itemList
