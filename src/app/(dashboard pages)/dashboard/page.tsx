@@ -11,90 +11,92 @@ function page() {
 
   const [todaySalesData, setTodaySales] = useState<any>([])
   const [monthlySale, setMonthlySale] = useState<any>([]);
-  useEffect(() => {
-    try {
 
-      const fetchTodaySales = async () => {
+  const [purchaseData, setPurchaseData] = useState<any>();
+  const [purchaseMonthly, setPurchaseMonthly] = useState<any>();
+  console.log("stoday", todaySalesData);
+  console.log("smonthly", monthlySale);
+  console.log("ptoday", purchaseData);
+  console.log("pmonthly", purchaseMonthly);
 
-        await axios.put('/api/sales', {
-          data: {
-            header: "getSales",
-            from: new Date,
-            end: new Date
-          }
-        }).then((data) => {
-          console.log({ jk: data });
 
-          setTodaySales(data.data)
-        }).catch(() => {
-          toast({
-            title: "New PopUp !",
-            description: "Something went wrong"
-          })
-        })
 
+  const fetchTodaySales = async () => {
+
+    await axios.put('/api/sales', {
+      data: {
+        header: "getSales",
+        from: new Date,
+        end: new Date
       }
-      const fetchSales = async () => {
-        const response = await axios.put('/api/sales', {
-          data: {
-            header: "getSales",
-            from: date,
-            end: new Date
-          }
-
-        })
-        setMonthlySale(response.data)
-      }
-      const fetchPurchase = async () => {
-        await axios.put('/api/purchase', {
-          data: {
-            header: "getPurchase",
-            from: date,
-            end: new Date
-          }
-        }).then((data) => {
-          setPurchaseData(data.data)
-
-        }).catch(() => {
-          toast({
-            title: "New PopUp !",
-            description: "Something went wrong"
-          })
-        })
-      }
-      const fetchMonthlyPurchase = async () => {
-        await axios.put('/api/purchase', {
-          data: {
-            header: "getPurchase",
-            from: date,
-            end: new Date
-          }
-        }).then((data) => {
-          setPurchaseMonthly(data.data)
-
-        }).catch(() => {
-          toast({
-            title: "New PopUp !",
-            description: "Something went wrong"
-          })
-        })
-      }
-      fetchTodaySales();
-      fetchSales();
-      fetchMonthlyPurchase();
-      fetchPurchase();
-    } catch (error) {
+    }).then((data) => {
+      console.log({ jk: data });
+      setTodaySales(data.data)
+    }).catch(() => {
       toast({
         title: "New PopUp !",
         description: "Something went wrong"
       })
+    })
 
+  }
+  const fetchSales = async () => {
+    const response = await axios.put('/api/sales', {
+      data: {
+        header: "getSales",
+        from: date,
+        end: new Date
+      }
+
+    })
+    setMonthlySale(response.data)
+  }
+  const fetchPurchase = async () => {
+    await axios.put('/api/purchase', {
+      data: {
+        header: "getPurchase",
+        from: new Date,
+        end: new Date
+      }
+    }).then((data) => {
+      setPurchaseData(data.data)
+
+    }).catch(() => {
+      toast({
+        title: "New PopUp !",
+        description: "Something went wrong"
+      })
+    })
+  }
+  const fetchMonthlyPurchase = async () => {
+    await axios.put('/api/purchase', {
+      data: {
+        header: "getPurchase",
+        from: date,
+        end: new Date
+      }
+    }).then((data) => {
+      setPurchaseMonthly(data.data)
+
+    }).catch(() => {
+      toast({
+        title: "New PopUp !",
+        description: "Something went wrong"
+      })
+    })
+  }
+  useEffect(() => {
+    const getData = async () => {
+      await fetchMonthlyPurchase();
+      await fetchTodaySales();
+      await fetchSales();
+      await fetchPurchase();
     }
+    getData();
+
   }, [])
 
 
-  const [purchaseData, setPurchaseData] = useState<any>();
-  const [purchaseMonthly, setPurchaseMonthly] = useState<any>();
 
   useEffect(() => {
     try {
@@ -169,6 +171,8 @@ function page() {
 
 
   console.log(todayExpense);
+  console.log("date", date);
+
   const todayExpenseAmount = todayExpense ? todayExpense?.reduce((acc: any, data: any) => acc + data.amount, 0) : 0
   console.log(todayExpenseAmount);
 
