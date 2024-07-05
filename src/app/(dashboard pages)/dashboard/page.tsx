@@ -16,7 +16,7 @@ function page() {
 
       const fetchTodaySales = async () => {
 
-        axios.put('/api/sales', {
+        await axios.put('/api/sales', {
           data: {
             header: "getSales",
             from: new Date,
@@ -45,25 +45,8 @@ function page() {
         })
         setMonthlySale(response.data)
       }
-      fetchTodaySales();
-      fetchSales();
-    } catch (error) {
-      toast({
-        title: "New PopUp !",
-        description: "Something went wrong"
-      })
-
-    }
-  }, [])
-
-
-  const [purchaseData, setPurchaseData] = useState<any>();
-  const [purchaseMonthly, setPurchaseMonthly] = useState<any>();
-
-  useEffect(() => {
-    try {
       const fetchPurchase = async () => {
-        axios.put('/api/purchase', {
+        await axios.put('/api/purchase', {
           data: {
             header: "getPurchase",
             from: date,
@@ -80,7 +63,7 @@ function page() {
         })
       }
       const fetchMonthlyPurchase = async () => {
-        axios.put('/api/purchase', {
+        await axios.put('/api/purchase', {
           data: {
             header: "getPurchase",
             from: date,
@@ -96,8 +79,26 @@ function page() {
           })
         })
       }
+      fetchTodaySales();
+      fetchSales();
       fetchMonthlyPurchase();
       fetchPurchase();
+    } catch (error) {
+      toast({
+        title: "New PopUp !",
+        description: "Something went wrong"
+      })
+
+    }
+  }, [])
+
+
+  const [purchaseData, setPurchaseData] = useState<any>();
+  const [purchaseMonthly, setPurchaseMonthly] = useState<any>();
+
+  useEffect(() => {
+    try {
+
     } catch (error) {
       toast({
         title: "New PopUp !",
