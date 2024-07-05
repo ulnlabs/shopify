@@ -90,12 +90,32 @@ function page() {
       })
     })
   }
+  const fetchExpense = async () => {
+    const { data } = await axios.put('/api/expenses',
+      {
+        from: new Date,
+        end: new Date
+      }
+    )
+    setTodayExpense(data)
+  }
+  const fetchMonthlyExpense = async () => {
+    const { data } = await axios.put('/api/expenses',
+      {
+        from: date,
+        end: new Date
+      }
+    )
+    setMonthlyExpense(data)
+  }
   useEffect(() => {
     const getData = async () => {
+      await fetchPurchase();
       await fetchMonthlyPurchase();
       await fetchTodaySales();
       await fetchSales();
-      await fetchPurchase();
+      await fetchExpense();
+      await fetchMonthlyExpense();
     }
     getData();
 
@@ -146,26 +166,8 @@ function page() {
   const [MonthlyExpense, setMonthlyExpense] = useState<any>();
   useEffect(() => {
     try {
-      const fetchExpense = async () => {
-        const { data } = await axios.put('/api/expenses',
-          {
-            from: new Date,
-            end: new Date
-          }
-        )
-        setTodayExpense(data)
-      }
-      const fetchMonthlyExpense = async () => {
-        const { data } = await axios.put('/api/expenses',
-          {
-            from: date,
-            end: new Date
-          }
-        )
-        setMonthlyExpense(data)
-      }
-      fetchExpense();
-      fetchMonthlyExpense();
+
+
     } catch (error) {
       toast({
         title: "New PopUp !",
