@@ -14,6 +14,9 @@ function page() {
 
   const [purchaseData, setPurchaseData] = useState<any>([]);
   const [purchaseMonthly, setPurchaseMonthly] = useState<any>([]);
+
+  const [todayExpense, setTodayExpense] = useState<any>([]);
+  const [MonthlyExpense, setMonthlyExpense] = useState<any>([]);
   console.log("stoday", todaySalesData);
   console.log("smonthly", monthlySale);
   console.log("ptoday", purchaseData);
@@ -162,29 +165,10 @@ function page() {
   const todaySaleCount = todaySalesData ? todaySalesData.length : 0
   const monthlySaleCount = monthlySale ? monthlySale.length : 0
 
-  const [todayExpense, setTodayExpense] = useState<any>();
-  const [MonthlyExpense, setMonthlyExpense] = useState<any>();
-  useEffect(() => {
-    try {
 
 
-    } catch (error) {
-      toast({
-        title: "New PopUp !",
-        description: "Something went wrong"
-      })
-    }
-  }, [])
-
-
-  console.log(todayExpense);
-  console.log("date", date);
 
   const todayExpenseAmount = todayExpense ? todayExpense?.reduce((acc: any, data: any) => acc + data.amount, 0) : 0
-  console.log(todayExpenseAmount);
-
-
-
   const MonthlyExpenseAmount = MonthlyExpense ? MonthlyExpense?.reduce((acc: any, data: any) => acc + data.amount, 0) : 0
 
   function calculateProfitPercentage(purchasePrice: number, salesPrice: number) {
@@ -218,18 +202,18 @@ function page() {
     <div className='w-full flex flex-col items-center py-6 px-6 gap-4'>
       <DashboardHeader title='Dashboard' subtitle='Business analatics' />
       <div className="flex justify-evenly w-full gap-6 flex-wrap">
-        <SaleAmount title="Today Sale Amount" amount={SalesAmount || 0} path="/sales/sales-list" />
-        <SaleAmount title="Monthly Sale Amount" amount={MonthlySaleAmount || 0} path="/sales/sales-list" />
+        <SaleAmount title="Today Sale Amount" amount={SalesAmount || "..."} path="/sales/sales-list" />
+        <SaleAmount title="Monthly Sale Amount" amount={MonthlySaleAmount || "..."} path="/sales/sales-list" />
 
       </div>
       <div className="flex justify-evenly w-full gap-6 flex-wrap">
-        <SaleAmount title="Today Purchase Amount" amount={PurchaseAmount || 0} path="/purchases/purchase-list" />
-        <SaleAmount title="Monthly Purchase Amount" amount={purchaseMonthlyAmount || 0} path="/purchases/purchase-list" />
+        <SaleAmount title="Today Purchase Amount" amount={PurchaseAmount || "..."} path="/purchases/purchase-list" />
+        <SaleAmount title="Monthly Purchase Amount" amount={purchaseMonthlyAmount || "..."} path="/purchases/purchase-list" />
 
       </div>
       <div className="flex justify-evenly w-full gap-6 flex-wrap">
-        <SaleAmount title="Today Expense Amount" amount={todayExpenseAmount || 0} path="/expenses/list" />
-        <SaleAmount title="Monthly Expense Amount" amount={MonthlyExpenseAmount || 0} path="/expenses/list" />
+        <SaleAmount title="Today Expense Amount" amount={todayExpenseAmount || "..."} path="/expenses/list" />
+        <SaleAmount title="Monthly Expense Amount" amount={MonthlyExpenseAmount || "..."} path="/expenses/list" />
 
       </div>
       <div className="flex w-full justify-evenly items-center flex-wrap">
