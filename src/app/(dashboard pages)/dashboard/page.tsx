@@ -35,21 +35,26 @@ function page() {
     }).catch(() => {
       toast({
         title: "New PopUp !",
-        description: "Something went wrong"
+        description: "Unable to get today sale"
       })
     })
 
   }
   const fetchSales = async () => {
-    const response = await axios.put('/api/sales', {
+    await axios.put('/api/sales', {
       data: {
         header: "getSales",
         from: date,
         end: new Date
       }
-
+    }).then((response) => {
+      setMonthlySale(response.data)
+    }).catch(() => {
+      toast({
+        title: "New PopUp!",
+        description: "Unable to get monthly sale"
+      })
     })
-    setMonthlySale(response.data)
   }
   const fetchPurchase = async () => {
     await axios.put('/api/purchase', {
@@ -64,7 +69,7 @@ function page() {
     }).catch(() => {
       toast({
         title: "New PopUp !",
-        description: "Something went wrong"
+        description: "Unable to get today purchase"
       })
     })
   }
@@ -81,7 +86,7 @@ function page() {
     }).catch(() => {
       toast({
         title: "New PopUp !",
-        description: "Something went wrong"
+        description: "Unable to get monthly purchase"
       })
     })
   }
