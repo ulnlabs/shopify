@@ -22,19 +22,6 @@ This is a fully-featured **Inventory Management System** built with **Next.js 15
 - **Styling:** Tailwind CSS
 - **Deployment:** Vercel
 
-## 📸 Screenshots
-
-| Feature | Screenshot |
-| ------- | ---------- |
-| Dashboard | ![Dashboard](https://via.placeholder.com/800x400) |
-| Inventory List | ![Inventory List](https://via.placeholder.com/800x400) |
-| Add New Product | ![Add New Product](https://via.placeholder.com/800x400) |
-
-## 📚 Documentation
-
-- [API Reference](https://github.com/ulnlabs/shopify/wiki/API-Reference)
-- [User Guide](https://github.com/ulnlabs/shopify/wiki/User-Guide)
-
 ## 🚀 Getting Started
 
 ### Prerequisites
